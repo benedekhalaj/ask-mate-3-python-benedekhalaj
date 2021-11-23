@@ -9,6 +9,13 @@ def open_file(file_path):
     return data_list
 
 
+def write_file(data_list, file_path, header):
+    with open(file_path, "r") as file:
+        csv_file = csv.DictWriter(file, fieldnames=header)
+        csv.DictReader()
+        for data in data_list:
+            csv_file.writerow(data)
+
 
 if __name__ == "__main__":
     answers = 'data/answers.csv'
