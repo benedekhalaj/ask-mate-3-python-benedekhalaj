@@ -8,15 +8,19 @@ app = Flask(__name__)
 @app.route("/list")
 def list_questions():
     questions = data_manager.get_questions()
-    if 'order_by' in request.form:
-        return render_template(f'/list?ored_by{request.form["order_by"]}&order_direction{request.form["order_direction"]}')
-    return render_template('list.html', questions=questions)
+    titles = data_manager.QUESTION_HEADER
+    if 'sort_by' in request.form:
+        questions = data_manager.sort_questions(request.args)
+        return redirect(f'/list?ored_by{request.form["sort_by"]}&order_direction{request.form["order_direction"]}')
+    return render_template('list.html', questions=questions, titles=titles)
 
 
 @app.route('/question/<question_id>')
 def display_question(question_id):
     return render_template('display_question.html', question_id=question_id)
 
+
+@app.route('/list')
 
 @app.route('/test')
 def test_answer():
