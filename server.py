@@ -8,7 +8,7 @@ app = Flask(__name__)
 def list_questions():
     questions = []
     for _ in range(5):
-        questions.append({'id': '0', 'type': 'test', 'name': 'zsu'})
+        questions.append({'id': '0', 'title': 'test', 'name': 'zsu'})
     return render_template('list.html', questions=questions)
 
 
