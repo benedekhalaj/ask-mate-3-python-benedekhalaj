@@ -17,7 +17,17 @@ def list_questions():
 
 @app.route('/question/<question_id>')
 def display_question(question_id):
-    return render_template('display_question.html', question_id=question_id)
+    answers_from_file = data_manager.get_answers()
+    questions = data_manager.get_questions()
+    answers_for_question = []
+
+    for answer in answers_from_file:
+        if question_id == answer['id']:
+            answers_for_question.append(answer)
+
+    for question in questions:
+        if question_id == question['id']:
+            return render_template('display_question.html', question_id=question_id, answers=answers_from_file, question=question)
 
 
 @app.route('/list')
@@ -45,6 +55,17 @@ def post_answer(question_id):
         answers.append(new_answer)
         data_manager.export_answers(answers)
         return redirect('/test')
+
+
+@app.route('/question/<question_id>/delete', methods=['POST'])
+def delete_question(question_id):
+    questions = data_manager.get_questions()
+    for index, question in enumerate(questions):
+        if question['id'] == question_id:
+            questions.pop(index)
+            break
+    data_manager.export_questions(questions)
+    return redirect('/list')
 
 
 @app.route('/add-question', methods=['GET', 'POST'])

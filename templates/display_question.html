@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Question {{ question_id }}</title>
 </head>
 <body>
+    <h1>Question {{ question_id }}</h1>
+    <br>
+    <table>
+    <tr>
+        {% for key in question.keys() %}
+            {% if key in ['title', 'message'] %}
+                <th>{{ key.upper() }}</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for key, value in question.items() %}
+            {% if key in ['title', 'message']  %}
+                <td>{{ value }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </table>
 
 </body>
 </html>
