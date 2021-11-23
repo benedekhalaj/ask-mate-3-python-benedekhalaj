@@ -22,7 +22,7 @@ def display_question(question_id):
     answers_for_question = []
 
     for answer in answers_from_file:
-        if question_id == answer['id']:
+        if question_id == answer['question_id']:
             answers_for_question.append(answer)
 
     for question in questions:

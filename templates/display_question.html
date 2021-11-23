@@ -5,13 +5,14 @@
     <title>Question {{ question_id }}</title>
 </head>
 <body>
-    <h1>Question {{ question_id }}</h1>
-    <br>
-    <table>
+    <h2>Question {{ question_id }}</h2><br>
+    <table border="1">
     <tr>
         {% for key in question.keys() %}
-            {% if key in ['title', 'message'] %}
+            {% if key == 'title' %}
                 <th>{{ key.upper() }}</th>
+            {% elif key == 'message' %}
+                <th>{{ 'QUESTION' }}</th>
             {% endif %}
         {% endfor %}
     </tr>
@@ -22,23 +23,29 @@
             {% endif %}
         {% endfor %}
     </tr>
-    </table>
+    </table><br><br>
 
-    <table>
+    <h2>Answer(s) for question {{ question_id }}</h2>
+
+    <table border="1">
     <tr>
-        {% for answer in answers %}
-            {% for key, value in answer.items() %}
-                <th>{{ key.upper() }}</th>
-            {% endfor %}
-        {% endfor %}
+    {% for key in answers[0].keys() %}
+        {% if key == 'message' %}
+            <th>{{ 'ANSWER' }}</th>
+        {% else %}
+            <th>{{ key.replace('_', ' ').upper() }}</th>
+        {% endif %}
+    {% endfor %}
     </tr>
-    <tr>
-        {% for answer in answers %}
-            {% for value in answer.values() %}
+
+    {% for answer in answers %}
+        <tr>
+        {% for key, value in answer.items() %}
                 <td>{{ value }}</td>
-            {% endfor %}
         {% endfor %}
-    </tr>
+        </tr>
+    {% endfor %}
+
 
     </table>
 
