@@ -8,6 +8,8 @@ app = Flask(__name__)
 @app.route("/list")
 def list_questions():
     questions = data_manager.get_questions()
+    if 'order_by' in request.form:
+        return render_template(f'/list?ored_by{request.form["order_by"]}&order_direction{request.form["order_direction"]}')
     return render_template('list.html', questions=questions)
 
 
@@ -21,7 +23,6 @@ def post_answer(question_id):
     return render_template('post_answer.html')
 
 
-
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
@@ -33,6 +34,11 @@ def add_question():
         data_manager.export_questions(questions)
         return redirect('/')
     return render_template('add_question.html')
+
+
+@app.route('/sort-question')
+def sort_question():
+    return render_template('sort_question.html')
 
 
 if __name__ == "__main__":
