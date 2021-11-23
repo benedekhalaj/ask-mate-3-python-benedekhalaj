@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Answer</title>
+</head>
+<body>
+    <h1>Question {{ question['id'] }}</h1>
+    <table>
+        <tr>
+            {% for key in question.keys() %}
+                {% if key in ['title', 'message'] %}
+                    <th>{{ key.replace('_', ' ').capitalize() }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for key, value in question.items() %}
+                {% if key in ['title', 'message'] %}
+                    <td>{{ value }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </table><br>
+
+    <form action="/question/{{ question['id']}}/new-answer" method="post">
+        <label for="message">Answer:</label><br>
+        <textarea id="message" name="message"></textarea><br><br>
+
+        <button type="submit">Add new Answer</button>
+    </form>
+
+</body>
+</html>
