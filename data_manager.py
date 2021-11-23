@@ -1,5 +1,3 @@
-from flask import Flask, render_template, request, redirect, url_for
-
 import connection
 
 def read_csv_file():
