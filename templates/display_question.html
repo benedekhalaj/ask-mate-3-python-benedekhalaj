@@ -49,6 +49,8 @@
                 <td>{{ value }}</td>
         {% endfor %}
                 <td><form action="/answer/{{ answer['id'] }}/delete" method="post"><button type="submit">Delete answer</button></form></td>
+                <td><a href="/answer/{{ answer['id'] }}/vote_up">Vote up</a></td>
+            <td><a href="/answer/{{ answer['id'] }}/vote_down">Vote down</a></td>
         </tr>
     {% endfor %}
 

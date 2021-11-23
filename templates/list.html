@@ -10,6 +10,7 @@
 
     <table>
         <tr>
+            {% if questions %}
             {% for key in questions[0].keys() %}
                 <th>
                     <a href="/list?order_by={{ key }}&order_direction=asc">▲</a>
@@ -17,6 +18,7 @@
                     <a href="/list?order_by={{ key }}&order_direction=desc">▼</a>
                 </th>
             {% endfor %}
+            {% endif %}
         </tr>
 
         {% for question in questions %}
