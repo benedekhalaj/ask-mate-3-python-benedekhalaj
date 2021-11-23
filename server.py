@@ -18,10 +18,28 @@ def display_question(question_id):
     return render_template('display_question.html', question_id=question_id)
 
 
-@app.route('/question/<question_id>/new-answer')
-def post_answer(question_id):
-    return render_template('post_answer.html')
+@app.route('/test')
+def test_answer():
+    return render_template('test.html', question_id=1)
 
+
+@app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
+def post_answer(question_id):
+    questions = data_manager.get_questions()
+    answers = data_manager.get_answers()
+    if request.method == 'GET':
+        selected_answers = [answer for answer in answers if answer['question_id'] == question_id]
+        for question in questions:
+            if question['id'] == question_id:
+                selected_question = question
+                break
+        return render_template('post_answer.html', question=selected_question, answers=selected_answers)
+    else:
+        new_answer = {}
+        for key, value in request.form.items():
+            new_answer[key] = value
+        answers.append(new_answer)
+        return redirect('/test')
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
