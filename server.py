@@ -16,6 +16,14 @@ def display_question(question_id):
     return render_template('display_question.html', question_id=question_id)
 
 
+@app.route('/add-question', methods=['GET', 'POST'])
+def add_question():
+    if request.method == 'POST':
+        
+        return redirect('/')
+    return render_template('add_question.html')
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0',
             debug=True,
