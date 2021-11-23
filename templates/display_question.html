@@ -48,6 +48,7 @@
         {% for key, value in answer.items() %}
                 <td>{{ value }}</td>
         {% endfor %}
+                <td><form action="/answer/{{ answer['id'] }}/delete" method="post"><button type="submit">Delete answer</button></form></td>
         </tr>
     {% endfor %}
 

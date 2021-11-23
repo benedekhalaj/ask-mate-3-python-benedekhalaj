@@ -60,7 +60,6 @@ def edit_question(question_id):
         return redirect(f'/question/{question_id}')
 
 
-
 @app.route('/question/<question_id>/delete', methods=['POST'])
 def delete_question(question_id):
     questions = data_manager.get_questions()
@@ -95,6 +94,18 @@ def post_answer(question_id):
         answers.append(new_answer)
         data_manager.export_answers(answers)
         return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/<answer_id>/delete', methods=['POST'])
+def delete_answer(answer_id):
+    answers = data_manager.get_answers()
+    for index, answer in enumerate(answers):
+        if answer_id == answer['id']:
+            question_id = answer['question_id']
+            answers.pop(index)
+            break
+    data_manager.export_answers(answers)
+    return redirect(f'/question/{question_id}')
 
 
 if __name__ == "__main__":
