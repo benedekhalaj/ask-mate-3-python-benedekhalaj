@@ -25,16 +25,23 @@ def display_question(question_id):
         if question_id == answer['question_id']:
             answers_for_question.append(answer)
 
-    for question in questions:
+    for index, question in enumerate(questions):
         if question_id == question['id']:
+            increment_question_view_number(questions, index)
             return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
+
+
+def increment_question_view_number(questions, index):
+    new_number = int(questions[index]['view_number']) + 1
+    questions[index]['view_number'] = new_number
+    data_manager.export_questions(questions)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         questions = data_manager.get_questions()
-        question = {}
+        question = {"view_number": 0}
         for key, value in request.form.items():
             question[key] = value
         questions.append(question)
@@ -46,12 +53,18 @@ def add_question():
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
     questions = data_manager.get_questions()
-    for question in questions:
+    for index, question in enumerate(questions):
         if question['id'] == question_id:
             current_question = question
+            current_id = index
             break
     if request.method == 'GET':
         return render_template('edit_question.html', question=current_question)
+    else:
+        for key, value in request.form.items():
+            questions[current_id][key] = value
+        data_manager.export_questions(questions)
+        return redirect(f'/question/{question_id}')
 
 
 @app.route('/question/<question_id>/delete', methods=['POST'])
@@ -83,6 +96,18 @@ def post_answer(question_id):
         answers.append(new_answer)
         data_manager.export_answers(answers)
         return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/<answer_id>/delete', methods=['POST'])
+def delete_answer(answer_id):
+    answers = data_manager.get_answers()
+    for index, answer in enumerate(answers):
+        if answer_id == answer['id']:
+            question_id = answer['question_id']
+            answers.pop(index)
+            break
+    data_manager.export_answers(answers)
+    return redirect(f'/question/{question_id}')
 
 
 if __name__ == "__main__":
