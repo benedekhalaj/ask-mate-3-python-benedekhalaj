@@ -11,6 +11,11 @@ def list_questions():
     return render_template('list.html', questions=questions)
 
 
+@app.route('/question/<question_id>')
+def display_question(question_id):
+    return render_template('display_question.html', question_id=question_id)
+
+
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
@@ -22,10 +27,6 @@ def add_question():
         data_manager.export_questions(questions)
         return redirect('/')
     return render_template('add_question.html')
-
-
-
-
 
 
 if __name__ == "__main__":
