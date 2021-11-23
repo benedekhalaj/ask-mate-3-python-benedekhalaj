@@ -13,7 +13,19 @@ def list_questions():
 
 @app.route('/question/<question_id>')
 def display_question(question_id):
-    return render_template('display_question.html', question_id=question_id)
+    answers_from_file = data_manager.get_answers()
+    questions = data_manager.get_questions()
+    answers_for_question, question_details = [], []
+
+    for answer in answers_from_file:
+        if question_id == answer['id']:
+            answers_for_question.append(answer)
+
+    for question in questions:
+        if question_id == question['id']:
+            question_details.append(question['title'])
+            question_details.append(question['message'])
+            return render_template('display_question.html', question_id=question_id, answers=answers_from_file, question_details=question_details)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
