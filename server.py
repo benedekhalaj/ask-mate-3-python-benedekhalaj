@@ -27,13 +27,19 @@ def display_question(question_id):
 
     for index, question in enumerate(questions):
         if question_id == question['id']:
-            increment_question_view_number(questions, index)
+            increment_question_number(questions, index, 'view_number')
             return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
 
 
-def increment_question_view_number(questions, index):
-    new_number = int(questions[index]['view_number']) + 1
-    questions[index]['view_number'] = new_number
+def increment_question_number(questions, index, key):
+    new_number = int(questions[index][key]) + 1
+    questions[index][key] = new_number
+    data_manager.export_questions(questions)
+
+
+def decrement_question_number(questions, index, key):
+    new_number = int(questions[index][key]) - 1
+    questions[index][key] = new_number
     data_manager.export_questions(questions)
 
 
@@ -41,7 +47,7 @@ def increment_question_view_number(questions, index):
 def add_question():
     if request.method == 'POST':
         questions = data_manager.get_questions()
-        question = {"view_number": 0}
+        question = {"view_number": 0, "vote_number": 0}
         for key, value in request.form.items():
             question[key] = value
         questions.append(question)
@@ -81,6 +87,24 @@ def delete_question(question_id):
 @app.route('/sort-question')
 def sort_question():
     return render_template('sort_question.html')
+
+
+@app.route('/question/<question_id>/vote_up')
+def vote_question_up(question_id):
+    questions = data_manager.get_questions()
+    for index, question in enumerate(questions):
+        if question_id == question['id']:
+            increment_question_number(questions, index, 'vote_number')
+    return redirect('/list')
+
+
+@app.route('/question/<question_id>/vote_down')
+def vote_question_down(question_id):
+    questions = data_manager.get_questions()
+    for index, question in enumerate(questions):
+        if question_id == question['id']:
+            decrement_question_number(questions, index, 'vote_number')
+    return redirect('/list')
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
