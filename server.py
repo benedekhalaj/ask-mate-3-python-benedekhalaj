@@ -30,9 +30,33 @@ def display_question(question_id):
             return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
 
 
-@app.route('/test')
-def test_answer():
-    return render_template('test.html', question_id=1)
+@app.route('/add-question', methods=['GET', 'POST'])
+def add_question():
+    if request.method == 'POST':
+        questions = data_manager.get_questions()
+        question = {}
+        for key, value in request.form.items():
+            question[key] = value
+        questions.append(question)
+        data_manager.export_questions(questions)
+        return redirect('/')
+    return render_template('add_question.html')
+
+
+@app.route('/question/<question_id>/delete', methods=['POST'])
+def delete_question(question_id):
+    questions = data_manager.get_questions()
+    for index, question in enumerate(questions):
+        if question['id'] == question_id:
+            questions.pop(index)
+            break
+    data_manager.export_questions(questions)
+    return redirect('/list')
+
+
+@app.route('/sort-question')
+def sort_question():
+    return render_template('sort_question.html')
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -53,35 +77,6 @@ def post_answer(question_id):
         answers.append(new_answer)
         data_manager.export_answers(answers)
         return redirect(f'/question/{question_id}')
-
-
-@app.route('/question/<question_id>/delete', methods=['POST'])
-def delete_question(question_id):
-    questions = data_manager.get_questions()
-    for index, question in enumerate(questions):
-        if question['id'] == question_id:
-            questions.pop(index)
-            break
-    data_manager.export_questions(questions)
-    return redirect('/list')
-
-
-@app.route('/add-question', methods=['GET', 'POST'])
-def add_question():
-    if request.method == 'POST':
-        questions = data_manager.get_questions()
-        question = {}
-        for key, value in request.form.items():
-            question[key] = value
-        questions.append(question)
-        data_manager.export_questions(questions)
-        return redirect('/')
-    return render_template('add_question.html')
-
-
-@app.route('/sort-question')
-def sort_question():
-    return render_template('sort_question.html')
 
 
 if __name__ == "__main__":
