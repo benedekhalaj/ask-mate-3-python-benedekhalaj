@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+import data_manager
 
 app = Flask(__name__)
 
@@ -6,9 +7,7 @@ app = Flask(__name__)
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    questions = []
-    for _ in range(5):
-        questions.append({'id': '0', 'title': 'test', 'name': 'zsu'})
+    questions = data_manager.get_questions()
     return render_template('list.html', questions=questions)
 
 
