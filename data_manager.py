@@ -32,12 +32,14 @@ def add_new_id(data_list):
     return data_list
 
 
-def sort_questions(order):
+def sort_questions(orders):
     question_list = get_questions()
-    order_title = order['order_by']
-    order_direction = order['order_direction']
+    order_title = orders['order_by']
+    order_direction = orders['order_direction']
     if order_direction == 'asc':
-        question_list.sort()
+        is_reverse = False
     elif order_direction == 'desc':
-        pass
+        is_reverse = True
+    ordered_list = sorted(question_list, key=lambda item: item[order_title], reverse=is_reverse)
+    return ordered_list
 
