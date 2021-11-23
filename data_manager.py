@@ -30,3 +30,14 @@ def add_new_id(data_list):
     new_id = last_id + 1
     data_list[-1]['id'] = new_id
     return data_list
+
+
+def sort_questions(order):
+    question_list = get_questions()
+    order_title = order['order_by']
+    order_direction = order['order_direction']
+    if order_direction == 'asc':
+        question_list.sort()
+    elif order_direction == 'desc':
+        pass
+

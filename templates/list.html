@@ -8,25 +8,17 @@
     <h1>Questions</h1>
     <p><a href="/add-question">Add new question</a></p>
 
-    <form action="">
-        <select name="sort_by">
-            {% for q_title in titles %}
-                <option value="{{ q_title }}">{{ q_title.replace("_", " ").title() }}</option>
-            {% endfor %}
-        </select>
-        <select name="direction_by">
-            <option value="asc">Ascend</option>
-            <option value="desc">Descend</option>
-        </select>
-        <button type="submit">Sort</button>
-    </form>
-
     <table>
         <tr>
             {% for key in questions[0].keys() %}
-                <th>{{  key.replace('_', ' ').capitalize() }}</th>
+                <th>
+                    <a href="/list?order_by={{ key }}&order_direction=asc">▲</a>
+                    {{  key.replace('_', ' ').capitalize() }}
+                    <a href="/list?order_by={{ key }}&order_direction=desc">▼</a>
+                </th>
             {% endfor %}
         </tr>
+
         {% for question in questions %}
             <tr>
             {% for key, value in question.items() %}
