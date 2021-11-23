@@ -25,7 +25,7 @@ def display_question(question_id):
 
     for question in questions:
         if question_id == question['id']:
-            return render_template('display_question.html', question_id=question_id, answers=answers_from_file, question=question)
+            return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
 
 
 @app.route('/test')

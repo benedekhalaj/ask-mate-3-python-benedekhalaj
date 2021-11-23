@@ -24,5 +24,23 @@
     </tr>
     </table>
 
+    <table>
+    <tr>
+        {% for answer in answers %}
+            {% for key, value in answer.items() %}
+                <th>{{ key.upper() }}</th>
+            {% endfor %}
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for answer in answers %}
+            {% for value in answer.values() %}
+                <td>{{ value }}</td>
+            {% endfor %}
+        {% endfor %}
+    </tr>
+
+    </table>
+
 </body>
 </html>
