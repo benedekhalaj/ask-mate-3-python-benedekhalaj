@@ -55,6 +55,17 @@ def post_answer(question_id):
         return redirect('/test')
 
 
+@app.route('/question/<question_id>/delete', methods=['POST'])
+def delete_question(question_id):
+    questions = data_manager.get_questions()
+    for index, question in enumerate(questions):
+        if question['id'] == question_id:
+            questions.pop(index)
+            break
+    data_manager.export_questions(questions)
+    return redirect('/list')
+
+
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
