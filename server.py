@@ -16,9 +16,9 @@ def display_question(question_id):
     return render_template('display_question.html', question_id=question_id)
 
 
-@app.route('question/<question_id>/new-answer')
+@app.route('/question/<question_id>/new-answer')
 def post_answer(question_id):
-
+    return render_template('post_answer.html')
 
 
 
