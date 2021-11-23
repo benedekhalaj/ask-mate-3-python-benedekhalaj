@@ -2,9 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>List questions</title>
 </head>
 <body>
-
+    <h1>Questions</h1>
+    <table>
+        <tr>
+            {% for key in questions[0].keys() %}
+                <th>{{  key.replace('_', ' ').capitalize() }}</th>
+            {% endfor %}
+        </tr>
+        {% for question in questions %}
+            <tr>
+            {% for key, value in question.items() %}
+                <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
 </body>
 </html>
