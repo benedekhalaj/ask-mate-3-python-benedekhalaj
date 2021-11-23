@@ -5,14 +5,15 @@
     <title>Add question</title>
 </head>
 <body>
-    <form action="/add-question" method="post">
+    {% block headline %}{% endblock %}
+    <form action="{% block action %}/add-question{% endblock %}" method="post">
         <label for="title">Title:</label><br>
-        <input id="title" name="title"><br<br>
+        <input id="title" name="title" {% block title %}{% endblock %}><br><br>
 
         <label for="message">Message:</label><br>
-        <textarea id="message" name="message"></textarea>
+        <textarea id="message" name="message">{% block message %}{% endblock %}</textarea><br><br>
 
-        <button type="submit">Add new question</button>
+        <button type="submit">{% block button %}Add new question{% endblock %}</button>
     </form>
 
 </body>

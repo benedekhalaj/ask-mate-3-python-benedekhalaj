@@ -43,6 +43,17 @@ def add_question():
     return render_template('add_question.html')
 
 
+@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
+def edit_question(question_id):
+    questions = data_manager.get_questions()
+    for question in questions:
+        if question['id'] == question_id:
+            current_question = question
+            break
+    if request.method == 'GET':
+        return render_template('edit_question.html', question=current_question)
+
+
 @app.route('/question/<question_id>/delete', methods=['POST'])
 def delete_question(question_id):
     questions = data_manager.get_questions()
