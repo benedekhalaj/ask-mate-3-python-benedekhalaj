@@ -3,18 +3,18 @@ import csv
 def open_file(file_path):
     with open(file_path, "r") as file:
         data_list = []
-        csv_dict = csv.DictReader(file)
-        for dictionary in csv_dict:
+        reader = csv.DictReader(file)
+        for dictionary in reader:
             data_list.append(dictionary)
     return data_list
 
 
 def write_file(data_list, file_path, header):
     with open(file_path, "r") as file:
-        csv_file = csv.DictWriter(file, fieldnames=header)
-        csv.DictReader()
+        writer = csv.DictWriter(file, fieldnames=header)
+        writer.writeheader()
         for data in data_list:
-            csv_file.writerow(data)
+            writer.writerow(data)
 
 
 if __name__ == "__main__":

@@ -15,7 +15,7 @@ def get_answers():
     return connection.open_file(ANSWERS_FILE_PATH)
 
 
-def export_question(question_list):
+def export_questions(question_list):
     question_list = add_new_id(question_list)
     connection.write_file(question_list, QUESTIONS_FILE_PATH, QUESTION_HEADER)
 

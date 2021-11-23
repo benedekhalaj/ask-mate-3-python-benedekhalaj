@@ -19,6 +19,7 @@ def add_question():
         for key, value in request.form.items():
             question[key] = value
         questions.append(question)
+        data_manager.export_questions(questions)
         return redirect('/')
     return render_template('add_question.html')
 
