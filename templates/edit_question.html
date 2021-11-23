@@ -1,0 +1,7 @@
+{% extends 'add_question.html' %}
+
+{% block headline %}<h1>Question {{ question['id'] }}</h1>{% endblock %}
+{% block action %}/question/{{ question['id'] }}/edit{% endblock %}
+{% block title %}value="{{ question['title'] }}"{% endblock %}
+{% block message %}{{ question['message'] }}{% endblock %}
+{% block button %}Edit question {{ question['id'] }}{% endblock %}
