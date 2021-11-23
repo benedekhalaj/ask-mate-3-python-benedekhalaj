@@ -6,6 +6,9 @@
 </head>
 <body>
     <h2>Question {{ question_id }}</h2><br>
+    <form action="/question/{{ question_id }}/delete" method="post">
+    <button type="submit">Delete question</button>
+    </form>
     <table border="1">
     <tr>
         {% for key in question.keys() %}
@@ -47,7 +50,10 @@
     {% endfor %}
 
 
-    </table>
+    </table><br>
+    <p><a href="{{ question_id }}/new-answer">Add a new answer</a></p>
+
+
 
 </body>
 </html>

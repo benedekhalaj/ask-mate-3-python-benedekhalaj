@@ -30,8 +30,6 @@ def display_question(question_id):
             return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
 
 
-@app.route('/list')
-
 @app.route('/test')
 def test_answer():
     return render_template('test.html', question_id=1)
@@ -54,7 +52,7 @@ def post_answer(question_id):
             new_answer[key] = value
         answers.append(new_answer)
         data_manager.export_answers(answers)
-        return redirect('/test')
+        return redirect(f'/question/{question_id}')
 
 
 @app.route('/question/<question_id>/delete', methods=['POST'])
