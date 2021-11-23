@@ -31,14 +31,15 @@
     <h2>Answer(s) for question {{ question_id }}</h2>
 
     <table border="1">
-    <tr>
-    {% for key in answers[0].keys() %}
-        {% if key == 'message' %}
-            <th>{{ 'ANSWER' }}</th>
-        {% else %}
-            <th>{{ key.replace('_', ' ').upper() }}</th>
+    <tr>{% if answers %}
+            {% for key in answers[0].keys() %}
+                {% if key == 'message' %}
+                    <th>{{ 'ANSWER' }}</th>
+                {% else %}
+                    <th>{{ key.replace('_', ' ').upper() }}</th>
+                {% endif %}
+            {% endfor %}
         {% endif %}
-    {% endfor %}
     </tr>
 
     {% for answer in answers %}
@@ -51,7 +52,8 @@
 
 
     </table><br>
-    <p><a href="{{ question_id }}/new-answer">Add a new answer</a></p>
+    <p><a href="{{ question_id }}/new-answer">Add a new answer</a></p><br><br><br>
+    <p><a href="/list">Back to Question List</a></p>
 
 
 
