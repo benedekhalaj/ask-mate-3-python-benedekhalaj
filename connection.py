@@ -10,7 +10,7 @@ def open_file(file_path):
 
 
 def write_file(data_list, file_path, header):
-    with open(file_path, "r") as file:
+    with open(file_path, "w") as file:
         writer = csv.DictWriter(file, fieldnames=header)
         writer.writeheader()
         for data in data_list:
