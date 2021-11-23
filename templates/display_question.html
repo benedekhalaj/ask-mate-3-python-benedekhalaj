@@ -8,7 +8,20 @@
     <h1>Question {{ question_id }}</h1>
     <br>
     <table>
-        <tr></tr>
+    <tr>
+        {% for key in question.keys() %}
+            {% if key in ['title', 'message'] %}
+                <th>{{ key.upper() }}</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for key, value in question.items() %}
+            {% if key in ['title', 'message']  %}
+                <td>{{ value }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
     </table>
 
 </body>
