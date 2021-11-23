@@ -25,16 +25,23 @@ def display_question(question_id):
         if question_id == answer['question_id']:
             answers_for_question.append(answer)
 
-    for question in questions:
+    for index, question in enumerate(questions):
         if question_id == question['id']:
+            increment_question_view_number(questions, index)
             return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
+
+
+def increment_question_view_number(questions, index):
+    new_number = int(questions[index]['view_number']) + 1
+    questions[index]['view_number'] = new_number
+    data_manager.export_questions(questions)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         questions = data_manager.get_questions()
-        question = {}
+        question = {"view_number": 0}
         for key, value in request.form.items():
             question[key] = value
         questions.append(question)
