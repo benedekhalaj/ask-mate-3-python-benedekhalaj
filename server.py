@@ -7,11 +7,11 @@ app = Flask(__name__)
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    questions = data_manager.get_questions()
     titles = data_manager.QUESTION_HEADER
-    if 'sort_by' in request.form:
+    if request.args:
         questions = data_manager.sort_questions(request.args)
-        return redirect(f'/list?ored_by{request.form["sort_by"]}&order_direction{request.form["order_direction"]}')
+    else:
+        questions = data_manager.get_questions()
     return render_template('list.html', questions=questions, titles=titles)
 
 
