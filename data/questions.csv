@@ -1,4 +1,5 @@
 id,submission_time,view_number,vote_number,title,message,image
+<<<<<<< HEAD
 4,,,,három barátom,Voltak ők,
 5,,,,XDDDDDDDDDDDDDDDDDDDDDDD,fdsagdsagdsafdsaf,
 6,,,,Mi a fasz?,jol mukodik? mukodj!!,
@@ -11,3 +12,10 @@ id,submission_time,view_number,vote_number,title,message,image
 13,,0,,,,
 14,,0,,,,
 15,,0,,,,
+=======
+1,,1,0,bende7,7777777777,
+2,,33,0,bende8,8888888888,
+3,,15,0,User Story status,How many user stories can this team finish by Wednesday morning?,
+4,,0,0,Test contribution,Hello,
+5,,0,0,Test email,Email,
+>>>>>>> f881f36e03d1c266cf768f866b1fab8728a7940b
