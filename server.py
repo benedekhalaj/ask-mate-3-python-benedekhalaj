@@ -14,7 +14,11 @@ def list_questions():
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        
+        questions = data_manager.get_questions()
+        question = {}
+        for key, value in request.form.items():
+            question[key] = value
+        questions.append(question)
         return redirect('/')
     return render_template('add_question.html')
 
