@@ -54,11 +54,6 @@ def delete_question(question_id):
     return redirect('/list')
 
 
-@app.route('/sort-question')
-def sort_question():
-    return render_template('sort_question.html')
-
-
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def post_answer(question_id):
     questions = data_manager.get_questions()
