@@ -47,11 +47,13 @@ def post_answer(question_id):
                 break
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
-        new_answer = {}
+        new_answer = {'question_id': question_id}
         for key, value in request.form.items():
             new_answer[key] = value
         answers.append(new_answer)
+        data_manager.export_answers(answers)
         return redirect('/test')
+
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
