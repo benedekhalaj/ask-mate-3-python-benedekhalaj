@@ -98,23 +98,17 @@ def post_answer(question_id):
 
 
 @app.route('/answer/<answer_id>/delete', methods=['POST'])
-def delete_answer(answer_id):
-    answers = data_manager.get_answers()
-    question_id = util.get_data_by_id(answers, 'id', answer_id)['question_id']
-    answers = util.delete_data(answers, answer_id)
-    data_manager.export_answers(answers)
-    return redirect(f'/question/{question_id}')
-
-
 @app.route('/answer/<answer_id>/vote_up')
 @app.route('/answer/<answer_id>/vote_down')
-def vote_answer(answer_id):
+def change_answer(answer_id):
     answers = data_manager.get_answers()
-    answer_question_id = util.get_data_by_id(answers, 'question_id', answer_id)['question_id']
+    answer_question_id = util.get_data_by_id(answers, 'id', answer_id)['question_id']
     if 'vote_up' in request.base_url:
         answers = util.vote(answers, answer_id, '+')
-    else:
+    elif 'vote_down' in request.base_url:
         answers = util.vote(answers, answer_id, '-')
+    else:
+        answers = util.delete_data(answers, answer_id)
     data_manager.export_answers(answers)
     return redirect(f'/question/{answer_question_id}')
 
