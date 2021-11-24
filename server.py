@@ -20,12 +20,7 @@ def list_questions():
 def display_question(question_id):
     answers = data_manager.get_answers()
     questions = data_manager.get_questions()
-    answers_for_question = []
-
-    for answer in answers:
-        if question_id == answer['question_id']:
-            answers_for_question.append(answer)
-
+    answers_for_question = util.get_data_list(answers, 'question_id', question_id)
     question = util.get_data_by_id(questions, 'id', question_id)
     return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
 
@@ -49,7 +44,7 @@ def edit_question(question_id):
     if request.method == 'GET':
         return render_template('edit_question.html', question=current_question)
     else:
-        questions[current_id] = util.update_data_by_form(questions[current_id])
+        questions[current_id] = util.update_data_by_form(questions[current_id], request.form)
         data_manager.export_questions(questions)
         return redirect(f'/question/{question_id}')
 
@@ -62,7 +57,7 @@ def delete_question(question_id):
     data_manager.export_questions(questions)
 
     answers = data_manager.get_answers()
-    selected_answers = [answer for answer in answers if answer['question_id'] == question_id]
+    selected_answers = util.get_data_list(answers, 'question_id', question_id)
     for selected_answer in selected_answers:
         answers.remove(selected_answer)
     data_manager.export_answers(answers)
@@ -91,7 +86,7 @@ def post_answer(question_id):
     questions = data_manager.get_questions()
     answers = data_manager.get_answers()
     if request.method == 'GET':
-        selected_answers = [answer for answer in answers if answer['question_id'] == question_id]
+        selected_answers = util.get_data_list(answers, 'question_id', question_id)
         selected_question = util.get_data_by_id(questions, 'id', question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:

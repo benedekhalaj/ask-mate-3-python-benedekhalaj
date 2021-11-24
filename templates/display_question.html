@@ -5,11 +5,8 @@
     <title>Question {{ question_id }}</title>
 </head>
 <body>
-    <h2>Question {{ question_id }}</h2><br>
-    <p><a href="/question/{{ question_id }}/edit">Edit question</a></p>
-    <form action="/question/{{ question_id }}/delete" method="post">
-    <button type="submit">Delete question</button>
-    </form><br>
+    <p><a href="/list">Back to Question List</a></p>
+    <h2>Question {{ question_id }}</h2>
     <table border="1">
     <tr>
         {% for key in question.keys() %}
@@ -27,7 +24,12 @@
             {% endif %}
         {% endfor %}
     </tr>
-    </table><br><br>
+    </table>
+    <p><a href="/question/{{ question_id }}/edit">Edit question</a></p>
+    <form action="/question/{{ question_id }}/delete" method="post">
+    <button type="submit">Delete question</button>
+    </form><br>
+
 
     <h2>Answer(s) for question {{ question_id }}</h2>
 
@@ -56,8 +58,8 @@
 
 
     </table><br>
-    <p><a href="{{ question_id }}/new-answer">Add a new answer</a></p><br><br><br>
-    <p><a href="/list">Back to Question List</a></p>
+    <p><a href="{{ question_id }}/new-answer">Add a new answer</a></p>
+
 
 
 

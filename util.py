@@ -10,6 +10,10 @@ def get_data_and_index_by_id(data_list, value, id):
             return data, index
 
 
+def get_data_list(data_list, value, id):
+    return [data for data in data_list if data[value] == id]
+
+
 def modify_number(data, value, operator):
     if operator == '+':
         new_value = int(data[value]) + 1
