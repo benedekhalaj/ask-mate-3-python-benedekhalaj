@@ -10,15 +10,13 @@
 
     <table>
         <tr>
-            {% if questions %}
-            {% for key in questions[0].keys() %}
+            {% for title in titles %}
                 <th>
-                    <a href="/list?order_by={{ key }}&order_direction=asc">▲</a>
-                    {{  key.replace('_', ' ').capitalize() }}
-                    <a href="/list?order_by={{ key }}&order_direction=desc">▼</a>
+                    <a href="/list?order_by={{ title }}&order_direction=asc">▲</a>
+                    {{  title.replace('_', ' ').capitalize() }}
+                    <a href="/list?order_by={{ title }}&order_direction=desc">▼</a>
                 </th>
             {% endfor %}
-            {% endif %}
         </tr>
 
         {% for question in questions %}

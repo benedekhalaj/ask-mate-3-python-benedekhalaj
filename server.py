@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    titles = data_manager.QUESTION_HEADER
+    titles = data_manager.QUESTION_HEADERS
     if request.args:
         questions = data_manager.sort_questions(request.args)
     else:
@@ -18,23 +18,22 @@ def list_questions():
 
 @app.route('/question/<question_id>')
 def display_question(question_id):
-    answers_from_file = data_manager.get_answers()
+    answers = data_manager.get_answers()
     questions = data_manager.get_questions()
     answers_for_question = []
 
-    for answer in answers_from_file:
+    for answer in answers:
         if question_id == answer['question_id']:
             answers_for_question.append(answer)
 
-    for index, question in enumerate(questions):
-        if question_id == question['id']:
-            return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
+    question, index = util.get_data_and_index_by_id(questions, 'id', question_id)
+    return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        new_question = {"view_number": 0, "vote_number": 0}
+        new_question = {"view_number": 0, "vote_number": 0, "id": data_manager.add_new_id('question')}
         new_question = util.update_data_by_form(new_question, request.form)
         questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
@@ -70,26 +69,14 @@ def sort_question():
 
 @app.route('/question/<question_id>/vote_up')
 @app.route('/question/<question_id>/vote_down')
-@app.route('/answer/<answer_id>/vote_up')
-@app.route('/answer/<answer_id>/vote_down')
-def vote(question_id='', answer_id=''):
-    if 'question' in request.base_url:
-        questions = data_manager.get_questions()
-        if 'vote_up' in request.base_url:
-            questions = util.vote(questions, question_id, '+')
-        else:
-            questions = util.vote(questions, question_id, '-')
-        data_manager.export_questions(questions)
-        return redirect('/list')
+def vote_question(question_id):
+    questions = data_manager.get_questions()
+    if 'vote_up' in request.base_url:
+        questions = util.vote(questions, question_id, '+')
     else:
-        answers = data_manager.get_answers()
-        answer_question_id = util.get_data_by_id(answers, 'question_id', answer_id)['question_id']
-        if 'vote_up' in request.base_url:
-            answers = util.vote(answers, answer_id, '+')
-        else:
-            answers = util.vote(answers, answer_id, '-')
-        data_manager.export_answers(answers)
-        return redirect(f'/question/{answer_question_id}')
+        questions = util.vote(questions, question_id, '-')
+    data_manager.export_questions(questions)
+    return redirect('/list')
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -122,6 +109,19 @@ def delete_answer(answer_id):
             break
     data_manager.export_answers(answers)
     return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/<answer_id>/vote_up')
+@app.route('/answer/<answer_id>/vote_down')
+def vote_answer(answer_id):
+    answers = data_manager.get_answers()
+    answer_question_id = util.get_data_by_id(answers, 'question_id', answer_id)['question_id']
+    if 'vote_up' in request.base_url:
+        answers = util.vote(answers, answer_id, '+')
+    else:
+        answers = util.vote(answers, answer_id, '-')
+    data_manager.export_answers(answers)
+    return redirect(f'/question/{answer_question_id}')
 
 
 if __name__ == "__main__":
