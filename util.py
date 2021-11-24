@@ -12,9 +12,11 @@ def get_data_and_index_by_id(data_list, value, id):
 
 def modify_number(data, value, operator):
     if operator == '+':
-        return data[value] + 1
+        new_value = int(data[value]) + 1
+        return str(new_value)
     else:
-        return data[value] - 1
+        new_value = int(data[value]) - 1
+        return str(new_value)
 
 
 def update_data_by_form(data, form):
@@ -25,4 +27,10 @@ def update_data_by_form(data, form):
 
 def add_new_data(data, data_list):
     data_list.append(data)
+    return data_list
+
+
+def vote(data_list, data_id, operator):
+    data, index = get_data_and_index_by_id(data_list, 'id', data_id)
+    data_list[index]['vote_number'] = modify_number(data, 'vote_number', operator)
     return data_list

@@ -18,12 +18,12 @@ def get_answers():
 
 
 def export_questions(question_list):
-    question_list = add_new_id(question_list, 'question')
+    # question_list = add_new_id(question_list, 'question')
     connection.save_csv_file(question_list, QUESTIONS_FILE_PATH, QUESTION_HEADER)
 
 
 def export_answers(answer_list):
-    answer_list = add_new_id(answer_list, 'answer')
+    # answer_list = add_new_id(answer_list, 'answer')
     connection.save_csv_file(answer_list, ANSWERS_FILE_PATH, ANSWERS_HEADER)
 
 
@@ -32,12 +32,12 @@ def add_new_id(data_list, data_type):
         last_id = int(connection.open_id(QUESTION_ID_FILE_PATH))
     else:
         last_id = int(connection.open_id(ANSWER_ID_FILE_PATH))
-    new_id = last_id + 1
+    new_id = str(last_id + 1)
     data_list[-1]['id'] = new_id
     if data_type == 'question':
-        connection.save_id(QUESTION_ID_FILE_PATH, str(new_id))
+        connection.save_id(QUESTION_ID_FILE_PATH, new_id)
     else:
-        connection.save_id(ANSWER_ID_FILE_PATH, str(new_id))
+        connection.save_id(ANSWER_ID_FILE_PATH, new_id)
     return data_list
 
 

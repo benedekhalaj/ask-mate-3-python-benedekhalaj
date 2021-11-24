@@ -14,8 +14,7 @@ def save_csv_file(data_list, file_path, header):
     with open(file_path, "w") as file:
         writer = csv.DictWriter(file, fieldnames=header)
         writer.writeheader()
-        for data in data_list:
-            writer.writerow(data)
+        writer.writerows(data_list)
 
 
 def open_id(file_path):
