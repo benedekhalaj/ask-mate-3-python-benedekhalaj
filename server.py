@@ -16,9 +16,9 @@ def list_questions():
 def display_question(question_id):
     answers = data_manager.get_answers()
     questions = data_manager.get_questions()
-    answers_for_question = util.get_data_list(answers, 'question_id', question_id)
+    question_answers = util.get_data_list(answers, 'question_id', question_id)
     question = util.get_data_by_id(questions, 'id', question_id)
-    return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
+    return render_template('display_question.html', question_id=question_id, answers=question_answers, question=question)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -52,9 +52,8 @@ def change_question(question_id):
     if 'delete' not in request.base_url:
         questions = util.change_vote_number(questions, question_id, operator)
     else:
-        questions = util.delete_data(data_manager.get_questions(), question_id)
-        answers = util.delete_data(data_manager.get_answers(), question_id, 'question_id')
-        data_manager.export_answers(answers)
+        questions = util.delete_data(questions, question_id)
+        data_manager.export_answers(util.delete_data(data_manager.get_answers(), question_id, 'question_id'))
     data_manager.export_questions(questions)
     return redirect('/list')
 
@@ -81,8 +80,7 @@ def post_answer(question_id):
 def change_answer(answer_id):
     answers = data_manager.get_answers()
     question_id = util.get_data_by_id(answers, 'id', answer_id)['question_id']
-    operator = '+' if 'vote_up' in request.base_url else '-'
-    answers = util.delete_data(answers, answer_id) if 'delete' in request.base_url else util.change_vote_number(answers, answer_id, operator)
+    answers = util.delete_data(answers, answer_id) if 'delete' in request.base_url else util.change_vote_number(answers, answer_id, '+' if 'vote_up' in request.base_url else '-')
     data_manager.export_answers(answers)
     return redirect(f'/question/{question_id}')
 
