@@ -1,6 +1,7 @@
 import csv
 
-def open_file(file_path):
+
+def open_csv_file(file_path):
     with open(file_path, "r") as file:
         data_list = []
         reader = csv.DictReader(file)
@@ -9,7 +10,7 @@ def open_file(file_path):
     return data_list
 
 
-def write_file(data_list, file_path, header):
+def save_csv_file(data_list, file_path, header):
     with open(file_path, "w") as file:
         writer = csv.DictWriter(file, fieldnames=header)
         writer.writeheader()
@@ -17,10 +18,12 @@ def write_file(data_list, file_path, header):
             writer.writerow(data)
 
 
-if __name__ == "__main__":
-    answers = 'data/answers.csv'
-    questions = 'data/questions.csv'
-    questions = open_file(questions)
-    answers = open_file(answers)
+def open_id(file_path):
+    with open(file_path, "r") as file:
+        id = file.read()
+        return id
 
 
+def save_id(file_path, new_id):
+    with open(file_path, "w") as file:
+        file.write(new_id)
