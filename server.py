@@ -38,7 +38,8 @@ def add_question():
         questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
         return redirect('/')
-    return render_template('add_question.html')
+    else:
+        return render_template('add_question.html')
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -85,16 +86,12 @@ def post_answer(question_id):
     answers = data_manager.get_answers()
     if request.method == 'GET':
         selected_answers = [answer for answer in answers if answer['question_id'] == question_id]
-        for question in questions:
-            if question['id'] == question_id:
-                selected_question = question
-                break
+        selected_question = util.get_data_by_id(questions, 'id', question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
-        new_answer = {'question_id': question_id, 'vote_number': 0}
-        for key, value in request.form.items():
-            new_answer[key] = value
-        answers.append(new_answer)
+        new_answer = {'question_id': question_id, 'vote_number': 0, 'id': data_manager.add_new_id('answer')}
+        util.update_data_by_form(new_answer, request.form)
+        util.add_new_data(new_answer, answers)
         data_manager.export_answers(answers)
         return redirect(f'/question/{question_id}')
 
