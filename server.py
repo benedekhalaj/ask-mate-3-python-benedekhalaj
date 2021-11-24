@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import data_manager
+import util
 
 app = Flask(__name__)
 
@@ -58,11 +59,9 @@ def decrement_answer_number(answers, index, key):
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        questions = data_manager.get_questions()
-        question = {"view_number": 0, "vote_number": 0}
-        for key, value in request.form.items():
-            question[key] = value
-        questions.append(question)
+        new_question = {"view_number": 0, "vote_number": 0}
+        new_question = util.update_data_by_form(new_question, request.form)
+        questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
         return redirect('/')
     return render_template('add_question.html')
