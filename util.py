@@ -34,3 +34,4 @@ def vote(data_list, data_id, operator):
     data, index = get_data_and_index_by_id(data_list, 'id', data_id)
     data_list[index]['vote_number'] = modify_number(data, 'vote_number', operator)
     return data_list
+

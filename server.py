@@ -60,6 +60,12 @@ def delete_question(question_id):
     question, index = util.get_data_and_index_by_id(questions, 'id', question_id)
     questions.pop(index)
     data_manager.export_questions(questions)
+
+    answers = data_manager.get_answers()
+    selected_answers = [answer for answer in answers if answer['question_id'] == question_id]
+    for selected_answer in selected_answers:
+        answers.remove(selected_answer)
+    data_manager.export_answers(answers)
     return redirect('/list')
 
 
