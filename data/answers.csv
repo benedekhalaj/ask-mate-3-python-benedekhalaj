@@ -1,17 +1,13 @@
 id,submission_time,vote_number,question_id,message,image
 1,1493398154,4,2,You need to use brackets: my_list = [],
-2,1493088154,35,2,Look it up in the Python docs,
-3,,,,Hello bello,
-4,,,,XDDDDDDDDDDDDDDD,
-6,,,6,Mukodsz!,
-7,,,2,"Fuck, go and see stackoverflow XDDDDDDDDDD",
-8,,,2,XDDDDDDDDD,
+2,1493088154,36,2,Look it up in the Python docs,
+3,,0,1,Hello bello,
+4,,0,1,XDDDDDDDDDDDDDDD,
+6,,0,6,Mukodsz!,
+7,,1,2,"Fuck, go and see stackoverflow XDDDDDDDDDD",
+8,,1,2,XDDDDDDDDD,
 9,,,6,"Éppen műXik, király",
-<<<<<<< HEAD
-10,,,8,NAGYON KIRÁÁÁÁLY ,
-=======
-10,,,10,xddd,
+10,,0,10,xddd,
 11,,2,10,Hát....,
 12,,0,1,XDDDDDDDDDD,
 13,,12,3,Yes,
->>>>>>> f881f36e03d1c266cf768f866b1fab8728a7940b
