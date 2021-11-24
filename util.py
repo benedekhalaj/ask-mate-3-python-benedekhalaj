@@ -4,6 +4,12 @@ def get_data_by_id(data_list, value, id):
             return data
 
 
+def get_data_and_index_by_id(data_list, value, id):
+    for index, data in enumerate(data_list):
+        if data[value] == id:
+            return data, index
+
+
 def modify_number(data, value, operator):
     if operator == '+':
         return data[value] + 1
