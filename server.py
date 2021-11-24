@@ -8,12 +8,8 @@ app = Flask(__name__)
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    titles = data_manager.QUESTION_HEADERS
-    if request.args:
-        questions = data_manager.sort_questions(request.args)
-    else:
-        questions = data_manager.get_questions()
-    return render_template('list.html', questions=questions, titles=titles)
+    questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions()
+    return render_template('list.html', questions=questions, titles=data_manager.QUESTION_HEADERS)
 
 
 @app.route('/question/<question_id>')
@@ -33,25 +29,18 @@ def add_question():
         questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
         return redirect('/')
-    else:
-        return render_template('add_question.html')
+    return render_template('add_question.html')
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
     questions = data_manager.get_questions()
     current_question, current_id = util.get_data_and_index_by_id(questions, 'id', question_id)
-    if request.method == 'GET':
-        return render_template('edit_question.html', question=current_question)
-    else:
+    if request.method == 'POST':
         questions[current_id] = util.update_data_by_form(questions[current_id], request.form)
         data_manager.export_questions(questions)
         return redirect(f'/question/{question_id}')
-
-
-@app.route('/sort-question')
-def sort_question():
-    return render_template('sort_question.html')
+    return render_template('edit_question.html', question=current_question)
 
 
 @app.route('/question/<question_id>/delete', methods=['POST'])
@@ -59,10 +48,9 @@ def sort_question():
 @app.route('/question/<question_id>/vote_down')
 def change_question(question_id):
     questions = data_manager.get_questions()
-    if 'vote_up' in request.base_url:
-        questions = util.vote(questions, question_id, '+')
-    elif 'vote_down' in request.base_url:
-        questions = util.vote(questions, question_id, '-')
+    operator = '+' if 'vote_up' in request.base_url else '-'
+    if 'delete' not in request.base_url:
+        questions = util.change_vote_number(questions, question_id, operator)
     else:
         questions = util.delete_data(data_manager.get_questions(), question_id)
         answers = util.delete_data(data_manager.get_answers(), question_id, 'question_id')
@@ -92,15 +80,11 @@ def post_answer(question_id):
 @app.route('/answer/<answer_id>/vote_down')
 def change_answer(answer_id):
     answers = data_manager.get_answers()
-    answer_question_id = util.get_data_by_id(answers, 'id', answer_id)['question_id']
-    if 'vote_up' in request.base_url:
-        answers = util.vote(answers, answer_id, '+')
-    elif 'vote_down' in request.base_url:
-        answers = util.vote(answers, answer_id, '-')
-    else:
-        answers = util.delete_data(answers, answer_id)
+    question_id = util.get_data_by_id(answers, 'id', answer_id)['question_id']
+    operator = '+' if 'vote_up' in request.base_url else '-'
+    answers = util.delete_data(answers, answer_id) if 'delete' in request.base_url else util.change_vote_number(answers, answer_id, operator)
     data_manager.export_answers(answers)
-    return redirect(f'/question/{answer_question_id}')
+    return redirect(f'/question/{question_id}')
 
 
 if __name__ == "__main__":
