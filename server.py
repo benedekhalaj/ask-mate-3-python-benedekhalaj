@@ -78,8 +78,10 @@ def post_answer(question_id):
 @app.route('/answer/<answer_id>/vote_up')
 @app.route('/answer/<answer_id>/vote_down')
 def change_answer(answer_id):
-    data_manager.export_answers(util.delete_data(data_manager.get_answers(), answer_id) if 'delete' in request.base_url else util.change_vote_number(data_manager.get_answers(), answer_id, '+' if 'vote_up' in request.base_url else '-'))
-    return redirect(f'/question/{util.get_data_by_id(data_manager.get_answers(), "id", answer_id)["question_id"]}')
+    answers = data_manager.get_answers()
+    question_id = util.get_data_by_id(answers, "id", answer_id)["question_id"]
+    data_manager.export_answers(util.delete_data(answers, answer_id) if 'delete' in request.base_url else util.change_vote_number(answers, answer_id, '+' if 'vote_up' in request.base_url else '-'))
+    return redirect(f'/question/{question_id}')
 
 
 if __name__ == "__main__":
