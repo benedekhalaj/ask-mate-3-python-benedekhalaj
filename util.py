@@ -30,6 +30,13 @@ def add_new_data(data, data_list):
     return data_list
 
 
+def delete_data(data_list, data_id):
+    for data in data_list:
+        if data_id == data['id']:
+            data_list.remove(data)
+    return data_list
+
+
 def vote(data_list, data_id, operator):
     data, index = get_data_and_index_by_id(data_list, 'id', data_id)
     data_list[index]['vote_number'] = modify_number(data, 'vote_number', operator)

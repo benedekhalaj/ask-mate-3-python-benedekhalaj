@@ -26,7 +26,7 @@ def display_question(question_id):
         if question_id == answer['question_id']:
             answers_for_question.append(answer)
 
-    question, index = util.get_data_and_index_by_id(questions, 'id', question_id)
+    question = util.get_data_by_id(questions, 'id', question_id)
     return render_template('display_question.html', question_id=question_id, answers=answers_for_question, question=question)
 
 
@@ -105,11 +105,8 @@ def post_answer(question_id):
 @app.route('/answer/<answer_id>/delete', methods=['POST'])
 def delete_answer(answer_id):
     answers = data_manager.get_answers()
-    for index, answer in enumerate(answers):
-        if answer_id == answer['id']:
-            question_id = answer['question_id']
-            answers.pop(index)
-            break
+    question_id = util.get_data_by_id(answers, 'id', answer_id)['question_id']
+    answers = util.delete_data(answers, answer_id)
     data_manager.export_answers(answers)
     return redirect(f'/question/{question_id}')
 
