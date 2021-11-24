@@ -82,10 +82,8 @@ def edit_question(question_id):
 @app.route('/question/<question_id>/delete', methods=['POST'])
 def delete_question(question_id):
     questions = data_manager.get_questions()
-    for index, question in enumerate(questions):
-        if question['id'] == question_id:
-            questions.pop(index)
-            break
+    question, index = util.get_data_and_index_by_id(questions, 'id', question_id)
+    questions.pop(index)
     data_manager.export_questions(questions)
     return redirect('/list')
 
