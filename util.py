@@ -34,9 +34,9 @@ def add_new_data(data, data_list):
     return data_list
 
 
-def delete_data(data_list, data_id):
+def delete_data(data_list, data_id, value='id'):
     for data in data_list:
-        if data_id == data['id']:
+        if data_id == data[value]:
             data_list.remove(data)
     return data_list
 

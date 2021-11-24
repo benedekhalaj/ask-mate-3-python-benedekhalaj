@@ -49,34 +49,24 @@ def edit_question(question_id):
         return redirect(f'/question/{question_id}')
 
 
-@app.route('/question/<question_id>/delete', methods=['POST'])
-def delete_question(question_id):
-    questions = data_manager.get_questions()
-    question, index = util.get_data_and_index_by_id(questions, 'id', question_id)
-    questions.pop(index)
-    data_manager.export_questions(questions)
-
-    answers = data_manager.get_answers()
-    selected_answers = util.get_data_list(answers, 'question_id', question_id)
-    for selected_answer in selected_answers:
-        answers.remove(selected_answer)
-    data_manager.export_answers(answers)
-    return redirect('/list')
-
-
 @app.route('/sort-question')
 def sort_question():
     return render_template('sort_question.html')
 
 
+@app.route('/question/<question_id>/delete', methods=['POST'])
 @app.route('/question/<question_id>/vote_up')
 @app.route('/question/<question_id>/vote_down')
-def vote_question(question_id):
+def change_question(question_id):
     questions = data_manager.get_questions()
     if 'vote_up' in request.base_url:
         questions = util.vote(questions, question_id, '+')
-    else:
+    elif 'vote_down' in request.base_url:
         questions = util.vote(questions, question_id, '-')
+    else:
+        questions = util.delete_data(data_manager.get_questions(), question_id)
+        answers = util.delete_data(data_manager.get_answers(), question_id, 'question_id')
+        data_manager.export_answers(answers)
     data_manager.export_questions(questions)
     return redirect('/list')
 
