@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect
 from werkzeug.utils import secure_filename
 import data_manager
 import util
@@ -56,11 +56,13 @@ def add_question():
 
 def upload_file(request_attributes, id, r_type='questions'):
     file = request_attributes.files['file']
-    filename = secure_filename(file.filename)
-    filename = add_id_to_image(filename, id)
-    file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{r_type}", filename))
-    source = f"{UPLOAD_FOLDER}/{r_type}/{filename}"
-    return source if r_type == 'questions' else f"../{source}"
+    if file:
+        filename = secure_filename(file.filename)
+        filename = add_id_to_image(filename, id)
+        file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{r_type}", filename))
+        source = f"{UPLOAD_FOLDER}/{r_type}/{filename}"
+        return source if r_type == 'questions' else f"../{source}"
+    return ''
 
 
 def add_id_to_image(filename, id):
@@ -75,7 +77,7 @@ def delete_file(r_type, id):
 
     for file in os.listdir(directory):
         filename = os.fsdecode(file)
-        if filename.endswith(f"_{id}.png"):
+        if filename.endswith(f"_{id}.png") or filename.endswith(f"_{id}.jpg"):
             os.remove(os.path.join(f"{directory_in_str}/{filename}"))
 
 
@@ -85,7 +87,8 @@ def edit_question(question_id):
     current_question, current_id = util.get_data_and_index_by_id(questions, 'id', question_id)
     if request.method == 'POST':
         questions[current_id] = util.update_data_by_form(questions[current_id], request.form)
-        questions[current_id]['image'] = upload_file(request)
+        delete_file('questions', question_id)
+        questions[current_id]['image'] = upload_file(request, question_id)
         data_manager.export_questions(questions)
         return redirect(f'/question/{question_id}')
     return render_template('edit_question.html', question=current_question)
@@ -130,7 +133,11 @@ def post_answer(question_id):
 def change_answer(answer_id):
     answers = data_manager.get_answers()
     question_id = util.get_data_by_id(answers, "id", answer_id)["question_id"]
-    data_manager.export_answers(util.delete_data(answers, answer_id) if 'delete' in request.base_url else util.change_vote_number(answers, answer_id, '+' if 'vote_up' in request.base_url else '-'))
+    if 'delete' not in request.base_url:
+        answers = util.change_vote_number(answers, answer_id, '+' if 'vote_up' in request.base_url else '-')
+    else:
+        answers = util.delete_data(answers, answer_id)
+    data_manager.export_answers(answers)
     return redirect(f'/question/{question_id}')
 
 
