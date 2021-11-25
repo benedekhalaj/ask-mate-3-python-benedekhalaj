@@ -1,8 +1,8 @@
 from werkzeug.utils import secure_filename
 import os
+from time import time
 
 UPLOAD_FOLDER = './static/images'
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 
 def get_data_by_id(data_list, value, id):
@@ -82,3 +82,7 @@ def delete_file(r_type, id):
         filename = os.fsdecode(file)
         if filename.endswith(f"_{id}.png") or filename.endswith(f"_{id}.jpg"):
             os.remove(os.path.join(f"{directory_in_str}/{filename}"))
+
+
+def add_submission_time():
+    return str(int(time()))

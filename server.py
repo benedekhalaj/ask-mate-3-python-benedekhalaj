@@ -35,7 +35,13 @@ def increment_view_number(question_id):
 def add_question():
     if request.method == 'POST':
         new_id = data_manager.add_new_id('question')
-        new_question = {"view_number": 0, "vote_number": 0, "id": new_id, "image": util.upload_file(request, new_id)}
+        new_question = {
+            "view_number": 0,
+            "vote_number": 0,
+            "id": new_id,
+            "image": util.upload_file(request, new_id),
+            "submission_time": util.add_submission_time()
+        }
         new_question = util.update_data_by_form(new_question, request.form)
         questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
@@ -82,7 +88,13 @@ def post_answer(question_id):
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
         new_id = data_manager.add_new_id('answer')
-        new_answer = {'question_id': question_id, 'vote_number': 0, 'id': new_id, 'image': util.upload_file(request, new_id,'answers')}
+        new_answer = {
+            'question_id': question_id,
+            'vote_number': 0,
+            'id': new_id,
+            'image': util.upload_file(request, new_id, 'answers'),
+            'submission_time': util.add_submission_time()
+        }
         util.update_data_by_form(new_answer, request.form)
         util.add_new_data(new_answer, answers)
         data_manager.export_answers(answers)
