@@ -23,9 +23,11 @@
         </tr>
     </table><br>
 
-    <form action="/question/{{ question['id']}}/new-answer" method="post">
+    <form action="/question/{{ question['id']}}/new-answer" method="post" enctype="multipart/form-data">
         <label for="message">Answer:</label><br>
         <textarea id="message" name="message"></textarea><br><br>
+
+        <input type="file" name="file"><br><br>
 
         <button type="submit">Add new Answer</button>
     </form>

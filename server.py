@@ -53,11 +53,11 @@ def add_question():
     return render_template('add_question.html')
 
 
-def upload_file(request_attributes):
+def upload_file(request_attributes, r_type='question'):
     file = request_attributes.files['file']
     filename = secure_filename(file.filename)
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return f"{UPLOAD_FOLDER}/{filename}"
+    return f"{UPLOAD_FOLDER}/{filename}" if r_type == 'question' else f"../{UPLOAD_FOLDER}/{filename}"
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -66,6 +66,7 @@ def edit_question(question_id):
     current_question, current_id = util.get_data_and_index_by_id(questions, 'id', question_id)
     if request.method == 'POST':
         questions[current_id] = util.update_data_by_form(questions[current_id], request.form)
+        questions[current_id]['image'] = upload_file(request)
         data_manager.export_questions(questions)
         return redirect(f'/question/{question_id}')
     return render_template('edit_question.html', question=current_question)
@@ -95,7 +96,7 @@ def post_answer(question_id):
         selected_question = util.get_data_by_id(questions, 'id', question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
-        new_answer = {'question_id': question_id, 'vote_number': 0, 'id': data_manager.add_new_id('answer')}
+        new_answer = {'question_id': question_id, 'vote_number': 0, 'id': data_manager.add_new_id('answer'), 'image': upload_file(request, 'answer')}
         util.update_data_by_form(new_answer, request.form)
         util.add_new_data(new_answer, answers)
         data_manager.export_answers(answers)
