@@ -45,7 +45,8 @@ def increment_view_number(question_id):
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        new_question = {"view_number": 0, "vote_number": 0, "id": data_manager.add_new_id('question'), "image": upload_file(request)}
+        new_id = data_manager.add_new_id('question')
+        new_question = {"view_number": 0, "vote_number": 0, "id": new_id, "image": upload_file(request, new_id)}
         new_question = util.update_data_by_form(new_question, request.form)
         questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
@@ -53,11 +54,19 @@ def add_question():
     return render_template('add_question.html')
 
 
-def upload_file(request_attributes, r_type='question'):
+def upload_file(request_attributes, id, r_type='questions'):
     file = request_attributes.files['file']
     filename = secure_filename(file.filename)
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    return f"{UPLOAD_FOLDER}/{filename}" if r_type == 'question' else f"../{UPLOAD_FOLDER}/{filename}"
+    filename = add_id_to_image(filename, id)
+    file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{r_type}", f"{filename}"))
+    return f"{UPLOAD_FOLDER}/{filename}" if r_type == 'questions' else f"../{UPLOAD_FOLDER}/{filename}"
+
+
+def add_id_to_image(filename, id):
+    name, extension = filename.split('.')
+    name = f"{name}_{id}"
+    return ".".join([name, extension])
+
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -96,7 +105,8 @@ def post_answer(question_id):
         selected_question = util.get_data_by_id(questions, 'id', question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
-        new_answer = {'question_id': question_id, 'vote_number': 0, 'id': data_manager.add_new_id('answer'), 'image': upload_file(request, 'answer')}
+        new_id = data_manager.add_new_id('answer')
+        new_answer = {'question_id': question_id, 'vote_number': 0, 'id': new_id, 'image': upload_file(request, new_id,'answers')}
         util.update_data_by_form(new_answer, request.form)
         util.add_new_data(new_answer, answers)
         data_manager.export_answers(answers)
