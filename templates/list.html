@@ -23,7 +23,7 @@
             <tr>
             {% for key, value in question.items() %}
                 {% if key == 'title' %}
-                    <td style="text-align: center"><a href="/question/{{ question['id'] }}">{{ value }}</a></td>
+                    <td style="text-align: center"><a href="/question/{{ question['id'] }}/view">{{ value }}</a></td>
                 {% else %}
                     <td style="text-align: center">{{ value }}</td>
                 {% endif %}

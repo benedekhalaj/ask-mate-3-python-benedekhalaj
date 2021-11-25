@@ -21,6 +21,15 @@ def display_question(question_id):
     return render_template('display_question.html', question_id=question_id, answers=question_answers, question=question)
 
 
+@app.route('/question/<question_id>/view')
+def increment_view_number(question_id):
+    questions = data_manager.get_questions()
+    question, index = util.get_data_and_index_by_id(questions, 'id', question_id)
+    questions[index]['view_number'] = util.modify_number(question, 'view_number', '+')
+    data_manager.export_questions(questions)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
