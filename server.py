@@ -39,7 +39,7 @@ def add_question():
         new_question = util.update_data_by_form(new_question, request.form)
         questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
-        return redirect('/')
+        return redirect(f'/question/{new_id}')
     return render_template('add_question.html')
 
 
