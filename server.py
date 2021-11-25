@@ -1,8 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect, url_for, send_from_directory
+from werkzeug.utils import secure_filename
 import data_manager
 import util
+import os
+
+UPLOAD_FOLDER = './static/images'
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -33,12 +45,19 @@ def increment_view_number(question_id):
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        new_question = {"view_number": 0, "vote_number": 0, "id": data_manager.add_new_id('question')}
+        new_question = {"view_number": 0, "vote_number": 0, "id": data_manager.add_new_id('question'), "image": upload_file(request)}
         new_question = util.update_data_by_form(new_question, request.form)
         questions = util.add_new_data(new_question, data_manager.get_questions())
         data_manager.export_questions(questions)
         return redirect('/')
     return render_template('add_question.html')
+
+
+def upload_file(request_attributes):
+    file = request_attributes.files['file']
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return f"{UPLOAD_FOLDER}/{filename}"
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])

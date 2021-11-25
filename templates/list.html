@@ -24,6 +24,8 @@
             {% for key, value in question.items() %}
                 {% if key == 'title' %}
                     <td style="text-align: center"><a href="/question/{{ question['id'] }}/view">{{ value }}</a></td>
+                {% elif key == 'image' %}
+                    <td><a href="{{ value }}" target="_blank"><img src="{{ value }}" style="max-width: 100px;"></a></td>
                 {% else %}
                     <td style="text-align: center">{{ value }}</td>
                 {% endif %}
