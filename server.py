@@ -58,8 +58,9 @@ def upload_file(request_attributes, id, r_type='questions'):
     file = request_attributes.files['file']
     filename = secure_filename(file.filename)
     filename = add_id_to_image(filename, id)
-    file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{r_type}", f"{filename}"))
-    return f"{UPLOAD_FOLDER}/{filename}" if r_type == 'questions' else f"../{UPLOAD_FOLDER}/{filename}"
+    file.save(os.path.join(f"{app.config['UPLOAD_FOLDER']}/{r_type}", filename))
+    source = f"{UPLOAD_FOLDER}/{r_type}/{filename}"
+    return source if r_type == 'questions' else f"../{source}"
 
 
 def add_id_to_image(filename, id):
@@ -67,6 +68,15 @@ def add_id_to_image(filename, id):
     name = f"{name}_{id}"
     return ".".join([name, extension])
 
+
+def delete_file(r_type, id):
+    directory_in_str = f'{app.config["UPLOAD_FOLDER"]}/{r_type}'
+    directory = os.fsencode(directory_in_str)
+
+    for file in os.listdir(directory):
+        filename = os.fsdecode(file)
+        if filename.endswith(f"_{id}.png"):
+            os.remove(os.path.join(f"{directory_in_str}/{filename}"))
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -92,6 +102,7 @@ def change_question(question_id):
     else:
         questions = util.delete_data(questions, question_id)
         data_manager.export_answers(util.delete_data(data_manager.get_answers(), question_id, 'question_id'))
+        delete_file('questions', question_id)
     data_manager.export_questions(questions)
     return redirect('/list')
 
