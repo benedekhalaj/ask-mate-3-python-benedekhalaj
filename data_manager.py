@@ -1,3 +1,4 @@
+import database_common as database
 import connection
 
 QUESTIONS_FILE_PATH = 'data/questions.csv'
@@ -9,12 +10,23 @@ ANSWER_ID_FILE_PATH = 'data/answer_id.txt'
 ANSWERS_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
 
-def get_questions():
-    return connection.open_csv_file(QUESTIONS_FILE_PATH)
+@database.connection_handler
+def get_questions(cursor):
+    query = """
+        SELECT * FROM question
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
-def get_answers():
-    return connection.open_csv_file(ANSWERS_FILE_PATH)
+@database.connection_handler
+def get_answers(cursor):
+    query = """
+        SELECT * FROM answer
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 
 def export_questions(question_list):

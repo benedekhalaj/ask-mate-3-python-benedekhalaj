@@ -40,5 +40,3 @@ def connection_handler(function):
         return return_value
 
     return wrapper
-
-

@@ -7,18 +7,18 @@ UPLOAD_FOLDER = './static/images'
 
 def get_data_by_id(data_list, value, id):
     for data in data_list:
-        if data[value] == id:
+        if data[value] == int(id):
             return data
 
 
 def get_data_and_index_by_id(data_list, value, id):
     for index, data in enumerate(data_list):
-        if data[value] == id:
+        if data[value] == int(id):
             return data, index
 
 
 def get_data_list(data_list, value, id):
-    return [data for data in data_list if data[value] == id]
+    return [data for data in data_list if data[value] == int(id)]
 
 
 def modify_number(data, value, operator):
