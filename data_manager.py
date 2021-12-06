@@ -28,7 +28,6 @@ def get_answers(cursor):
     return cursor.fetchall()
 
 
-
 def export_questions(question_list):
     # question_list = add_new_id(question_list, 'question')
     connection.save_csv_file(question_list, QUESTIONS_FILE_PATH, QUESTION_HEADERS)
