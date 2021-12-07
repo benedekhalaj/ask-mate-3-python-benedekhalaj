@@ -53,6 +53,9 @@ def edit_question(question_id):
     if request.method == 'POST':
         question = util.update_data_by_form(question, request.form)
         data_manager.update_table(table='question', data=question)
+        util.delete_file('questions', question_id)
+        image_url = util.upload_file(request, question_id)
+        data_manager.insert_image('question', question_id, image_url)
         return redirect(f'/question/{question_id}')
     return render_template('edit_question.html', question=question)
 
