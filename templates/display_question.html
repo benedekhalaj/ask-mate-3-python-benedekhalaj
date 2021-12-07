@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Question {{ question_id }}</title>
+    <title>Question {{ question['title'] }}</title>
 </head>
 <body>
     <p><a href="/list">Back to Question List</a></p>
-    <h2>Question {{ question_id }}</h2>
+    <h2>Question {{ question['title'] }}</h2>
     <table border="1">
     <tr>
         {% for key in question.keys() %}
@@ -30,9 +30,31 @@
     <button type="submit">Delete question</button>
     </form><br>
 
-    <p><a href="{{ url_for('add_new_comment', question_id=question_id) }}">Add new comment to this question</a></p><br>
+    <a href="{{ url_for('add_new_comment', question_id=question_id) }}">Add new comment to this question</a><br>
 
-    <h2>Answer(s) for question {{ question_id }}</h2>
+    <h3>Comments for question {{ question['title'] }}</h3>
+
+    {% if comments %}
+        <table border="1">
+            <tr>
+            {% for key in comments[0].keys() %}
+                <th>{{ key }}</th>
+            {% endfor %}
+            </tr>
+            {% for comment in comments %}
+                <tr>
+                {% for value in comment.values() %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% else %}
+        <p>There is no comment yet</p><br>
+    {% endif %}
+
+    <h2>Answer(s) for question {{ question['title'] }}</h2>
 
     <table border="1">
     <tr>{% if answers %}

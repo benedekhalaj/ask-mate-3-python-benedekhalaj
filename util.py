@@ -19,14 +19,21 @@ def update_data_by_form(data, form):
     return data
 
 
-def upload_file(request_attributes, r_type='questions'):
+def upload_file(request_attributes, id, r_type='questions'):
     file = request_attributes.files['file']
     if file:
         filename = secure_filename(file.filename)
+        filename = add_id_to_file(filename, id)
         file.save(os.path.join(f"{UPLOAD_FOLDER}/{r_type}", filename))
         source = f"{UPLOAD_FOLDER}/{r_type}/{filename}"
         return source if r_type == 'questions' else f"../{source}"
     return ''
+
+
+def add_id_to_file(filename, id):
+    name, extension = filename.split('.')
+    name = f"{name}_{id}"
+    return ".".join([name, extension])
 
 
 def delete_file(r_type, id):

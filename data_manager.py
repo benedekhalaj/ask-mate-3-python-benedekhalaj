@@ -53,51 +53,48 @@ def get_question_answers(cursor, question_id):
 @connection
 def insert_question(cursor, question_details):
     query = """
-        INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
+        INSERT INTO question(submission_time, view_number, vote_number, title, message)
         VALUES (
             {submission_time},
             0,
             0,
             {title},
-            {message},
-            {image}"""
+            {message}"""
     cursor.execute(SQL(query).format(
         submission_time=Literal(question_details['submission_time']),
         title=Literal(question_details['title']),
-        message=Literal(question_details['message']),
-        image=Literal(question_details['image'])
+        message=Literal(question_details['message'])
     ))
 
 
 @connection
 def insert_answer(cursor, new_answer):
     query = """
-        INSERT INTO answer(submission_time, vote_number, question_id, message, image)
+        INSERT INTO answer(submission_time, vote_number, question_id, message)
         VALUES (
             {submission_time},
             0,
             {question_id},
-            {message},
-            {image})
+            {message})
     """
     cursor.execute(SQL(query).format(
         submission_time=Literal(new_answer['submission_time']),
         question_id=Literal(new_answer['question_id']),
-        message=Literal(new_answer['message']),
-        image=Literal(new_answer['image'])
+        message=Literal(new_answer['message'])
     ))
 
 
 @connection
-def get_new_id(cursor, submission_time):
+def get_new_id(cursor, submission_time, table='question'):
     query = """
-        SELECT id FROM question
+        SELECT id FROM {table}
         WHERE submission_time = {submission_time}
     """
     cursor.execute(SQL(query).format(
+        table=Identifier(table),
         submission_time=Literal(submission_time)
     ))
-    return cursor.fetchone()
+    return cursor.fetchone()['id']
 
 
 @connection
@@ -214,5 +211,44 @@ def search_for_answer(cursor, keyword):
     """
     cursor.execute(SQL(query).format(
         keyword=Literal(f'%{keyword}%')
+    ))
+    return cursor.fetchall()
+
+
+@connection
+def insert_image(cursor, table, id, image_url):
+    query = """
+    UPDATE {table}
+    SET image = {image_url}
+    WHERE id = {id}
+    """
+
+    cursor.execute(SQL(query).format(
+        table=Identifier(table),
+        image_url=Literal(image_url),
+        id=Literal(id)
+    ))
+
+
+@connection
+def add_new_comment(cursor, comment_details):
+    query = """
+    INSERT INTO comment (question_id, message, submission_time)
+    VALUES ({question_id}, {message}, {submission_time})
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(comment_details['question_id']),
+        message=Literal(comment_details['message']),
+        submission_time=Literal(comment_details['submission_time'])
+    ))
+
+@connection
+def get_comments(cursor, id):
+    query = """
+    SELECT submission_time, message FROM comment
+    WHERE question_id = {id}
+    """
+    cursor.execute(SQL(query).format(
+        id=Literal(id)
     ))
     return cursor.fetchall()
