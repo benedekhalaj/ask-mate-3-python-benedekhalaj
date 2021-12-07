@@ -67,7 +67,6 @@ def change_question(question_id):
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def post_answer(question_id):
-    answers = data_manager.get_answers()
     if request.method == 'GET':
         selected_answers = data_manager.get_question_answers(question_id=question_id)
         selected_question = data_manager.get_question_by_id(question_id)
@@ -96,9 +95,14 @@ def change_answer(answer_id):
     return redirect(f'/question/{question_id}')
 
 
-@app.route('/question/<question_id>/new-comment')
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment(question_id):
-    return render_template('comments.html')
+    selected_question = data_manager.get_question_by_id(question_id)
+    if request.method == 'POST':
+        new_comment = request.args.get('new-comment')
+
+        return redirect(f'/question/{question_id}')
+    return render_template('comments.html', question_id=question_id, question=selected_question)
 
 
 
