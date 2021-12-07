@@ -1,5 +1,3 @@
 id,submission_time,vote_number,question_id,message,image
-7,,0,7,jjjj,.././static/images/answers/sikerado_logo_7.png
-11,1637856400,0,19,no,
-13,1637856406,0,19,no,
-15,1637856417,0,19,pi,
+1,2017-04-28 16:49:00,3,1,You need to use brackets: my_list = [],
+2,2017-04-25 14:42:00,35,1,Look it up in the Python docs,images/image2.jpg

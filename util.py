@@ -80,4 +80,4 @@ def delete_file(r_type, id):
 
 
 def add_submission_time():
-    return str(datetime.datetime.now().isoformat())
+    return datetime.datetime.now().isoformat()

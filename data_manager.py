@@ -34,7 +34,7 @@ def get_answers(cursor):
 
 
 @database.connection_handler
-def export_questions(cursor, question_details):
+def export_question(cursor, question_details):
     cursor.execute(sql.SQL("""
         INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
         VALUES (
@@ -61,6 +61,19 @@ def get_new_id(cursor, submission_time):
         WHERE submission_time = {}
     """).format(sql.Literal(submission_time)))
     return cursor.fetchone()
+
+
+@database.connection_handler
+def increment_view_number(cursor, table, id):
+    cursor.execute(sql.SQL(
+        """
+        UPDATE {table} 
+        SET view_number = view_number + 1
+        WHERE id = {id}
+        """
+    ).format(table=sql.Identifier(table),
+             id=sql.Literal(id)))
+
 
 
 def export_answers(answer_list):
