@@ -34,7 +34,7 @@ def get_answers(cursor):
 
 
 @database.connection_handler
-def export_question(cursor, question_details):
+def insert_question(cursor, question_details):
     cursor.execute(sql.SQL("""
         INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
         VALUES (
@@ -126,3 +126,31 @@ def sort_questions(orders):
     ordered_list = sorted(question_list, key=lambda item: item[order_title], reverse=is_reverse)
     return ordered_list
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@database.connection_handler
+def get_question_answers(cursor, question_id):
+    cursor.execute(sql.SQL("""
+        SELECT * FROM answer
+        WHERE question_id = {question_id}
+    """).format(question_id=sql.Literal(question_id)))

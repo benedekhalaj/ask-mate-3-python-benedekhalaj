@@ -15,9 +15,8 @@ def list_questions():
 
 @app.route('/question/<question_id>')
 def display_question(question_id):
-    answers = data_manager.get_answers()
     questions = data_manager.get_questions()
-    question_answers = util.get_data_list(answers, 'question_id', question_id)
+    question_answers = data_manager.get_question_answers(question_id)
     question = util.get_data_by_id(questions, 'id', question_id)
     return render_template('display_question.html', question_id=question_id, answers=question_answers, question=question)
 
@@ -38,7 +37,7 @@ def add_question():
             "submission_time": util.add_submission_time()
         }
         new_question = util.update_data_by_form(new_question, request.form)
-        data_manager.export_question(new_question)
+        data_manager.insert_question(new_question)
         new_question_id = data_manager.get_new_id(new_question['submission_time'])
         return redirect(f'/question/{new_question_id["id"]}')
     return render_template('add_question.html')
@@ -52,7 +51,7 @@ def edit_question(question_id):
         questions[current_id] = util.update_data_by_form(questions[current_id], request.form)
         util.delete_file('questions', question_id)
         questions[current_id]['image'] = util.upload_file(request, question_id)
-        data_manager.export_question(questions)
+        data_manager.insert_question(questions)
         return redirect(f'/question/{question_id}')
     return render_template('edit_question.html', question=current_question)
 
@@ -61,7 +60,6 @@ def edit_question(question_id):
 @app.route('/question/<question_id>/vote_up')
 @app.route('/question/<question_id>/vote_down')
 def change_question(question_id):
-    questions = data_manager.get_questions()
     if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
