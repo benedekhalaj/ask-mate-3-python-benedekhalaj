@@ -1,20 +1,13 @@
-import csv
-from psycopg2 import sql
+from psycopg2.sql import SQL, Literal, Identifier
 from psycopg2.extras import RealDictCursor
 
-import database_common as database
-import connection
+from database_common import connection_handler as connection
 
-QUESTIONS_FILE_PATH = 'data/questions.csv'
-QUESTION_ID_FILE_PATH = 'data/question_id.txt'
+
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 
-ANSWERS_FILE_PATH = 'data/answers.csv'
-ANSWER_ID_FILE_PATH = 'data/answer_id.txt'
-ANSWERS_HEADERS = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
-
-@database.connection_handler
+@connection
 def get_questions(cursor):
     query = """
         SELECT * FROM question
@@ -23,16 +16,19 @@ def get_questions(cursor):
     return cursor.fetchall()
 
 
-@database.connection_handler
+@connection
 def get_question_by_id(cursor, question_id):
-    cursor.execute(sql.SQL("""
+    query = """
         SELECT * FROM question
         WHERE id = {question_id}
-    """).format(question_id=sql.Literal(question_id)))
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id)
+    ))
     return cursor.fetchone()
 
 
-@database.connection_handler
+@connection
 def get_answers(cursor):
     query = """
         SELECT * FROM answer
@@ -41,19 +37,22 @@ def get_answers(cursor):
     return cursor.fetchall()
 
 
-@database.connection_handler
+@connection
 def get_question_answers(cursor, question_id):
-    cursor.execute(sql.SQL("""
+    query = """
         SELECT * FROM answer
         WHERE question_id = {question_id}
-    """).format(question_id=sql.Literal(question_id)))
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id)
+    ))
 
     return cursor.fetchall()
 
 
-@database.connection_handler
+@connection
 def insert_question(cursor, question_details):
-    cursor.execute(sql.SQL("""
+    query = """
         INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
         VALUES (
             {submission_time},
@@ -61,17 +60,18 @@ def insert_question(cursor, question_details):
             0,
             {title},
             {message},
-            {image}
-            )
-    """).format(submission_time=sql.Literal(question_details['submission_time']),
-                title=sql.Literal(question_details['title']),
-                message=sql.Literal(question_details['message']),
-                image=sql.Literal(question_details['image'])))
+            {image}"""
+    cursor.execute(SQL(query).format(
+        submission_time=Literal(question_details['submission_time']),
+        title=Literal(question_details['title']),
+        message=Literal(question_details['message']),
+        image=Literal(question_details['image'])
+    ))
 
 
-@database.connection_handler
+@connection
 def insert_answer(cursor, new_answer):
-    cursor.execute(sql.SQL("""
+    query = """
         INSERT INTO answer(submission_time, vote_number, question_id, message, image)
         VALUES (
             {submission_time},
@@ -79,55 +79,83 @@ def insert_answer(cursor, new_answer):
             {question_id},
             {message},
             {image})
-    """).format(submission_time=sql.Literal(new_answer['submission_time']),
-                question_id=sql.Literal(new_answer['question_id']),
-                message=sql.Literal(new_answer['message']),
-                image=sql.Literal(new_answer['image'])))
+    """
+    cursor.execute(SQL(query).format(
+        submission_time=Literal(new_answer['submission_time']),
+        question_id=Literal(new_answer['question_id']),
+        message=Literal(new_answer['message']),
+        image=Literal(new_answer['image'])
+    ))
 
 
-@database.connection_handler
+@connection
 def get_new_id(cursor, submission_time):
-    cursor.execute(sql.SQL("""
+    query = """
         SELECT id FROM question
-        WHERE submission_time = {}
-    """).format(sql.Literal(submission_time)))
+        WHERE submission_time = {submission_time}
+    """
+    cursor.execute(SQL(query).format(
+        submission_time=Literal(submission_time)
+    ))
     return cursor.fetchone()
 
 
-@database.connection_handler
+@connection
 def increment_view_number(cursor, table, id):
-    cursor.execute(sql.SQL("""
+    query = """
         UPDATE {table} 
         SET view_number = view_number + 1
         WHERE id = {id}
         """
-                           ).format(table=sql.Identifier(table),
-                                    id=sql.Literal(id)))
+    cursor.execute(SQL(query).format(
+        table=Identifier(table),
+        id=Literal(id)
+    ))
 
 
-@database.connection_handler
+@connection
 def modify_vote_number(cursor, table, voting, id):
     if 'vote_up' in voting:
         voting = 1
     else:
         voting = -1
-    cursor.execute(sql.SQL("""
+    query = """
         UPDATE {table} 
         SET vote_number = vote_number + {voting}
         WHERE id = {id} 
         """
-                           ).format(table=sql.Identifier(table),
-                                    id=sql.Literal(id),
-                                    voting=sql.Literal(voting)))
+    cursor.execute(SQL(query).format(
+        table=Identifier(table),
+        id=Literal(id),
+        voting=Literal(voting)
+    ))
 
 
-@database.connection_handler
+@connection
 def delete_table_data(cursor, table, data_id):
-    cursor.execute(sql.SQL("""
+    query = """
         DELETE FROM {table}
         WHERE id = {data_id}
-    """).format(data_id=sql.Literal(data_id),
-                table=sql.Identifier(table)))
+    """
+    cursor.execute(SQL(query).format(
+        data_id=Literal(data_id),
+        table=Identifier(table)
+    ))
+
+
+@connection
+def update_table(cursor, table, data):
+    query = """
+        UPDATE {table}
+        SET title = {title}, message = {message}
+        WHERE id = {id}
+    """
+    cursor.execute(SQL(query).format(
+        table=Identifier(table),
+        title=Literal(data['title']),
+        message=Literal(data['message']),
+        id=Literal(data['id'])
+    ))
 
 
 def sort_questions(orders):
@@ -142,22 +170,22 @@ def sort_questions(orders):
     return ordered_list
 
 
-@database.connection_handler
+@connection
 def update_table(cursor, table, data):
     query = """
         UPDATE {table}
         SET title = {title}, message = {message}
         WHERE id = {id}
     """
-    cursor.execute(sql.SQL(query).format(
-        table=sql.Identifier(table),
-        title=sql.Literal(data['title']),
-        message=sql.Literal(data['message']),
-        id=sql.Literal(data['id'])
+    cursor.execute(SQL(query).format(
+        table=Identifier(table),
+        title=Literal(data['title']),
+        message=Literal(data['message']),
+        id=Literal(data['id'])
     ))
 
 
-@database.connection_handler
+@connection
 def search_for_question(cursor, keyword):
     answers_rdr = search_for_answer(keyword)
     answers = tuple([answer['question_id'] for answer in answers_rdr])
@@ -171,20 +199,20 @@ def search_for_question(cursor, keyword):
                 SELECT * FROM question
                 WHERE message LIKE {keyword} OR title LIKE {keyword}
                 """
-    cursor.execute(sql.SQL(query).format(
-        keyword=sql.Literal(f'%{keyword}%'),
-        answers=sql.Literal(answers)
+    cursor.execute(SQL(query).format(
+        keyword=Literal(f'%{keyword}%'),
+        answers=Literal(answers)
     ))
     return cursor.fetchall()
 
 
-@database.connection_handler
+@connection
 def search_for_answer(cursor, keyword):
     query = """
     SELECT question_id FROM answer
     WHERE message LIKE {keyword}
     """
-    cursor.execute(sql.SQL(query).format(
-        keyword=sql.Literal(f'%{keyword}%')
+    cursor.execute(SQL(query).format(
+        keyword=Literal(f'%{keyword}%')
     ))
     return cursor.fetchall()
