@@ -31,8 +31,6 @@ def increment_view_number(question_id):
 def add_question():
     if request.method == 'POST':
         new_question = {
-            "view_number": 0,
-            "vote_number": 0,
             "image": util.upload_file(request),
             "submission_time": util.add_submission_time()
         }
@@ -69,24 +67,19 @@ def change_question(question_id):
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def post_answer(question_id):
-    questions = data_manager.get_questions()
     answers = data_manager.get_answers()
     if request.method == 'GET':
-        selected_answers = util.get_data_list(answers, 'question_id', question_id)
-        selected_question = util.get_data_by_id(questions, 'id', question_id)
+        selected_answers = data_manager.get_question_answers(question_id=question_id)
+        selected_question = data_manager.get_question_by_id(question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
-        new_id = data_manager.add_new_id('answer')
         new_answer = {
             'question_id': question_id,
-            'vote_number': 0,
-            'id': new_id,
-            'image': util.upload_file(request, new_id, 'answers'),
+            'image': util.upload_file(request, 'answers'),
             'submission_time': util.add_submission_time()
         }
         util.update_data_by_form(new_answer, request.form)
-        util.add_new_data(new_answer, answers)
-        data_manager.export_answers(answers)
+        data_manager.insert_answer(new_answer)
         return redirect(f'/question/{question_id}')
 
 

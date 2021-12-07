@@ -25,6 +25,15 @@ def get_questions(cursor):
 
 
 @database.connection_handler
+def get_question_by_id(cursor, question_id):
+    cursor.execute(sql.SQL("""
+        SELECT * FROM question
+        WHERE id = {question_id}
+    """).format(question_id=sql.Literal(question_id)))
+    return cursor.fetchone()
+
+
+@database.connection_handler
 def get_answers(cursor):
     query = """
         SELECT * FROM answer
@@ -34,24 +43,47 @@ def get_answers(cursor):
 
 
 @database.connection_handler
+def get_question_answers(cursor, question_id):
+    cursor.execute(sql.SQL("""
+        SELECT * FROM answer
+        WHERE question_id = {question_id}
+    """).format(question_id=sql.Literal(question_id)))
+
+    return cursor.fetchall()
+
+
+@database.connection_handler
 def insert_question(cursor, question_details):
     cursor.execute(sql.SQL("""
         INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
         VALUES (
             {submission_time},
-            {view_number},
-            {vote_number},
+            0,
+            0,
             {title},
             {message},
             {image}
             )
     """).format(submission_time=sql.Literal(question_details['submission_time']),
-                view_number=sql.Literal(question_details['view_number']),
-                vote_number=sql.Literal(question_details['vote_number']),
                 title=sql.Literal(question_details['title']),
                 message=sql.Literal(question_details['message']),
-                image=sql.Literal(question_details['image'])
-                ))
+                image=sql.Literal(question_details['image'])))
+
+
+@database.connection_handler
+def insert_answer(cursor, new_answer):
+    cursor.execute(sql.SQL("""
+        INSERT INTO answer(submission_time, vote_number, question_id, message, image)
+        VALUES (
+            {submission_time},
+            0,
+            {question_id},
+            {message},
+            {image})
+    """).format(submission_time=sql.Literal(new_answer['submission_time']),
+                question_id=sql.Literal(new_answer['question_id']),
+                message=sql.Literal(new_answer['message']),
+                image=sql.Literal(new_answer['image'])))
 
 
 @database.connection_handler
@@ -99,23 +131,6 @@ def delete_table_data(cursor, table, data_id):
                 table=sql.Identifier(table)))
 
 
-def export_answers(answer_list):
-    # answer_list = add_new_id(answer_list, 'answer')
-    connection.save_csv_file(answer_list, ANSWERS_FILE_PATH, ANSWERS_HEADERS)
-
-
-def add_new_id(data_type):
-    if data_type == 'question':
-        last_id = int(connection.open_id(QUESTION_ID_FILE_PATH))
-        new_id = str(last_id + 1)
-        connection.save_id(QUESTION_ID_FILE_PATH, new_id)
-    else:
-        last_id = int(connection.open_id(ANSWER_ID_FILE_PATH))
-        new_id = str(last_id + 1)
-        connection.save_id(ANSWER_ID_FILE_PATH, new_id)
-    return new_id
-
-
 def sort_questions(orders):
     question_list = get_questions()
     order_title = orders['order_by']
@@ -126,32 +141,3 @@ def sort_questions(orders):
         is_reverse = True
     ordered_list = sorted(question_list, key=lambda item: item[order_title], reverse=is_reverse)
     return ordered_list
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@database.connection_handler
-def get_question_answers(cursor, question_id):
-    cursor.execute(sql.SQL("""
-        SELECT * FROM answer
-        WHERE question_id = {question_id}
-    """).format(question_id=sql.Literal(question_id)))
