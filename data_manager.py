@@ -242,6 +242,7 @@ def add_new_comment(cursor, comment_details):
         submission_time=Literal(comment_details['submission_time'])
     ))
 
+
 @connection
 def get_comments(cursor, id):
     query = """
