@@ -21,6 +21,13 @@ def display_question(question_id):
     return render_template('display_question.html', question_id=question_id, answers=question_answers, question=question)
 
 
+@app.route('/search')
+def search_question():
+    keyword = request.args.get('q')
+    searched_questions = data_manager.search_for_question(keyword)
+    return render_template('search_question.html', questions=searched_questions, titles=data_manager.QUESTION_HEADERS)
+
+
 @app.route('/question/<question_id>/view')
 def increment_view_number(question_id):
     data_manager.increment_view_number(table='question', id=question_id)
@@ -98,9 +105,7 @@ def add_new_comment(question_id):
     return render_template('comments.html')
 
 
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0',
             debug=True,
             port=8000)
-

@@ -155,3 +155,36 @@ def update_table(cursor, table, data):
         message=sql.Literal(data['message']),
         id=sql.Literal(data['id'])
     ))
+
+
+@database.connection_handler
+def search_for_question(cursor, keyword):
+    answers_rdr = search_for_answer(keyword)
+    answers = tuple([answer['question_id'] for answer in answers_rdr])
+    if answers:
+        query = """
+        SELECT * FROM question
+        WHERE message LIKE {keyword} OR title LIKE {keyword} OR id in {answers}
+        """
+    else:
+        query = """
+                SELECT * FROM question
+                WHERE message LIKE {keyword} OR title LIKE {keyword}
+                """
+    cursor.execute(sql.SQL(query).format(
+        keyword=sql.Literal(f'%{keyword}%'),
+        answers=sql.Literal(answers)
+    ))
+    return cursor.fetchall()
+
+
+@database.connection_handler
+def search_for_answer(cursor, keyword):
+    query = """
+    SELECT question_id FROM answer
+    WHERE message LIKE {keyword}
+    """
+    cursor.execute(sql.SQL(query).format(
+        keyword=sql.Literal(f'%{keyword}%')
+    ))
+    return cursor.fetchall()
