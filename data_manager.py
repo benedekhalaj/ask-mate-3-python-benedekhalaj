@@ -60,7 +60,7 @@ def insert_question(cursor, question_details):
             0,
             {title},
             {message},
-            {image}"""
+            {image})"""
     cursor.execute(SQL(query).format(
         submission_time=Literal(question_details['submission_time']),
         title=Literal(question_details['title']),
