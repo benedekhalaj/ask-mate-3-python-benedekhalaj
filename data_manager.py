@@ -65,8 +65,7 @@ def get_new_id(cursor, submission_time):
 
 @database.connection_handler
 def increment_view_number(cursor, table, id):
-    cursor.execute(sql.SQL(
-        """
+    cursor.execute(sql.SQL("""
         UPDATE {table} 
         SET view_number = view_number + 1
         WHERE id = {id}
@@ -74,6 +73,21 @@ def increment_view_number(cursor, table, id):
     ).format(table=sql.Identifier(table),
              id=sql.Literal(id)))
 
+
+@database.connection_handler
+def modify_vote_number(cursor, table, voting, id):
+    if 'vote_up' in voting:
+        voting = 1
+    else:
+        voting = -1
+    cursor.execute(sql.SQL("""
+        UPDATE {table} 
+        SET vote_number = vote_number + {voting}
+        WHERE id = {id} 
+        """
+    ).format(table=sql.Identifier(table),
+             id=sql.Literal(id),
+             voting=sql.Literal(voting)))
 
 
 def export_answers(answer_list):

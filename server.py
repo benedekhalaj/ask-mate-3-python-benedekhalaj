@@ -62,14 +62,12 @@ def edit_question(question_id):
 @app.route('/question/<question_id>/vote_down')
 def change_question(question_id):
     questions = data_manager.get_questions()
-    operator = '+' if 'vote_up' in request.base_url else '-'
     if 'delete' not in request.base_url:
-        questions = util.change_vote_number(questions, question_id, operator)
+        data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
         questions = util.delete_data(questions, question_id)
         data_manager.export_answers(util.delete_data(data_manager.get_answers(), question_id, 'question_id'))
         util.delete_file('questions', question_id)
-    data_manager.export_question(questions)
     return redirect('/list')
 
 
