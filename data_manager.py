@@ -1,3 +1,8 @@
+import csv
+from psycopg2 import sql
+from psycopg2.extras import RealDictCursor
+
+
 import database_common as database
 import connection
 
@@ -28,9 +33,34 @@ def get_answers(cursor):
     return cursor.fetchall()
 
 
-def export_questions(question_list):
-    # question_list = add_new_id(question_list, 'question')
-    connection.save_csv_file(question_list, QUESTIONS_FILE_PATH, QUESTION_HEADERS)
+@database.connection_handler
+def export_questions(cursor, question_details):
+    cursor.execute(sql.SQL("""
+        INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
+        VALUES (
+            {submission_time},
+            {view_number},
+            {vote_number},
+            {title},
+            {message},
+            {image}
+            )
+    """).format(submission_time=sql.Literal(question_details['submission_time']),
+                view_number=sql.Literal(question_details['view_number']),
+                vote_number=sql.Literal(question_details['vote_number']),
+                title=sql.Literal(question_details['title']),
+                message=sql.Literal(question_details['message']),
+                image=sql.Literal(question_details['image'])
+                ))
+
+
+@database.connection_handler
+def get_new_id(cursor, submission_time):
+    cursor.execute(sql.SQL("""
+        SELECT id FROM question
+        WHERE submission_time = {}
+    """).format(sql.Literal(submission_time)))
+    return cursor.fetchone()
 
 
 def export_answers(answer_list):

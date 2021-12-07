@@ -34,18 +34,16 @@ def increment_view_number(question_id):
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        new_id = data_manager.add_new_id('question')
         new_question = {
             "view_number": 0,
             "vote_number": 0,
-            "id": new_id,
-            "image": util.upload_file(request, new_id),
+            "image": util.upload_file(request),
             "submission_time": util.add_submission_time()
         }
         new_question = util.update_data_by_form(new_question, request.form)
-        questions = util.add_new_data(new_question, data_manager.get_questions())
-        data_manager.export_questions(questions)
-        return redirect(f'/question/{new_id}')
+        data_manager.export_questions(new_question)
+        new_question_id = data_manager.get_new_id(new_question['submission_time'])
+        return redirect(f'/question/{new_question_id["id"]}')
     return render_template('add_question.html')
 
 
