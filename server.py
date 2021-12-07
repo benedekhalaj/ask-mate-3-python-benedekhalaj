@@ -65,9 +65,7 @@ def change_question(question_id):
     if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
-        questions = util.delete_data(questions, question_id)
-        data_manager.export_answers(util.delete_data(data_manager.get_answers(), question_id, 'question_id'))
-        util.delete_file('questions', question_id)
+        data_manager.delete_question(question_id)
     return redirect('/list')
 
 

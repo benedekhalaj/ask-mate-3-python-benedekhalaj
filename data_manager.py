@@ -90,6 +90,14 @@ def modify_vote_number(cursor, table, voting, id):
              voting=sql.Literal(voting)))
 
 
+@database.connection_handler
+def delete_question(cursor, id):
+    cursor.execute(sql.SQL("""
+        DELETE FROM question
+        WHERE id = {id}
+    """).format(id=sql.Literal(id)))
+
+
 def export_answers(answer_list):
     # answer_list = add_new_id(answer_list, 'answer')
     connection.save_csv_file(answer_list, ANSWERS_FILE_PATH, ANSWERS_HEADERS)
