@@ -101,11 +101,10 @@ def change_answer(answer_id):
     answers = data_manager.get_answers()
     question_id = util.get_data_by_id(answers, "id", answer_id)["question_id"]
     if 'delete' not in request.base_url:
-        answers = util.change_vote_number(answers, answer_id, '+' if 'vote_up' in request.base_url else '-')
+        data_manager.modify_vote_number(table='answer', voting=request.base_url, id=answer_id)
     else:
         answers = util.delete_data(answers, answer_id)
         util.delete_file('answers', answer_id)
-    data_manager.export_answers(answers)
     return redirect(f'/question/{question_id}')
 
 
