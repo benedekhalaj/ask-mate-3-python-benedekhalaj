@@ -37,14 +37,13 @@ def increment_view_number(question_id):
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
-        new_question = {
-            "image": util.upload_file(request),
-            "submission_time": util.add_submission_time()
-        }
+        new_question = {"submission_time": util.add_submission_time()}
         new_question = util.update_data_by_form(new_question, request.form)
         data_manager.insert_question(new_question)
-        new_question_id = data_manager.get_new_id(new_question['submission_time'])
-        return redirect(f'/question/{new_question_id["id"]}')
+        new_question_id = data_manager.get_new_id(new_question['submission_time'])['id']
+        image_url = util.upload_file(request, new_question_id)
+        data_manager.insert_image('question', new_question_id, image_url)
+        return redirect(f'/question/{new_question_id}')
     return render_template('add_question.html')
 
 
@@ -66,6 +65,7 @@ def change_question(question_id):
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
         data_manager.delete_table_data(table='question', data_id=question_id)
+        util.delete_file('questions', question_id)
     return redirect('/list')
 
 

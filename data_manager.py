@@ -53,19 +53,15 @@ def get_question_answers(cursor, question_id):
 @connection
 def insert_question(cursor, question_details):
     query = """
-        INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
+        INSERT INTO question (submission_time, title, message)
         VALUES (
             {submission_time},
-            0,
-            0,
             {title},
-            {message},
-            {image})"""
+            {message})"""
     cursor.execute(SQL(query).format(
         submission_time=Literal(question_details['submission_time']),
         title=Literal(question_details['title']),
-        message=Literal(question_details['message']),
-        image=Literal(question_details['image'])
+        message=Literal(question_details['message'])
     ))
 
 
@@ -216,3 +212,18 @@ def search_for_answer(cursor, keyword):
         keyword=Literal(f'%{keyword}%')
     ))
     return cursor.fetchall()
+
+
+@connection
+def insert_image(cursor, table, id, image_url):
+    query = """
+    UPDATE {table}
+    SET image = {image_url}
+    WHERE id = {id}
+    """
+
+    cursor.execute(SQL(query).format(
+        table=Identifier(table),
+        image_url=Literal(image_url),
+        id=Literal(id)
+    ))
