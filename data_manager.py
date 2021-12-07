@@ -68,32 +68,31 @@ def insert_question(cursor, question_details):
 @connection
 def insert_answer(cursor, new_answer):
     query = """
-        INSERT INTO answer(submission_time, vote_number, question_id, message, image)
+        INSERT INTO answer(submission_time, vote_number, question_id, message)
         VALUES (
             {submission_time},
             0,
             {question_id},
-            {message},
-            {image})
+            {message})
     """
     cursor.execute(SQL(query).format(
         submission_time=Literal(new_answer['submission_time']),
         question_id=Literal(new_answer['question_id']),
-        message=Literal(new_answer['message']),
-        image=Literal(new_answer['image'])
+        message=Literal(new_answer['message'])
     ))
 
 
 @connection
-def get_new_id(cursor, submission_time):
+def get_new_id(cursor, submission_time, table='question'):
     query = """
-        SELECT id FROM question
+        SELECT id FROM {table}
         WHERE submission_time = {submission_time}
     """
     cursor.execute(SQL(query).format(
+        table=Identifier(table),
         submission_time=Literal(submission_time)
     ))
-    return cursor.fetchone()
+    return cursor.fetchone()['id']
 
 
 @connection
