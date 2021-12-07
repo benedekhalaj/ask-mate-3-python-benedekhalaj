@@ -63,7 +63,7 @@ def change_question(question_id):
     if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
-        data_manager.delete_question(question_id)
+        data_manager.delete_table_data(table='question', data_id=question_id)
     return redirect('/list')
 
 
@@ -99,8 +99,7 @@ def change_answer(answer_id):
     if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='answer', voting=request.base_url, id=answer_id)
     else:
-        answers = util.delete_data(answers, answer_id)
-        util.delete_file('answers', answer_id)
+        data_manager.delete_table_data(table='answer', data_id=answer_id)
     return redirect(f'/question/{question_id}')
 
 
