@@ -2,7 +2,6 @@ import csv
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
-
 import database_common as database
 import connection
 
@@ -102,8 +101,8 @@ def increment_view_number(cursor, table, id):
         SET view_number = view_number + 1
         WHERE id = {id}
         """
-    ).format(table=sql.Identifier(table),
-             id=sql.Literal(id)))
+                           ).format(table=sql.Identifier(table),
+                                    id=sql.Literal(id)))
 
 
 @database.connection_handler
@@ -117,9 +116,9 @@ def modify_vote_number(cursor, table, voting, id):
         SET vote_number = vote_number + {voting}
         WHERE id = {id} 
         """
-    ).format(table=sql.Identifier(table),
-             id=sql.Literal(id),
-             voting=sql.Literal(voting)))
+                           ).format(table=sql.Identifier(table),
+                                    id=sql.Literal(id),
+                                    voting=sql.Literal(voting)))
 
 
 @database.connection_handler
@@ -141,3 +140,18 @@ def sort_questions(orders):
         is_reverse = True
     ordered_list = sorted(question_list, key=lambda item: item[order_title], reverse=is_reverse)
     return ordered_list
+
+
+@database.connection_handler
+def update_table(cursor, table, data):
+    query = """
+        UPDATE {table}
+        SET title = {title}, message = {message}
+        WHERE id = {id}
+    """
+    cursor.execute(sql.SQL(query).format(
+        table=sql.Identifier(table),
+        title=sql.Literal(data['title']),
+        message=sql.Literal(data['message']),
+        id=sql.Literal(data['id'])
+    ))
