@@ -96,6 +96,12 @@ def change_answer(answer_id):
     return redirect(f'/question/{question_id}')
 
 
+@app.route('/question/<question_id>/new-comment')
+def add_new_comment(question_id):
+    return render_template('comments.html')
+
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0',
             debug=True,

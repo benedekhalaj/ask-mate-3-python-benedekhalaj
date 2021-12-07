@@ -127,7 +127,7 @@ def delete_table_data(cursor, table, data_id):
     cursor.execute(sql.SQL("""
         DELETE FROM {table}
         WHERE id = {data_id}
-    """).format(id=sql.Literal(data_id),
+    """).format(data_id=sql.Literal(data_id),
                 table=sql.Identifier(table)))
 
 
