@@ -91,11 +91,12 @@ def modify_vote_number(cursor, table, voting, id):
 
 
 @database.connection_handler
-def delete_question(cursor, id):
+def delete_table_data(cursor, table, data_id):
     cursor.execute(sql.SQL("""
-        DELETE FROM question
-        WHERE id = {id}
-    """).format(id=sql.Literal(id)))
+        DELETE FROM {table}
+        WHERE id = {data_id}
+    """).format(id=sql.Literal(data_id),
+                table=sql.Identifier(table)))
 
 
 def export_answers(answer_list):
