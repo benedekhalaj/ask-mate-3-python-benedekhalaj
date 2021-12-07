@@ -216,3 +216,27 @@ def search_for_answer(cursor, keyword):
         keyword=Literal(f'%{keyword}%')
     ))
     return cursor.fetchall()
+
+
+@connection
+def add_new_comment(cursor, comment_details):
+    query = """
+    INSERT INTO comment (question_id, message, submission_time)
+    VALUES ({question_id}, {message}, {submission_time})
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(comment_details['question_id']),
+        message=Literal(comment_details['message']),
+        submission_time=Literal(comment_details['submission_time'])
+    ))
+
+@connection
+def get_comments(cursor, id):
+    query = """
+    SELECT submission_time, message FROM comment
+    WHERE question_id = {id}
+    """
+    cursor.execute(SQL(query).format(
+        id=Literal(id)
+    ))
+    return cursor.fetchall()

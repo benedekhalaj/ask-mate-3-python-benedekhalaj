@@ -13,12 +13,17 @@ def list_questions():
     return render_template('list.html', questions=reversed(questions), titles=data_manager.QUESTION_HEADERS)
 
 
-@app.route('/question/<question_id>')
+@app.route('/question/<question_id>', methods=['GET', 'POST'])
 def display_question(question_id):
     questions = data_manager.get_questions()
     question_answers = data_manager.get_question_answers(question_id)
     question = util.get_data_by_id(questions, 'id', question_id)
-    return render_template('display_question.html', question_id=question_id, answers=question_answers, question=question)
+    comments = data_manager.get_comments(question_id)
+    return render_template('display_question.html',
+                           question_id=question_id,
+                           answers=question_answers,
+                           question=question,
+                           comments=comments)
 
 
 @app.route('/search')
@@ -103,8 +108,12 @@ def change_answer(answer_id):
 def add_new_comment(question_id):
     selected_question = data_manager.get_question_by_id(question_id)
     if request.method == 'POST':
-        new_comment = request.args.get('new-comment')
-
+        new_comment = {
+            'question_id': question_id,
+            'submission_time': util.add_submission_time()
+        }
+        util.update_data_by_form(new_comment, request.form)
+        data_manager.add_new_comment(new_comment)
         return redirect(f'/question/{question_id}')
     return render_template('comments.html', question_id=question_id, question=selected_question)
 

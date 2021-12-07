@@ -3,9 +3,9 @@
 {% block title %}New comment{% endblock %}
 
 {% block for_comment_page %}
-    <form action="{{ url_for('display_question', question_id=question_id) }}" method="post">
-        <label for="new-comment">Add new comment:</label><br>
-        <textarea name="new-comment" id="new-comment"></textarea><br>
+    <form action="{{ url_for('add_new_comment', question_id=question_id) }}" method="post">
+        <label for="message">Add new comment:</label><br>
+        <textarea name="message" id="message"></textarea><br>
         <button type="submit">Send</button><br>
     </form>
 {% endblock %}
