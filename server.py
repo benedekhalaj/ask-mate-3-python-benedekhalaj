@@ -9,8 +9,13 @@ app = Flask(__name__)
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions()
-    return render_template('list.html', questions=reversed(questions), titles=data_manager.QUESTION_HEADERS)
+    if "list" not in request.base_url:
+        questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=1)
+        is_main_page = True
+    else:
+        questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions()
+        is_main_page = False
+    return render_template('list.html', questions=reversed(questions), titles=data_manager.QUESTION_HEADERS, main_page=is_main_page)
 
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
