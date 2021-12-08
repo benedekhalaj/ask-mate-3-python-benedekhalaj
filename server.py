@@ -18,28 +18,11 @@ def list_questions():
     return render_template('list.html', questions=reversed(questions), titles=data_manager.QUESTION_HEADERS, main_page=is_main_page)
 
 
-@app.route('/question/<question_id>', methods=['GET', 'POST'])
-def display_question(question_id):
-    questions = data_manager.get_questions()
-    question_answers = data_manager.get_question_answers(question_id)
-    question = util.get_data_by_id(questions, 'id', question_id)
-    comments = data_manager.get_comments()
-
-    tags = data_manager.get_tags()
-    question_tags = data_manager.get_question_tags(question_id)
-    question_tags = [tag['tag_id'] for tag in question_tags]
-
-    return render_template('display_question.html',
-                           question_id=question_id,
-                           answers=question_answers,
-                           question=question,
-                           comments=comments,
-                           tags=tags,
-                           question_tags=question_tags)
-
-
 @app.route('/search')
 def search_question():
+    def split_by_pattern(text, pattern, keyword):
+        return text.replace(keyword, f"{pattern}{keyword}{pattern}").split(pattern)
+
     keyword = request.args.get('q')
     searched_questions = data_manager.search_for_question(keyword)
     searched_answers = data_manager.search_for_answer(keyword)
@@ -58,14 +41,30 @@ def search_question():
                            keyword=keyword)
 
 
-def split_by_pattern(text, pattern, keyword):
-    return text.replace(keyword, f"{pattern}{keyword}{pattern}").split(pattern)
-
-
 @app.route('/question/<question_id>/view')
 def increment_view_number(question_id):
     data_manager.increment_view_number(table='question', id=question_id)
     return redirect(f'/question/{question_id}')
+
+
+@app.route('/question/<question_id>', methods=['GET', 'POST'])
+def display_question(question_id):
+    questions = data_manager.get_questions()
+    question_answers = data_manager.get_question_answers(question_id)
+    question = util.get_data_by_id(questions, 'id', question_id)
+    comments = data_manager.get_comments()
+
+    tags = data_manager.get_tags()
+    question_tags = data_manager.get_question_tags(question_id)
+    question_tags = [tag['tag_id'] for tag in question_tags]
+
+    return render_template('display_question.html',
+                           question_id=question_id,
+                           answers=question_answers,
+                           question=question,
+                           comments=comments,
+                           tags=tags,
+                           question_tags=question_tags)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -141,41 +140,6 @@ def change_question(question_id):
     return redirect('/list')
 
 
-@app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
-def post_answer(question_id):
-    if request.method == 'GET':
-        selected_answers = data_manager.get_question_answers(question_id=question_id)
-        selected_question = data_manager.get_data_by_id(table='question', id=question_id)
-        return render_template('post_answer.html', question=selected_question, answers=selected_answers)
-    else:
-        new_answer = {
-            'question_id': question_id,
-            'submission_time': util.add_submission_time()
-        }
-        util.update_data_by_form(new_answer, request.form)
-        data_manager.insert_answer(new_answer)
-        new_answer_id = data_manager.get_new_id(new_answer['submission_time'], 'answer')
-
-        image_url = util.upload_file(request, new_answer_id, 'answers')
-        data_manager.insert_image('answer', new_answer_id, image_url)
-
-        return redirect(f'/question/{question_id}')
-
-
-@app.route('/answer/<answer_id>/delete', methods=['POST'])
-@app.route('/answer/<answer_id>/vote_up')
-@app.route('/answer/<answer_id>/vote_down')
-def change_answer(answer_id):
-    answers = data_manager.get_answers()
-    question_id = util.get_data_by_id(answers, "id", answer_id)["question_id"]
-    if 'delete' not in request.base_url:
-        data_manager.modify_vote_number(table='answer', voting=request.base_url, id=answer_id)
-    else:
-        data_manager.delete_table_data(table='answer', data_id=answer_id)
-        util.delete_file('answers', answer_id)
-    return redirect(f'/question/{question_id}')
-
-
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 @app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
 def add_new_comment(question_id=None, answer_id=None):
@@ -197,6 +161,27 @@ def add_new_comment(question_id=None, answer_id=None):
     return render_template('comments.html', question_id=question_id, answer_id=answer_id, question=selected_post)
 
 
+@app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
+def post_answer(question_id):
+    if request.method == 'GET':
+        selected_answers = data_manager.get_question_answers(question_id=question_id)
+        selected_question = data_manager.get_data_by_id(table='question', id=question_id)
+        return render_template('post_answer.html', question=selected_question, answers=selected_answers)
+    else:
+        new_answer = {
+            'question_id': question_id,
+            'submission_time': util.add_submission_time()
+        }
+        util.update_data_by_form(new_answer, request.form)
+        data_manager.insert_answer(new_answer)
+        new_answer_id = data_manager.get_new_id(new_answer['submission_time'], 'answer')
+
+        image_url = util.upload_file(request, new_answer_id, 'answers')
+        data_manager.insert_image('answer', new_answer_id, image_url)
+
+        return redirect(f'/question/{question_id}')
+
+
 @app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(answer_id):
     message_and_question_id = data_manager.get_answer_by_id(answer_id)
@@ -214,6 +199,25 @@ def edit_answer(answer_id):
     return render_template('edit_answer.html', answer_id=answer_id,
                            message_to_edit=message,
                            question=question)
+
+
+@app.route('/comment/<comment_id>/edit', methods=['GET'])
+def edit_comment(comment_id):
+    return render_template('edit_comment.html')
+
+
+@app.route('/answer/<answer_id>/delete', methods=['POST'])
+@app.route('/answer/<answer_id>/vote_up')
+@app.route('/answer/<answer_id>/vote_down')
+def change_answer(answer_id):
+    answers = data_manager.get_answers()
+    question_id = util.get_data_by_id(answers, "id", answer_id)["question_id"]
+    if 'delete' not in request.base_url:
+        data_manager.modify_vote_number(table='answer', voting=request.base_url, id=answer_id)
+    else:
+        data_manager.delete_table_data(table='answer', data_id=answer_id)
+        util.delete_file('answers', answer_id)
+    return redirect(f'/question/{question_id}')
 
 
 if __name__ == "__main__":

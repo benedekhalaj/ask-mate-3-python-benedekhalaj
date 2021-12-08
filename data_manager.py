@@ -12,6 +12,7 @@ QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'titl
 def get_questions(cursor, limit=None):
     query = """
         SELECT * FROM question
+        ORDER BY id ASC
         LIMIT {limit}
     """
     cursor.execute(SQL(query).format(limit=Literal(limit)))
@@ -278,7 +279,7 @@ def add_new_comment(cursor, comment_details):
 @connection
 def get_comments(cursor):
     query = """
-    SELECT question_id, answer_id, submission_time, message FROM comment
+    SELECT id, question_id, answer_id, submission_time, message FROM comment
     """
     cursor.execute(SQL(query))
     return cursor.fetchall()
