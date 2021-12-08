@@ -18,7 +18,7 @@ def display_question(question_id):
     questions = data_manager.get_questions()
     question_answers = data_manager.get_question_answers(question_id)
     question = util.get_data_by_id(questions, 'id', question_id)
-    comments = data_manager.get_comments(question_id)
+    comments = data_manager.get_comments()
 
     tags = data_manager.get_tags()
     question_tags = data_manager.get_question_tags(question_id)

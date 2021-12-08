@@ -247,14 +247,11 @@ def add_new_comment(cursor, comment_details):
 
 
 @connection
-def get_comments(cursor, id):
+def get_comments(cursor):
     query = """
-    SELECT submission_time, message FROM comment
-    WHERE question_id = {id}
+    SELECT question_id, answer_id, submission_time, message FROM comment
     """
-    cursor.execute(SQL(query).format(
-        id=Literal(id)
-    ))
+    cursor.execute(SQL(query))
     return cursor.fetchall()
 
 
