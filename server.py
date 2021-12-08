@@ -39,12 +39,17 @@ def search_question():
     searched_questions = data_manager.search_for_question(keyword)
     split_pattern = '$ß$'
     for question in searched_questions:
-        question['title'] = question['title'].replace(keyword, f"{split_pattern}{keyword}{split_pattern}")
-        question['title'] = question['title'].split(split_pattern)
+        question['title'] = split_by_pattern(question['title'], split_pattern, keyword)
+        question['message'] = split_by_pattern(question['message'], split_pattern, keyword)
     return render_template('search_question.html',
                            questions=searched_questions,
                            titles=data_manager.QUESTION_HEADERS,
                            keyword=keyword)
+
+
+def split_by_pattern(text, pattern, keyword):
+    return text.replace(keyword, f"{pattern}{keyword}{pattern}").split(pattern)
+
 
 
 @app.route('/question/<question_id>/view')
