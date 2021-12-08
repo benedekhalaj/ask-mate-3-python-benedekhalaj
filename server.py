@@ -63,7 +63,7 @@ def add_question():
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_question_by_id(question_id)
+    question = data_manager.get_data_by_id('question', question_id)
     if request.method == 'POST':
         question = util.update_data_by_form(question, request.form)
         data_manager.update_table(table='question', data=question)
@@ -117,7 +117,7 @@ def change_question(question_id):
 def post_answer(question_id):
     if request.method == 'GET':
         selected_answers = data_manager.get_question_answers(question_id=question_id)
-        selected_question = data_manager.get_question_by_id(question_id)
+        selected_question = data_manager.get_data_by_id('question', question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
         new_answer = {
