@@ -5,7 +5,11 @@
 
 <form method="post">
     {% for tag in tags %}
-        <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}">
+        {% if tag.id in question_tags %}
+            <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}" checked>
+        {% else %}
+            <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}">
+        {% endif %}
         <label for="{{ tag.name }}">{{ tag.name }}</label>
         <br>
     {% endfor %}
