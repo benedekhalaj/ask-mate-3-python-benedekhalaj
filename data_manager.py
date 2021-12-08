@@ -9,11 +9,12 @@ QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'titl
 
 
 @connection
-def get_questions(cursor):
+def get_questions(cursor, limit=None):
     query = """
         SELECT * FROM question
+        LIMIT {limit}
     """
-    cursor.execute(query)
+    cursor.execute(SQL(query).format(limit=Literal(limit)))
     return cursor.fetchall()
 
 
