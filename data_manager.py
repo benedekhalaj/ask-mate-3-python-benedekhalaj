@@ -1,3 +1,4 @@
+import psycopg2.errors
 from psycopg2.sql import SQL, Literal, Identifier
 from psycopg2.extras import RealDictCursor
 
@@ -288,3 +289,27 @@ def add_new_tag(cursor, new_tag):
         cursor.execute(SQL(query).format(
             new_tag=Literal(new_tag)
         ))
+
+
+@connection
+def delete_tags_from_question(cursor, question_id):
+    query = """
+    DELETE FROM question_tag
+    WHERE question_id = {question_id}
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id)
+    ))
+
+
+@connection
+def add_tag_to_question(cursor, question_id, tag_id):
+    query = """
+    INSERT INTO question_tag
+    VALUES ({question_id}, {tag_id})
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id),
+        tag_id=Literal(tag_id)
+    ))
+
