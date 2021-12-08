@@ -105,7 +105,7 @@ def add_new_tag(question_id):
     question_tags = [tag['tag_id'] for tag in question_tags]
     print(question_tags)
     if request.method == 'GET':
-        return render_template('add_new_tag.html', tags=tags, question_tags=question_tags)
+        return render_template('add_new_tag.html', tags=tags, question_tags=question_tags, question_id=question_id)
 
     else:
         if request.form['submit_button'] == 'add_new_tag':
@@ -121,6 +121,12 @@ def add_new_tag(question_id):
                 if tag['name'] in selected_tags:
                     data_manager.add_tag_to_question(question_id, tag['id'])
             return redirect(url_for('display_question', question_id=question_id))
+
+
+@app.route('/question/<question_id>/tag/<tag_id>')
+def delete_tag(question_id, tag_id):
+    data_manager.delete_tag(tag_id)
+    return redirect(url_for('add_new_tag', question_id=question_id))
 
 
 @app.route('/question/<question_id>/delete', methods=['POST'])
