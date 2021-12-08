@@ -67,7 +67,8 @@
     <h2>Answer(s) for question {{ question['title'] }}</h2>
 
     <table>
-    <tr>{% if answers %}
+    <tr>
+        {% if answers %}
             {% for key in answers[0].keys() %}
                 {% if key == 'message' %}
                     <th>{{ 'ANSWER' }}</th>
@@ -91,7 +92,10 @@
                 <td style="text-align: center; height: 50px;">{{ value }}</td>
             {% endif %}
         {% endfor %}
-                <td><form action="/answer/{{ answer['id'] }}/delete" method="post"><button type="submit">Delete answer</button></form></td>
+                <td>
+                    <form action="/answer/{{ answer['id'] }}/delete" method="post"><button type="submit">Delete answer</button></form>
+                    <form action="{{ url_for('edit_answer', answer_id=answer['id']) }}"><button type="submit">Edit answer</button></form>
+                </td>
                 <td><a href="/answer/{{ answer['id'] }}/vote_up">Vote up</a></td>
             <td><a href="/answer/{{ answer['id'] }}/vote_down">Vote down</a></td>
         </tr>

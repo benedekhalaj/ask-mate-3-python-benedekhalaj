@@ -130,6 +130,25 @@ def add_new_comment(question_id):
     return render_template('comments.html', question_id=question_id, question=selected_question)
 
 
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(answer_id):
+    message_and_question_id = data_manager.get_answer_by_id(answer_id)
+    question_id = message_and_question_id[0]['question_id']
+    message = message_and_question_id[0]['message']
+    question = data_manager.get_question_by_id(question_id)
+    if request.method == 'POST':
+        edited_answer = {
+            'answer_id': answer_id,
+            'submission_time': util.add_submission_time()
+        }
+        util.update_data_by_form(edited_answer, request.form)
+        data_manager.update_answer(edited_answer)
+        return redirect(f'/question/{question_id}')
+    return render_template('edit_answer.html', answer_id=answer_id,
+                           message_to_edit=message,
+                           question=question)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0',
             debug=True,
