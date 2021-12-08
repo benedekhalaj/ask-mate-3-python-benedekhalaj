@@ -36,6 +36,7 @@ def get_data_by_id(cursor, table, id):
 def get_answers(cursor):
     query = """
         SELECT * FROM answer
+        ORDER BY id ASC
     """
     cursor.execute(query)
     return cursor.fetchall()
@@ -58,6 +59,7 @@ def get_question_answers(cursor, question_id):
     query = """
         SELECT * FROM answer
         WHERE question_id = {question_id}
+        ORDER BY id ASC
     """
     cursor.execute(SQL(query).format(
         question_id=Literal(question_id)
@@ -280,6 +282,7 @@ def add_new_comment(cursor, comment_details):
 def get_comments(cursor):
     query = """
     SELECT id, question_id, answer_id, submission_time, message FROM comment
+    ORDER BY id ASC
     """
     cursor.execute(SQL(query))
     return cursor.fetchall()

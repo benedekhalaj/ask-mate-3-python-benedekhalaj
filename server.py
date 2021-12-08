@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route("/list")
 def list_questions():
     if "list" not in request.base_url:
-        questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=1)
+        questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=5)
         is_main_page = True
     else:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions()
