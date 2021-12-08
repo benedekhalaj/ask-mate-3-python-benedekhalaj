@@ -171,16 +171,17 @@ def update_table(cursor, table, data):
     ))
 
 
-def sort_questions(orders):
-    question_list = get_questions()
-    order_title = orders['order_by']
-    order_direction = orders['order_direction']
-    if order_direction == 'asc':
-        is_reverse = False
-    elif order_direction == 'desc':
-        is_reverse = True
-    ordered_list = sorted(question_list, key=lambda item: item[order_title], reverse=is_reverse)
-    return ordered_list
+@connection
+def sort_questions(cursor, orders):
+    query = """
+    SELECT * from question
+    ORDER BY {order_by} {direction}
+    """
+    cursor.execute(SQL(query).format(
+        order_by=SQL(orders['order_by']),
+        direction=SQL(orders['order_direction'].upper())
+    ))
+    return cursor.fetchall()
 
 
 @connection
