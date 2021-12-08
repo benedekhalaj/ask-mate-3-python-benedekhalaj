@@ -1,0 +1,7 @@
+{% extends 'post_answer.html' %}
+
+{% block edit_answer_route %}{{ url_for('edit_answer', answer_id=answer_id) }}{% endblock %}
+
+{% block edit_answer_value %}{{ message_to_edit }}{% endblock %}
+
+{% block edit_answer_submit %}Edit{% endblock %}

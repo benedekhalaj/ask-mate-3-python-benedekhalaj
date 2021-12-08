@@ -40,6 +40,18 @@ def get_answers(cursor):
 
 
 @connection
+def get_answer_by_id(cursor, answer_id):
+    query = """
+    SELECT message, question_id from answer
+    WHERE id = {answer_id}
+    """
+    cursor.execute(SQL(query).format(
+        answer_id=Literal(answer_id)
+    ))
+    return cursor.fetchall()
+
+
+@connection
 def get_question_answers(cursor, question_id):
     query = """
         SELECT * FROM answer
@@ -182,6 +194,20 @@ def update_table(cursor, table, data):
         title=Literal(data['title']),
         message=Literal(data['message']),
         id=Literal(data['id'])
+    ))
+
+
+@connection
+def update_answer(cursor, data):
+    query = """
+        UPDATE answer
+        SET submission_time = {submission_time}, message = {message}
+        WHERE id = {answer_id}
+    """
+    cursor.execute(SQL(query).format(
+        submission_time=Literal(data['submission_time']),
+        message=Literal(data['message']),
+        answer_id=Literal(data['answer_id'])
     ))
 
 

@@ -70,7 +70,7 @@ def add_question():
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_data_by_id('question', question_id)
+    question = data_manager.get_data_by_id(table='question', id=question_id)
     if request.method == 'POST':
         question = util.update_data_by_form(question, request.form)
         data_manager.update_table(table='question', data=question)
@@ -124,7 +124,7 @@ def change_question(question_id):
 def post_answer(question_id):
     if request.method == 'GET':
         selected_answers = data_manager.get_question_answers(question_id=question_id)
-        selected_question = data_manager.get_data_by_id('question', question_id)
+        selected_question = data_manager.get_data_by_id(table='question', id=question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
         new_answer = {
@@ -174,6 +174,25 @@ def add_new_comment(question_id=None, answer_id=None):
             question_id = selected_post['question_id']
         return redirect(f'/question/{question_id}')
     return render_template('comments.html', question_id=question_id, answer_id=answer_id, question=selected_post)
+
+
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(answer_id):
+    message_and_question_id = data_manager.get_answer_by_id(answer_id)
+    question_id = message_and_question_id[0]['question_id']
+    message = message_and_question_id[0]['message']
+    question = data_manager.get_data_by_id(table='question', id=question_id)
+    if request.method == 'POST':
+        edited_answer = {
+            'answer_id': answer_id,
+            'submission_time': util.add_submission_time()
+        }
+        util.update_data_by_form(edited_answer, request.form)
+        data_manager.update_answer(edited_answer)
+        return redirect(f'/question/{question_id}')
+    return render_template('edit_answer.html', answer_id=answer_id,
+                           message_to_edit=message,
+                           question=question)
 
 
 if __name__ == "__main__":
