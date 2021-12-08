@@ -33,7 +33,14 @@
     </tr>
     </table>
 
+    <a href="{{ url_for('add_new_tag', question_id=question['id']) }}">Add new tag</a>
 
+    <h3>Tags:</h3>
+    {% for tag in tags %}
+        {% if tag.id in question_tags %}
+        <p>{{ tag.name }}</p>
+        {% endif %}
+    {% endfor %}
 
     <p><a href="/question/{{ question_id }}/edit">Edit question</a></p>
     <form action="/question/{{ question_id }}/delete" method="post">
