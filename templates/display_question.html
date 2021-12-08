@@ -79,7 +79,7 @@
     </tr>
 
     {% for answer in answers %}
-        <tr>
+        <td>
         {% for key, value in answer.items() %}
             {% if key == 'image' %}
                {% if value %}
@@ -91,9 +91,11 @@
                 <td style="text-align: center; height: 50px;">{{ value }}</td>
             {% endif %}
         {% endfor %}
-                <td><form action="/answer/{{ answer['id'] }}/delete" method="post"><button type="submit">Delete answer</button></form></td>
-                <td><a href="/answer/{{ answer['id'] }}/vote_up">Vote up</a></td>
+            <td><form action="/answer/{{ answer['id'] }}/delete" method="post"><button type="submit">Delete answer</button></form></td>
+            <td><a href="/answer/{{ answer['id'] }}/vote_up">Vote up</a></td>
             <td><a href="/answer/{{ answer['id'] }}/vote_down">Vote down</a></td>
+            <td><a href="{{ url_for('add_new_comment', answer_id=answer['id']) }}">Add new comment to this answer</a></td>
+
         </tr>
     {% endfor %}
 

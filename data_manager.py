@@ -17,13 +17,14 @@ def get_questions(cursor):
 
 
 @connection
-def get_question_by_id(cursor, question_id):
+def get_data_by_id(cursor, table, id):
     query = """
-        SELECT * FROM question
-        WHERE id = {question_id}
+        SELECT * FROM {table}
+        WHERE id = {id}
     """
     cursor.execute(SQL(query).format(
-        question_id=Literal(question_id)
+        table=Identifier(table),
+        id=Literal(id)
     ))
     return cursor.fetchone()
 
@@ -234,11 +235,12 @@ def insert_image(cursor, table, id, image_url):
 @connection
 def add_new_comment(cursor, comment_details):
     query = """
-    INSERT INTO comment (question_id, message, submission_time)
-    VALUES ({question_id}, {message}, {submission_time})
+    INSERT INTO comment (question_id, answer_id, message, submission_time)
+    VALUES ({question_id}, {answer_id}, {message}, {submission_time})
     """
     cursor.execute(SQL(query).format(
         question_id=Literal(comment_details['question_id']),
+        answer_id=Literal(comment_details['answer_id']),
         message=Literal(comment_details['message']),
         submission_time=Literal(comment_details['submission_time'])
     ))

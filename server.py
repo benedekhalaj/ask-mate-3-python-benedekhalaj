@@ -117,17 +117,24 @@ def change_answer(answer_id):
 
 
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
-def add_new_comment(question_id):
-    selected_question = data_manager.get_question_by_id(question_id)
+@app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
+def add_new_comment(question_id=None, answer_id=None):
+    if 'question' in request.base_url:
+        selected_post = data_manager.get_data_by_id(table='question', id=question_id)
+    else:
+        selected_post = data_manager.get_data_by_id(table='answer', id=answer_id)
     if request.method == 'POST':
         new_comment = {
             'question_id': question_id,
+            'answer_id': answer_id,
             'submission_time': util.add_submission_time()
         }
         util.update_data_by_form(new_comment, request.form)
         data_manager.add_new_comment(new_comment)
+        if answer_id:
+            question_id = selected_post['question_id']
         return redirect(f'/question/{question_id}')
-    return render_template('comments.html', question_id=question_id, question=selected_question)
+    return render_template('comments.html', question_id=question_id, answer_id=answer_id, question=selected_post)
 
 
 if __name__ == "__main__":
