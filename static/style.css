@@ -22,4 +22,5 @@ table, th, tr, td{
 
 span {
     background-color: orange;
+    display: inline;
 }
