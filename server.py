@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import data_manager
 import util
 
@@ -19,11 +19,18 @@ def display_question(question_id):
     question_answers = data_manager.get_question_answers(question_id)
     question = util.get_data_by_id(questions, 'id', question_id)
     comments = data_manager.get_comments(question_id)
+
+    tags = data_manager.get_tags()
+    question_tags = data_manager.get_question_tags(question_id)
+    question_tags = [tag['tag_id'] for tag in question_tags]
+
     return render_template('display_question.html',
                            question_id=question_id,
                            answers=question_answers,
                            question=question,
-                           comments=comments)
+                           comments=comments,
+                           tags=tags,
+                           question_tags=question_tags)
 
 
 @app.route('/search')
@@ -67,6 +74,23 @@ def edit_question(question_id):
 
         return redirect(f'/question/{question_id}')
     return render_template('edit_question.html', question=question)
+
+
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def add_new_tag(question_id):
+    if request.method == 'GET':
+        tags = data_manager.get_tags()
+        return render_template('add_new_tag.html', tags=tags)
+    else:
+        if request.form['submit_button'] == 'add_new_tag':
+            new_tag = request.form.get('new_tag')
+            if new_tag:
+                data_manager.add_new_tag(new_tag)
+            return redirect(url_for('add_new_tag', question_id=question_id))
+        else:
+            for key, value in request.form.items():
+                pass
+            return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/question/<question_id>/delete', methods=['POST'])

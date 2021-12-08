@@ -268,9 +268,25 @@ def get_tags(cursor):
 
 
 @connection
-def get_question_tags(cursor):
+def get_question_tags(cursor, question_id):
     query = """
-    SELECT * FROM question_tag
+    SELECT tag_id FROM question_tag
+    WHERE question_id = {question_id}
     """
-    cursor.execute(SQL(query))
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id)
+    ))
     return cursor.fetchall()
+
+
+@connection
+def add_new_tag(cursor, new_tag):
+    tags = [tag['name'].lower() for tag in get_tags()]
+    if new_tag.lower() not in tags:
+        query = """
+        INSERT INTO tag (name)
+        VALUES ({new_tag})
+        """
+        cursor.execute(SQL(query).format(
+            new_tag=Literal(new_tag)
+        ))
