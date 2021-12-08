@@ -254,3 +254,21 @@ def get_comments(cursor, id):
         id=Literal(id)
     ))
     return cursor.fetchall()
+
+
+@connection
+def get_tags(cursor):
+    query = """
+    SELECT * FROM tag
+    """
+    cursor.execute(SQL(query))
+    return cursor.fetchall()
+
+
+@connection
+def get_question_tags(cursor):
+    query = """
+    SELECT * FROM question_tag
+    """
+    cursor.execute(SQL(query))
+    return cursor.fetchall()
