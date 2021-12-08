@@ -16,8 +16,9 @@ table, th, tr, td{
     border-style: groove;
 }
 
-.back{
-    text-align: left;
+#back{
+    margin: 0;
+    float: left;
 }
 
 span {
