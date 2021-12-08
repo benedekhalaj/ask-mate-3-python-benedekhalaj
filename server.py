@@ -79,8 +79,11 @@ def edit_question(question_id):
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
 def add_new_tag(question_id):
     tags = data_manager.get_tags()
+    question_tags = data_manager.get_question_tags(question_id)
+    question_tags = [tag['tag_id'] for tag in question_tags]
+    print(question_tags)
     if request.method == 'GET':
-        return render_template('add_new_tag.html', tags=tags)
+        return render_template('add_new_tag.html', tags=tags, question_tags=question_tags)
 
     else:
         if request.form['submit_button'] == 'add_new_tag':
