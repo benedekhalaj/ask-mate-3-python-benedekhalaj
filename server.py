@@ -117,7 +117,7 @@ def change_question(question_id):
 def post_answer(question_id):
     if request.method == 'GET':
         selected_answers = data_manager.get_question_answers(question_id=question_id)
-        selected_question = data_manager.get_question_by_id(question_id)
+        selected_question = data_manager.get_data_by_id(table='question', id=question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
         new_answer = {
