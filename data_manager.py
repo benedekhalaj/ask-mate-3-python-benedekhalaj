@@ -337,4 +337,3 @@ def add_tag_to_question(cursor, question_id, tag_id):
         question_id=Literal(question_id),
         tag_id=Literal(tag_id)
     ))
-
