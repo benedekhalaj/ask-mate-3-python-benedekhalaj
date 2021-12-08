@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    {% block title %}<title>Post Answer</title>{% endblock %}
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block title %}
+    Post Answer
+{% endblock %}
+
+{% block content %}
     <h1>Question {{ question['id'] }}</h1>
     <table>
         <tr>
@@ -24,15 +24,13 @@
     </table><br>
 
     {% block for_comment_page %}
-    <form action="/question/{{ question['id']}}/new-answer" method="post" enctype="multipart/form-data">
-        <label for="message">Answer:</label><br>
-        <textarea id="message" name="message"></textarea><br><br>
+        <form action="/question/{{ question['id']}}/new-answer" method="post" enctype="multipart/form-data">
+            <label for="message">Answer:</label><br>
+            <textarea id="message" name="message"></textarea><br><br>
 
-        <input type="file" name="file"><br><br>
+            <input type="file" name="file"><br><br>
 
-        <button type="submit">Add new Answer</button>
-    </form>
+            <button type="submit">Add new Answer</button>
+        </form>
     {% endblock %}
-
-</body>
-</html>
+{% endblock %}

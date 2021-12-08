@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>{% block title %}{% endblock %}-Jinja3</title>
+</head>
+<body>
+    {% block back %}
+        <a href="/" class="back" id="back">Back to Main Page</a>
+    {% endblock %}
+
+    <h1>Jinja 3 Forum</h1>
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

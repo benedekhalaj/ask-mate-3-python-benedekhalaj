@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>List questions</title>
-</head>
-<body>
-    <h1>Questions</h1>
+{% extends "layout.html" %}
+{% block title %}
+    List questions
+{% endblock %}
+
+{% block content %}
+    {% block back %}
+    {% endblock %}
+    <h2>Questions</h2>
 
     <form action="{{ url_for('search_question') }}">
         <label for="search">Search:</label>
@@ -32,7 +33,11 @@
                 {% if key == 'title' %}
                     <td style="text-align: center; height: 50px;"><a href="/question/{{ question['id'] }}/view">{{ value }}</a></td>
                 {% elif key == 'image' %}
-                    <td><a href="{{ value }}" target="_blank"><img src="{{ value }}" style="max-height: 50px;"></a></td>
+                    {% if value %}
+                        <td><a href="{{ url_for('static', filename=value) }}" target="_blank"><img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;"></a></td>
+                    {% else %}
+                        <td><p>No image</p></td>
+                    {% endif %}
                 {% else %}
                     <td style="text-align: center; height: 50px;">{{ value }}</td>
                 {% endif %}
@@ -42,5 +47,4 @@
             </tr>
         {% endfor %}
     </table>
-</body>
-</html>
+{% endblock %}

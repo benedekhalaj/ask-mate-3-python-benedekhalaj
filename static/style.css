@@ -1,0 +1,21 @@
+
+body {
+    background-color: aliceblue;
+    text-align: center;
+}
+
+a:hover {
+    color: darkblue;
+    font-weight: bolder;
+    background-color: yellow;
+}
+
+table, th, tr, td{
+    margin: auto;
+    text-align: center;
+    border-style: groove;
+}
+
+.back{
+    text-align: left;
+}

@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add question</title>
-</head>
-<body>
-    <p><a href="/">Back to Main Page</a></p>
+{% extends 'layout.html' %}
+
+{% block title %}
+    Add question
+{% endblock %}
+
+{% block content %}
     {% block headline %}{% endblock %}
     <form action="{% block action %}/add-question{% endblock %}" method="post" enctype="multipart/form-data">
         <label for="title">Title:</label><br>
@@ -17,6 +16,4 @@
         <input type="file" name="file" id="file"><br><br>
         <button type="submit" value="Upload">{% block button %}Add new question{% endblock %}</button>
     </form>
-
-</body>
-</html>
+{% endblock %}

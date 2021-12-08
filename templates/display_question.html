@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Question {{ question['title'] }}</title>
-</head>
-<body>
-    <p><a href="/list">Back to Question List</a></p>
+{% extends "layout.html" %}
+
+{% block title %}
+    Question {{ question['title'] }}
+{% endblock %}
+
+{% block content %}
     <h2>Question {{ question['title'] }}</h2>
-    <table border="1">
+    <table>
     <tr>
         {% for key in question.keys() %}
-            {% if key == 'title' %}
+            {% if key in ['title', 'image'] %}
                 <th>{{ key.upper() }}</th>
             {% elif key == 'message' %}
                 <th>{{ 'QUESTION' }}</th>
@@ -19,8 +18,16 @@
     </tr>
     <tr>
         {% for key, value in question.items() %}
-            {% if key in ['title', 'message']  %}
-                <td>{{ value }}</td>
+            {% if key in ['title', 'message', 'image']  %}
+                {% if key == 'image' %}
+                    {% if value %}
+                        <td><a href="{{ url_for('static', filename=value) }}" target="_blank"><img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;"></a></td>
+                    {% else %}
+                        <td><p>No image</p></td>
+                    {% endif %}
+                {% else %}
+                    <td>{{ value }}</td>
+                {% endif %}
             {% endif %}
         {% endfor %}
     </tr>
@@ -35,7 +42,7 @@
     <h3>Comments for question {{ question['title'] }}</h3>
 
     {% if comments %}
-        <table border="1">
+        <table>
             <tr>
             {% for key in comments[0].keys() %}
                 <th>{{ key }}</th>
@@ -56,7 +63,7 @@
 
     <h2>Answer(s) for question {{ question['title'] }}</h2>
 
-    <table border="1">
+    <table>
     <tr>{% if answers %}
             {% for key in answers[0].keys() %}
                 {% if key == 'message' %}
@@ -72,7 +79,11 @@
         <tr>
         {% for key, value in answer.items() %}
             {% if key == 'image' %}
-                <td><a href="{{ value }}" target="_blank"><img src="{{ value }}" style="max-height: 50px;"></a></td>
+               {% if value %}
+                    <td><a href="{{ url_for('static', filename=value) }}" target="_blank"><img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;"></a></td>
+                {% else %}
+                    <td><p>No image</p></td>
+                {% endif %}
             {% else %}
                 <td style="text-align: center; height: 50px;">{{ value }}</td>
             {% endif %}
@@ -86,9 +97,4 @@
 
     </table><br>
     <p><a href="{{ question_id }}/new-answer">Add a new answer</a></p><br>
-
-
-
-
-</body>
-</html>
+{% endblock %}
