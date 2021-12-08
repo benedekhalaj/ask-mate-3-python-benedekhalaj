@@ -37,7 +37,14 @@ def display_question(question_id):
 def search_question():
     keyword = request.args.get('q')
     searched_questions = data_manager.search_for_question(keyword)
-    return render_template('search_question.html', questions=searched_questions, titles=data_manager.QUESTION_HEADERS)
+    split_pattern = '$ß$'
+    for question in searched_questions:
+        question['title'] = question['title'].replace(keyword, f"{split_pattern}{keyword}{split_pattern}")
+        question['title'] = question['title'].split(split_pattern)
+    return render_template('search_question.html',
+                           questions=searched_questions,
+                           titles=data_manager.QUESTION_HEADERS,
+                           keyword=keyword)
 
 
 @app.route('/question/<question_id>/view')
