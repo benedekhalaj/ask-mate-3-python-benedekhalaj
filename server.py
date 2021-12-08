@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import data_manager
 import util
 
@@ -18,12 +18,19 @@ def display_question(question_id):
     questions = data_manager.get_questions()
     question_answers = data_manager.get_question_answers(question_id)
     question = util.get_data_by_id(questions, 'id', question_id)
-    comments = data_manager.get_comments(question_id)
+    comments = data_manager.get_comments()
+
+    tags = data_manager.get_tags()
+    question_tags = data_manager.get_question_tags(question_id)
+    question_tags = [tag['tag_id'] for tag in question_tags]
+
     return render_template('display_question.html',
                            question_id=question_id,
                            answers=question_answers,
                            question=question,
-                           comments=comments)
+                           comments=comments,
+                           tags=tags,
+                           question_tags=question_tags)
 
 
 @app.route('/search')
@@ -56,7 +63,7 @@ def add_question():
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_question_by_id(question_id)
+    question = data_manager.get_data_by_id(table='question', id=question_id)
     if request.method == 'POST':
         question = util.update_data_by_form(question, request.form)
         data_manager.update_table(table='question', data=question)
@@ -67,6 +74,31 @@ def edit_question(question_id):
 
         return redirect(f'/question/{question_id}')
     return render_template('edit_question.html', question=question)
+
+
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def add_new_tag(question_id):
+    tags = data_manager.get_tags()
+    question_tags = data_manager.get_question_tags(question_id)
+    question_tags = [tag['tag_id'] for tag in question_tags]
+    print(question_tags)
+    if request.method == 'GET':
+        return render_template('add_new_tag.html', tags=tags, question_tags=question_tags)
+
+    else:
+        if request.form['submit_button'] == 'add_new_tag':
+            new_tag = request.form.get('new_tag')
+            if new_tag:
+                data_manager.add_new_tag(new_tag)
+            return redirect(url_for('add_new_tag', question_id=question_id))
+
+        else:
+            data_manager.delete_tags_from_question(question_id)
+            selected_tags = [key for key in request.form.keys() if key != 'submit_button']
+            for tag in tags:
+                if tag['name'] in selected_tags:
+                    data_manager.add_tag_to_question(question_id, tag['id'])
+            return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/question/<question_id>/delete', methods=['POST'])
@@ -85,7 +117,7 @@ def change_question(question_id):
 def post_answer(question_id):
     if request.method == 'GET':
         selected_answers = data_manager.get_question_answers(question_id=question_id)
-        selected_question = data_manager.get_question_by_id(question_id)
+        selected_question = data_manager.get_data_by_id(table='question', id=question_id)
         return render_template('post_answer.html', question=selected_question, answers=selected_answers)
     else:
         new_answer = {
@@ -117,17 +149,24 @@ def change_answer(answer_id):
 
 
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
-def add_new_comment(question_id):
-    selected_question = data_manager.get_question_by_id(question_id)
+@app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
+def add_new_comment(question_id=None, answer_id=None):
+    if 'question' in request.base_url:
+        selected_post = data_manager.get_data_by_id(table='question', id=question_id)
+    else:
+        selected_post = data_manager.get_data_by_id(table='answer', id=answer_id)
     if request.method == 'POST':
         new_comment = {
             'question_id': question_id,
+            'answer_id': answer_id,
             'submission_time': util.add_submission_time()
         }
         util.update_data_by_form(new_comment, request.form)
         data_manager.add_new_comment(new_comment)
+        if answer_id:
+            question_id = selected_post['question_id']
         return redirect(f'/question/{question_id}')
-    return render_template('comments.html', question_id=question_id, question=selected_question)
+    return render_template('comments.html', question_id=question_id, answer_id=answer_id, question=selected_post)
 
 
 @app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
@@ -135,7 +174,7 @@ def edit_answer(answer_id):
     message_and_question_id = data_manager.get_answer_by_id(answer_id)
     question_id = message_and_question_id[0]['question_id']
     message = message_and_question_id[0]['message']
-    question = data_manager.get_question_by_id(question_id)
+    question = data_manager.get_data_by_id(table='question', id=question_id)
     if request.method == 'POST':
         edited_answer = {
             'answer_id': answer_id,

@@ -1,3 +1,4 @@
+import psycopg2.errors
 from psycopg2.sql import SQL, Literal, Identifier
 from psycopg2.extras import RealDictCursor
 
@@ -17,13 +18,14 @@ def get_questions(cursor):
 
 
 @connection
-def get_question_by_id(cursor, question_id):
+def get_data_by_id(cursor, table, id):
     query = """
-        SELECT * FROM question
-        WHERE id = {question_id}
+        SELECT * FROM {table}
+        WHERE id = {id}
     """
     cursor.execute(SQL(query).format(
-        question_id=Literal(question_id)
+        table=Identifier(table),
+        id=Literal(id)
     ))
     return cursor.fetchone()
 
@@ -260,25 +262,23 @@ def insert_image(cursor, table, id, image_url):
 @connection
 def add_new_comment(cursor, comment_details):
     query = """
-    INSERT INTO comment (question_id, message, submission_time)
-    VALUES ({question_id}, {message}, {submission_time})
+    INSERT INTO comment (question_id, answer_id, message, submission_time)
+    VALUES ({question_id}, {answer_id}, {message}, {submission_time})
     """
     cursor.execute(SQL(query).format(
         question_id=Literal(comment_details['question_id']),
+        answer_id=Literal(comment_details['answer_id']),
         message=Literal(comment_details['message']),
         submission_time=Literal(comment_details['submission_time'])
     ))
 
 
 @connection
-def get_comments(cursor, id):
+def get_comments(cursor):
     query = """
-    SELECT submission_time, message FROM comment
-    WHERE question_id = {id}
+    SELECT question_id, answer_id, submission_time, message FROM comment
     """
-    cursor.execute(SQL(query).format(
-        id=Literal(id)
-    ))
+    cursor.execute(SQL(query))
     return cursor.fetchall()
 
 
@@ -292,9 +292,49 @@ def get_tags(cursor):
 
 
 @connection
-def get_question_tags(cursor):
+def get_question_tags(cursor, question_id):
     query = """
-    SELECT * FROM question_tag
+    SELECT tag_id FROM question_tag
+    WHERE question_id = {question_id}
     """
-    cursor.execute(SQL(query))
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id)
+    ))
     return cursor.fetchall()
+
+
+@connection
+def add_new_tag(cursor, new_tag):
+    tags = [tag['name'].lower() for tag in get_tags()]
+    if new_tag.lower() not in tags:
+        query = """
+        INSERT INTO tag (name)
+        VALUES ({new_tag})
+        """
+        cursor.execute(SQL(query).format(
+            new_tag=Literal(new_tag)
+        ))
+
+
+@connection
+def delete_tags_from_question(cursor, question_id):
+    query = """
+    DELETE FROM question_tag
+    WHERE question_id = {question_id}
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id)
+    ))
+
+
+@connection
+def add_tag_to_question(cursor, question_id, tag_id):
+    query = """
+    INSERT INTO question_tag
+    VALUES ({question_id}, {tag_id})
+    """
+    cursor.execute(SQL(query).format(
+        question_id=Literal(question_id),
+        tag_id=Literal(tag_id)
+    ))
+
