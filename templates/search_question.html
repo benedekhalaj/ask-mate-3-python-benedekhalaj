@@ -3,7 +3,7 @@
 {% block highlight %}
 
  {% for question in questions %}
-     <h2>Question</h2>
+     <h2>Question {{ question['id'] }}</h2>
      <table>
         <tr>
             {% for title in titles %}
