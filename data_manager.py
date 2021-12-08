@@ -236,7 +236,7 @@ def search_for_question(cursor, keyword):
 @connection
 def search_for_answer(cursor, keyword):
     query = """
-    SELECT question_id FROM answer
+    SELECT * FROM answer
     WHERE message LIKE {keyword}
     """
     cursor.execute(SQL(query).format(

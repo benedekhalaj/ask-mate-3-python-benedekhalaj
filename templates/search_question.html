@@ -3,6 +3,15 @@
 {% block highlight %}
 
  {% for question in questions %}
+     <h2>Question</h2>
+     <table>
+        <tr>
+            {% for title in titles %}
+                <th>
+                    {{  title.replace('_', ' ').capitalize() }}
+                </th>
+            {% endfor %}
+        </tr>
             <tr>
             {% for key, value in question.items() %}
 
@@ -43,7 +52,30 @@
                 <td><a href="/question/{{ question['id'] }}/vote_up">Vote up</a></td>
                 <td><a href="/question/{{ question['id'] }}/vote_down">Vote down</a></td>
             </tr>
-        {% endfor %}
-    </table>
+     </table><br>
+     {% for answer in answers %}
+         {% if answer['question_id'] == question['id'] %}
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Answer</th>
+                </tr>
+                <tr>
+                    <td>{{ answer['id'] }}</td>
+                    <td>
+                        {% for message in answer['message'] %}
+                            {% if message == keyword %}
+                                <span>{{ message }}</span>
+                            {% else %}
+                                {{ message }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+             <br><br><br>
+         {% endif %}
+     {% endfor %}
+{% endfor %}
 
 {% endblock %}

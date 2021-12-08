@@ -16,6 +16,7 @@
 
     <p><a href="/add-question">Add new question</a></p>
 
+    {% block highlight %}
     <table>
         <tr>
             {% for title in titles %}
@@ -26,8 +27,6 @@
                 </th>
             {% endfor %}
         </tr>
-
-        {% block highlight %}
 
         {% for question in questions %}
             <tr>
@@ -50,7 +49,7 @@
         {% endfor %}
     </table>
 
-    {% endblock %}
+        {% endblock %}
 
     {% if main_page %}
         <a href="/list">All question</a>

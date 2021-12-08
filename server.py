@@ -42,13 +42,18 @@ def display_question(question_id):
 def search_question():
     keyword = request.args.get('q')
     searched_questions = data_manager.search_for_question(keyword)
+    searched_answers = data_manager.search_for_answer(keyword)
     split_pattern = '$ß$'
     for question in searched_questions:
         question['title'] = split_by_pattern(question['title'], split_pattern, keyword)
         question['message'] = split_by_pattern(question['message'], split_pattern, keyword)
-        print(question['message'])
+
+    for answer in searched_answers:
+        answer['message'] = split_by_pattern(answer['message'], split_pattern, keyword)
+        print(searched_answers)
     return render_template('search_question.html',
                            questions=searched_questions,
+                           answers=searched_answers,
                            titles=data_manager.QUESTION_HEADERS,
                            keyword=keyword)
 
