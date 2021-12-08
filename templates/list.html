@@ -31,7 +31,15 @@
             <tr>
             {% for key, value in question.items() %}
                 {% if key == 'title' %}
-                    <td style="text-align: center; height: 50px;"><a href="/question/{{ question['id'] }}/view">{{ value }}</a></td>
+                    <td style="text-align: center; height: 50px;"><a href="/question/{{ question['id'] }}/view">
+                        {% for item in value %}
+                            {% if item == keyword %}
+                                <span>{{ item }}</span>
+                            {% else %}
+                                {{ item }}
+                            {% endif %}
+                        {% endfor %}
+                    </a></td>
                 {% elif key == 'image' %}
                     {% if value %}
                         <td><a href="{{ url_for('static', filename=value) }}" target="_blank"><img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;"></a></td>
