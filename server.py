@@ -63,7 +63,7 @@ def add_question():
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_question_by_id(question_id)
+    question = data_manager.get_data_by_id(table='question', id=question_id)
     if request.method == 'POST':
         question = util.update_data_by_form(question, request.form)
         data_manager.update_table(table='question', data=question)
