@@ -8,7 +8,7 @@
     {% block headline %}{% endblock %}
     <form action="{% block action %}/add-question{% endblock %}" method="post" enctype="multipart/form-data">
         <label for="title">Title:</label><br>
-        <input id="title" name="title" {% block title %}{% endblock %} required><br><br>
+        <input id="title" name="title" {% block question_title %}{% endblock %} required><br><br>
 
         <label for="message">Message:</label><br>
         <textarea id="message" name="message" required>{% block message %}{% endblock %}</textarea><br><br>

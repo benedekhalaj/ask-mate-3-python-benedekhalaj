@@ -90,7 +90,7 @@
         {% for key, value in answer.items() %}
             {% if key == 'image' %}
                {% if value %}
-                    <td><a href="{{ url_for('static', filename=value) }}" target="_blank"><img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;"></a></td>
+                    <td><a href="{{ url_for('static', filename = value) }}" target="_blank"><img src="{{ url_for('static',filename = value) }}" style="max-height: 50px;"></a></td>
                 {% else %}
                     <td><p>No image</p></td>
                 {% endif %}

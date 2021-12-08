@@ -1,6 +1,8 @@
 {% extends 'post_answer.html' %}
 
-{% block title %}New comment{% endblock %}
+{% block title %}Comments{% endblock %}
+
+{% block question_title %}New comment{% endblock %}
 
 {% block for_comment_page %}
     <form action="{{ url_for('add_new_comment', question_id=question_id) }}" method="post">
