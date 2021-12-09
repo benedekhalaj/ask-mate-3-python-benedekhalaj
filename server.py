@@ -138,7 +138,7 @@ def delete_tag(question_id, tag_id):
 @app.route('/question/<question_id>/vote_up')
 @app.route('/question/<question_id>/vote_down')
 def change_question(question_id):
-    if request.method == 'POST':
+    if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
         data_manager.delete_table_data(table='question', data_id=question_id)
@@ -212,13 +212,13 @@ def edit_comment(comment_id):
     return render_template('edit_comment.html')
 
 
-@app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])
+@app.route('/answer/<answer_id>/delete', methods=['POST'])
 @app.route('/answer/<answer_id>/vote_up')
 @app.route('/answer/<answer_id>/vote_down')
 def change_answer(answer_id):
     answers = data_manager.get_answers()
     question_id = util.get_data_by_id(answers, "id", answer_id)["question_id"]
-    if request.method == 'GET':
+    if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='answer', voting=request.base_url, id=answer_id)
     else:
         data_manager.delete_table_data(table='answer', data_id=answer_id)
