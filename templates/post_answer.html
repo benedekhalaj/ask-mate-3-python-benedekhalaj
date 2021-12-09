@@ -10,7 +10,7 @@
         <tr>
             {% for key in question.keys() %}
                 {% if key in header %}
-                    <th>{{ key.replace('_', ' ').capitalize() }}</th>
+                    <th>{{ key.replace('_', ' ').upper() }}</th>
                 {% endif %}
             {% endfor %}
         </tr>

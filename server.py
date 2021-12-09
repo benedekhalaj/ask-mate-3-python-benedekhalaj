@@ -5,7 +5,7 @@ import util
 
 app = Flask(__name__)
 
-COMMENT_HEADER = ['submission_time', 'message']
+COMMENT_HEADER = ['submission_time', 'message', 'edited_count']
 ANSWER_HEADER = ['submission_time', 'vote_number', 'message', 'image']
 QUESTION_HEADER = ['title', 'message', 'image']
 

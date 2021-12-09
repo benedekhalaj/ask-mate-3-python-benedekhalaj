@@ -286,7 +286,7 @@ def add_new_comment(cursor, comment_details):
 @connection
 def get_comments(cursor):
     query = """
-    SELECT id, question_id, answer_id, submission_time, message FROM comment
+    SELECT * FROM comment
     ORDER BY id ASC
     """
     cursor.execute(SQL(query))

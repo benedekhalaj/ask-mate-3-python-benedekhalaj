@@ -5,7 +5,7 @@
     {% for key, value in comment.items() %}
         {% if key in header %}
         <tr>
-            <th>{{ key }}</th>
+            <th>{{ key.replace('_', ' ').upper() }}</th>
         </tr>
         <tr>
             <td>{{ value }}</td>
