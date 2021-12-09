@@ -226,6 +226,22 @@ def change_answer(answer_id):
     return redirect(f'/question/{question_id}')
 
 
+@app.route('/comment/<comment_id>/delete', methods=['GET', 'POST'])
+def delete_comment(comment_id):
+    comments = data_manager.get_comments()
+    comment = util.get_data_by_id(comments, "id", comment_id)
+    if request.method == 'POST':
+        question_id = comment['question_id']
+        if request.form['confirm_deleting'] == 'YES':
+            data_manager.delete_table_data(table='comment', data_id=comment_id)
+            return redirect(f'/question/{question_id}')
+        elif request.form['confirm_deleting'] == 'NO':
+            return redirect(f'/question/{question_id}')
+    return render_template('confirm_delete_comment.html',
+                           comment=comment,
+                           header=COMMENT_HEADER)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0',
             debug=True,
