@@ -1,0 +1,28 @@
+{% if value is not string %}
+    <div class="{{ title }}">
+    {% if title == 'title' %}
+        <h3><a href="{{ url_for('display_question', question_id=question['id']) }}">
+    {% endif %}
+    {% for item in value %}
+
+        {% if item == keyword %}
+            <span>{{ item }}</span>
+        {% else %}
+            {{ item }}
+        {% endif %}
+    {% endfor %}
+    {% if title == 'title' %}
+        </a></h3>
+    {% endif %}
+    </div>
+{% else %}
+    <div class="{{ title }}">
+        {% if title == 'title' %}
+            <h3><a href="{{ url_for('display_question', question_id=question['id']) }}">
+        {% endif %}
+            {{ value }}
+        {% if title == 'title' %}
+            </a></h3>
+        {% endif %}
+    </div>
+{% endif %}

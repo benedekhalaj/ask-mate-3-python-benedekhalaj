@@ -6,40 +6,10 @@
 
 {% block content %}
     <h2>Question {{ question['title'] }}</h2>
-    <table>
-        <tr>
-            {% for key in question.keys() %}
-                {% if key in question_header %}
-                    {% if key == 'message' %}
-                        <th>{{ 'QUESTION' }}</th>
-                    {% else %}
-                        <th>{{ key.upper() }}</th>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </tr>
-        <tr>
-            {% for key, value in question.items() %}
-                {% if key in question_header  %}
-                    {% if key == 'image' %}
-                        {% if value %}
-                            <td>
-                                <a href="{{ url_for('static', filename=value) }}" target="_blank">
-                                    <img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;">
-                                </a>
-                            </td>
-                        {% else %}
-                            <td>
-                                <p>No image</p>
-                            </td>
-                        {% endif %}
-                    {% else %}
-                        <td>{{ value }}
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </tr>
-    </table>
+
+    {% set questions = [question] %}
+
+    {% include 'question_layout.html' %}
 
     <a href="{{ url_for('add_new_tag', question_id=question['id']) }}">Add new tag</a>
 

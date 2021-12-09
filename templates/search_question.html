@@ -2,57 +2,8 @@
 
 {% block highlight %}
 
- {% for question in questions %}
-     <h2>Question {{ question['id'] }}</h2>
-     <table>
-        <tr>
-            {% for title in titles %}
-                <th>
-                    {{  title.replace('_', ' ').capitalize() }}
-                </th>
-            {% endfor %}
-        </tr>
-            <tr>
-            {% for key, value in question.items() %}
+     {% include 'question_layout.html' %}
 
-                {% if key == 'title' %}
-                    <td style="text-align: center; height: 50px;"><a href="/question/{{ question['id'] }}/view">
-                    <p>
-                        {% for item in value %}
-                            {% if item == keyword %}
-                                <span>{{ item }}</span>
-                            {% else %}
-                                {{ item }}
-                            {% endif %}
-                        {% endfor %}
-                    </p>
-                    </a></td>
-
-                {% elif key == 'message' %}
-                <td style="text-align: center; height: 50px;">
-                    {% for item in value %}
-                        {% if item == keyword %}
-                            <span>{{ item }}</span>
-                        {% else %}
-                            {{ item }}
-                        {% endif %}
-                    {% endfor %}
-               </td>
-
-                {% elif key == 'image' %}
-                    {% if value %}
-                        <td><a href="{{ url_for('static', filename=value) }}" target="_blank"><img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;"></a></td>
-                    {% else %}
-                        <td><p>No image</p></td>
-                    {% endif %}
-                {% else %}
-                    <td style="text-align: center; height: 50px;">{{ value }}</td>
-                {% endif %}
-            {% endfor %}
-                <td><a href="/question/{{ question['id'] }}/vote_up">Vote up</a></td>
-                <td><a href="/question/{{ question['id'] }}/vote_down">Vote down</a></td>
-            </tr>
-     </table><br>
      {% for answer in answers %}
          {% if answer['question_id'] == question['id'] %}
             <table>
@@ -76,6 +27,5 @@
              <br><br><br>
          {% endif %}
      {% endfor %}
-{% endfor %}
 
 {% endblock %}
