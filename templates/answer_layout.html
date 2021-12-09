@@ -1,6 +1,6 @@
-{% for question in questions %}
-            <div class="question">
-            {% for title, value in question.items() %}
+{% for answer in answers %}
+            <div class="question answer">
+            {% for title, value in answer.items() %}
                     {% if title == 'title' %}
 
                         {% include 'highlight_layout.html' %}
@@ -11,8 +11,6 @@
                     {% elif title == 'message' %}
                         {% include 'highlight_layout.html' %}
 
-                    {% elif title == 'view_number' %}
-                        <div class="{{ title }}"><p>Viewed: {{ value }} times</p></div>
                     {% elif title == 'image' %}
                         {% if value %}
                             <div class="image"><a href="{{ url_for('static', filename=value) }}" target="_blank">
@@ -27,9 +25,4 @@
                 <div class="vote_up vote"><a href="/question/{{ question['id'] }}/vote_up">🔺</a></div>
                 <div class="vote_down vote"><a href="/question/{{ question['id'] }}/vote_down">🔻</a></div>
             </div>
-
-    {% if search %}
-        {% include 'answer_layout.html' %}
-    {% endif %}
-
     {% endfor %}

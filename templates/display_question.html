@@ -6,24 +6,32 @@
 
 {% block content %}
     <h2>Question {{ question['title'] }}</h2>
+    <div class="manipulate_question">
+
+        <div class="edit_question"><p><a href="/question/{{ question['id'] }}/edit">Edit question</a></p></div>
+        <div class="delete_question">
+            <form action="/question/{{ question['id'] }}/delete" method="post">
+                <button type="submit">Delete question</button>
+            </form><br>
+        </div>
+    </div>
 
     {% set questions = [question] %}
-
     {% include 'question_layout.html' %}
 
-    <a href="{{ url_for('add_new_tag', question_id=question['id']) }}">Add new tag</a>
+    <div class="question-tags">
+        <div class="tags">
+        {% for tag in tags %}
+            {% if tag.id in question_tags %}
+                <b class="tag">{{ tag.name }}</b>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <div class="select_tags"><a href="{{ url_for('add_new_tag', question_id=question['id']) }}">Select Tag(s)</a></div>
+    </div>
+    <br><br><br>
 
-    <h3>Tags:</h3>
-    {% for tag in tags %}
-        {% if tag.id in question_tags %}
-            <p>{{ tag.name }}</p>
-        {% endif %}
-    {% endfor %}
 
-    <p><a href="/question/{{ question['id'] }}/edit">Edit question</a></p>
-    <form action="/question/{{ question['id'] }}/delete" method="post">
-        <button type="submit">Delete question</button>
-    </form><br>
 
     <a href="{{ url_for('add_new_comment', question_id=question['id']) }}">Add new comment to this question</a><br>
 

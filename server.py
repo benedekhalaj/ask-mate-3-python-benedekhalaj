@@ -42,7 +42,8 @@ def search_question():
                            questions=searched_questions,
                            answers=searched_answers,
                            titles=data_manager.QUESTION_HEADERS,
-                           keyword=keyword)
+                           keyword=keyword,
+                           search=True)
 
 
 @app.route('/question/<question_id>/view')

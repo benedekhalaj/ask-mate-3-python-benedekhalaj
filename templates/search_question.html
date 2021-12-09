@@ -4,28 +4,4 @@
 
      {% include 'question_layout.html' %}
 
-     {% for answer in answers %}
-         {% if answer['question_id'] == question['id'] %}
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Answer</th>
-                </tr>
-                <tr>
-                    <td>{{ answer['id'] }}</td>
-                    <td>
-                        {% for message in answer['message'] %}
-                            {% if message == keyword %}
-                                <span>{{ message }}</span>
-                            {% else %}
-                                {{ message }}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                </tr>
-            </table>
-             <br><br><br>
-         {% endif %}
-     {% endfor %}
-
 {% endblock %}

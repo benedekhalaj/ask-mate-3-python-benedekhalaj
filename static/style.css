@@ -132,6 +132,10 @@ input, textarea {
     align-items: center;
 }
 
+.answer {
+    max-width: 50%;
+}
+
 .title { grid-area: title; }
 
 .title h3 {
@@ -174,3 +178,44 @@ input, textarea {
 .view_number { grid-area: view_number; }
 
 .image { grid-area: image; }
+
+
+
+.question-tags {
+  display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 60%;
+    margin: 0 20% 50px;
+}
+
+.tags {
+}
+
+.tag {
+    border: solid 2px var(--main-color-1);
+    border-radius: 15px;
+    padding: 5px;
+    background-color: var(--main-color-2);
+    color: var(--main-color-1);
+}
+
+.select_tags {
+}
+
+
+.manipulate_question {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.edit_question {
+    padding: 5px;
+    margin: 0;
+}
+
+.delete_question {
+    padding: 5px;
+    margin: 0;
+}
