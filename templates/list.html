@@ -11,41 +11,35 @@
     <p><a href="/add-question">Add new question</a></p>
 
     {% block highlight %}
-    <table>
-        <tr>
-            {% for title in titles %}
-                {% if title in ['submission_time', 'view_number', 'vote_number', 'title', 'message', 'image'] %}
-                    <th>
-                        <a href="/list?order_by={{ title }}&order_direction=asc">▲</a>
-                        {{  title.replace('_', ' ').capitalize() }}
-                        <a href="/list?order_by={{ title }}&order_direction=desc">▼</a>
-                    </th>
-                {% endif %}
-            {% endfor %}
-        </tr>
 
         {% for question in questions %}
-            <tr>
+            <div class="question">
             {% for title, value in question.items() %}
-                {% if title in ['submission_time', 'view_number', 'vote_number', 'title', 'message', 'image'] %}
                     {% if title == 'title' %}
-                        <td style="text-align: center; height: 50px;"><a href="/question/{{ question['id'] }}/view">{{ value }}</a></td>
+                        <div class="title"><a href="/question/{{ question['id'] }}/view"><h3>{{ value }}</h3></a></div>
+
+                    {% elif title in ['message', 'vote_number', 'submission_time'] %}
+                        <div class="{{ title }}"><p>{{ value }}</p></div>
+
+                    {% elif title == 'view_number' %}
+                        <div class="{{ title }}"><p>Viewed: {{ value }} times</p></div>
                     {% elif title == 'image' %}
                         {% if value %}
-                            <td><a href="{{ url_for('static', filename=value) }}" target="_blank"><img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;"></a></td>
+                            <div class="image"><a href="{{ url_for('static', filename=value) }}" target="_blank">
+                                <img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;">
+                            </a></div>
+
                         {% else %}
-                            <td><p>No image</p></td>
+                            <div class="image">No image</div>
                         {% endif %}
-                    {% else %}
-                        <td style="text-align: center; height: 50px;">{{ value }}</td>
                     {% endif %}
-                {% endif %}
+
             {% endfor %}
-                <td><a href="/question/{{ question['id'] }}/vote_up">Vote up</a></td>
-                <td><a href="/question/{{ question['id'] }}/vote_down">Vote down</a></td>
-            </tr>
+                <div class="vote_up vote"><a href="/question/{{ question['id'] }}/vote_up">🔺</a></div>
+                <div class="vote_down vote"><a href="/question/{{ question['id'] }}/vote_down">🔻</a></div>
+            </div>
         {% endfor %}
-    </table>
+
 
         {% endblock %}
 

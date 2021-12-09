@@ -4,7 +4,8 @@
     --main-color-1: #1c8fa6;
     --main-color-2: white;
     --main-color-3: black;
-    --background-color: #e7f6ff;
+    --hover-color: #ff4400;
+    --background-color: #ddecf5;
     --highlight-color: #eeaad3;
     --transition-main: ease 0.2s;
     font-family: 'Montserrat', sans-serif;
@@ -16,6 +17,7 @@ body {
 }
 
 a {
+    font-weight: 500;
     text-decoration: none;
     color: var(--main-color-1);
     transition: var(--transition-main);
@@ -23,14 +25,23 @@ a {
 
 
 a:hover {
-    color: var(--main-color-3);
+    color: var(--hover-color);
     transition: var(--transition-main);
 }
 
 table, th, tr, td{
-    margin: auto;
+    margin: 25px auto;
+    max-width: 75%;
+    padding: 10px;
     text-align: center;
-    border-style: groove;
+    align-self: center;
+    justify-content: center;
+}
+
+table {
+    background-color: var(--main-color-2);
+    border-radius: 5px;
+    width: 75%;
 }
 
 #back{
@@ -64,8 +75,8 @@ nav li {
 
 
 button {
-    background-color: var(--main-color-1);
-    color: white;
+    background-color: var(--main-color-2);
+    color: var(--main-color-1);
     font-weight: bold;
     border: solid 2px var(--main-color-2);
     border-radius: 5px;
@@ -73,6 +84,8 @@ button {
 }
 button:hover {
     transition: var(--transition-main);
+    background-color: var(--main-color-1);
+    color: var(--main-color-2);
 }
 
 nav a {
@@ -97,3 +110,66 @@ input, textarea {
     border-radius: 5px;
     border: solid 1px var(--main-color-2);
 }
+
+.question {
+  display: grid;
+  grid-template-columns: 5% 50% 5%;
+  grid-template-rows: 40px 20px 80px 20px 25px;
+  gap: 10px 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    ". title view_number"
+    "vote_up message image"
+    "vote_number message image"
+    "vote_down message image"
+    ". . submission_time";
+    background-color: var(--main-color-2);
+    margin: 25px auto;
+    padding: 20px;
+    max-width: 60%;
+    border-radius: 5px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.title { grid-area: title; }
+
+.title h3 {
+    font-size: 1.5em;
+}
+
+.message {
+    grid-area: message;
+    overflow: scroll;
+    height: 120px;
+    border-radius: 5px;
+}
+
+.vote_number {
+    grid-area: vote_number;
+    font-size: 1.2em;
+    color: var(--main-color-1);
+    font-weight: bold;
+}
+
+.vote {
+    font-size: 2.5em;
+    /* filter - to make it blue */
+    filter: hue-rotate(200deg);
+    transition: var(--transition-main);
+}
+
+.vote:hover {
+    filter: contrast(100%);
+    transition: var(--transition-main);
+}
+
+.vote_up { grid-area: vote_up; }
+
+.vote_down { grid-area: vote_down; }
+
+.submission_time { grid-area: submission_time; }
+
+.view_number { grid-area: view_number; }
+
+.image { grid-area: image; }
