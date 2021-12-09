@@ -9,16 +9,18 @@
     <table>
         <tr>
             {% for key in question.keys() %}
-                {% if key in ['title', 'image'] %}
-                    <th>{{ key.upper() }}</th>
-                {% elif key == 'message' %}
-                    <th>{{ 'QUESTION' }}</th>
+                {% if key in question_header %}
+                    {% if key == 'message' %}
+                        <th>{{ 'QUESTION' }}</th>
+                    {% else %}
+                        <th>{{ key.upper() }}</th>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </tr>
         <tr>
             {% for key, value in question.items() %}
-                {% if key in ['title', 'message', 'image']  %}
+                {% if key in question_header  %}
                     {% if key == 'image' %}
                         {% if value %}
                             <td>
@@ -32,7 +34,7 @@
                             </td>
                         {% endif %}
                     {% else %}
-                        <td>{{ value }}</td>
+                        <td>{{ value }}
                     {% endif %}
                 {% endif %}
             {% endfor %}
@@ -48,33 +50,33 @@
         {% endif %}
     {% endfor %}
 
-    <p><a href="/question/{{ question_id }}/edit">Edit question</a></p>
-    <form action="/question/{{ question_id }}/delete" method="post">
+    <p><a href="/question/{{ question['id'] }}/edit">Edit question</a></p>
+    <form action="/question/{{ question['id'] }}/delete" method="post">
         <button type="submit">Delete question</button>
     </form><br>
 
-    <a href="{{ url_for('add_new_comment', question_id=question_id) }}">Add new comment to this question</a><br>
+    <a href="{{ url_for('add_new_comment', question_id=question['id']) }}">Add new comment to this question</a><br>
 
     <h3>Comments for question {{ question['title'] }}</h3>
 
     <table>
-        {% for comment in comments %}
-            {% if comment['question_id'] and question['id'] == comment['question_id'] %}
-                <tr>
-                    {% for key in comments[0].keys() if loop.first %}
-                        {% if key in ['submission_time', 'message'] %}
-                            <th>{{ key }}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            {% endif %}
-        {% endfor %}
+        <tr>
+            {% for key in comments[0].keys()  %}
+                {% if key in comment_header %}
+                    {% if key == 'message' %}
+                        <th>COMMENT</th>
+                    {% else %}
+                        <th>{{ key }}</th>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </tr>
 
         {% for comment in comments %}
             {% if comment['question_id'] and question['id'] == comment['question_id'] %}
                 <tr>
                 {% for key, value in comment.items() %}
-                    {% if key in ['submission_time', 'message'] %}
+                    {% if key in comment_header %}
                         <td>{{ value }}</td>
                     {% endif %}
                 {% endfor %}
@@ -91,30 +93,27 @@
     <h2>Answer(s) for question {{ question['title'] }}</h2>
 
 
-    {% if answers %}
         {% for answer in answers %}
             <table>
                 <tr>
-                    {% if answers %}
-                        {% for key in answers[0].keys() %}
-                            {% if key in ['submission_time', 'vote_number', 'answer', 'image'] %}
-                                {% if key == 'message' %}
-                                    <th>{{ 'ANSWER' }}</th>
-                                {% else %}
-                                    <th>{{ key.replace('_', ' ').upper() }}</th>
+                    {% for key in answers[0].keys() %}
+                        {% if key in answer_header %}
+                            {% if key == 'message' %}
+                                <th>{{ 'ANSWER' }}</th>
+                            {% else %}
+                                <th>{{ key.replace('_', ' ').upper() }}</th>
                             {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
+                        {% endif %}
+                    {% endfor %}
                 </tr>
 
                 {% for key, value in answer.items() %}
-                    {% if key in ['submission_time', 'vote_number', 'answer', 'image'] %}
+                    {% if key in answer_header %}
                         {% if key == 'image' %}
                            {% if value %}
                                 <td>
                                     <a href="{{ url_for('static', filename = value) }}" target="_blank">
-                                        <img src="{{ url_for('static',filename = value) }}" style="max-height: 50px;">
+                                        <img src="{{ url_for('static',filename = value) }}" alt="forum picture" style="max-height: 50px;">
                                     </a>
                                 </td>
                             {% else %}
@@ -144,18 +143,23 @@
                 </td>
             </table>
             <table>
-                {% for comment in comments %}
-                    {% if comment['answer_id'] and answer['id'] == comment['answer_id'] %}
-                        <tr>
-                        {% for key in comments[0].keys() %}
-                            {% if key in ['submission_time', 'message'] %}
+                <tr>
+                    {% for key in comments[0].keys() %}
+                        {% if key in comment_header %}
+                            {% if key == 'message' %}
+                                <th>COMMENT</th>
+                            {% else %}
                                 <th>{{ key }}</th>
                             {% endif %}
-                        {% endfor %}
-                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% for comment in comments %}
+                    {% if comment['answer_id'] and answer['id'] == comment['answer_id'] %}
+
                         <tr>
                         {% for key, value in comment.items() %}
-                            {% if key in ['submission_time', 'message'] %}
+                            {% if key in comment_header %}
                                 <td>{{ value }}</td>
                             {% endif %}
                         {% endfor %}
@@ -169,6 +173,5 @@
                 {% endfor %}
             </table><br>
         {% endfor %}
-    {% endif %}
-    <p><a href="{{ question_id }}/new-answer">Add a new answer</a></p><br>
+    <p><a href="{{ question['id'] }}/new-answer">Add a new answer</a></p><br>
 {% endblock %}

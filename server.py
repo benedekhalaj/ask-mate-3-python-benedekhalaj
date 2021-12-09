@@ -5,6 +5,10 @@ import util
 
 app = Flask(__name__)
 
+COMMENT_HEADER = ['submission_time', 'message']
+ANSWER_HEADER = ['submission_time', 'vote_number', 'message', 'image']
+QUESTION_HEADER = ['title', 'message', 'image']
+
 
 @app.route('/')
 @app.route("/list")
@@ -59,12 +63,14 @@ def display_question(question_id):
     question_tags = [tag['tag_id'] for tag in question_tags]
 
     return render_template('display_question.html',
-                           question_id=question_id,
-                           answers=question_answers,
                            question=question,
+                           question_tags=question_tags,
+                           question_header=QUESTION_HEADER,
+                           answers=question_answers,
+                           answer_header=ANSWER_HEADER,
                            comments=comments,
-                           tags=tags,
-                           question_tags=question_tags)
+                           comment_header=COMMENT_HEADER,
+                           tags=tags)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -132,7 +138,7 @@ def delete_tag(question_id, tag_id):
 @app.route('/question/<question_id>/vote_up')
 @app.route('/question/<question_id>/vote_down')
 def change_question(question_id):
-    if 'delete' not in request.base_url:
+    if request.method == 'POST':
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
         data_manager.delete_table_data(table='question', data_id=question_id)
@@ -206,13 +212,13 @@ def edit_comment(comment_id):
     return render_template('edit_comment.html')
 
 
-@app.route('/answer/<answer_id>/delete', methods=['POST'])
+@app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])
 @app.route('/answer/<answer_id>/vote_up')
 @app.route('/answer/<answer_id>/vote_down')
 def change_answer(answer_id):
     answers = data_manager.get_answers()
     question_id = util.get_data_by_id(answers, "id", answer_id)["question_id"]
-    if 'delete' not in request.base_url:
+    if request.method == 'GET':
         data_manager.modify_vote_number(table='answer', voting=request.base_url, id=answer_id)
     else:
         data_manager.delete_table_data(table='answer', data_id=answer_id)
