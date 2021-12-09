@@ -29,6 +29,10 @@ a:hover {
     transition: var(--transition-main);
 }
 
+img {
+    border-radius: 5px;
+}
+
 table, th, tr, td{
     margin: 25px auto;
     max-width: 75%;
