@@ -220,7 +220,7 @@ def edit_comment(comment_id):
         question_id = data_manager.get_data_by_id(table=table, id=id)['question_id']
     else:
         id, header, table = comment['question_id'], QUESTION_HEADER, 'question'
-        question_id = data_manager.get_data_by_id(table=table, id=id)['id']
+        question_id = comment['question_id']
     if request.method == 'GET':
         answer = data_manager.get_data_by_id(table=table, id=id)
         return render_template('edit_comment.html',
@@ -256,7 +256,10 @@ def delete_comment(comment_id):
     comments = data_manager.get_comments()
     comment = util.get_data_by_id(comments, "id", comment_id)
     if request.method == 'POST':
-        id_for_redirect = comment['question_id'] if comment['question_id'] else comment['answer_id']
+        if comment['answer_id']:
+            id_for_redirect = data_manager.get_data_by_id(table='answer', id=comment['answer_id'])['question_id']
+        else:
+            id_for_redirect = comment['question_id']
         if request.form['confirm_deleting'] == 'YES':
             data_manager.delete_table_data(table='comment', data_id=comment_id)
             return redirect(f'/question/{id_for_redirect}')
