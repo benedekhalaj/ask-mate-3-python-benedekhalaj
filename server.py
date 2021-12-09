@@ -231,12 +231,12 @@ def delete_comment(comment_id):
     comments = data_manager.get_comments()
     comment = util.get_data_by_id(comments, "id", comment_id)
     if request.method == 'POST':
-        question_id = comment['question_id']
+        id_for_redirect = comment['question_id'] if comment['question_id'] else comment['answer_id']
         if request.form['confirm_deleting'] == 'YES':
             data_manager.delete_table_data(table='comment', data_id=comment_id)
-            return redirect(f'/question/{question_id}')
+            return redirect(f'/question/{id_for_redirect}')
         elif request.form['confirm_deleting'] == 'NO':
-            return redirect(f'/question/{question_id}')
+            return redirect(f'/question/{id_for_redirect}')
     return render_template('confirm_delete_comment.html',
                            comment=comment,
                            header=COMMENT_HEADER)
