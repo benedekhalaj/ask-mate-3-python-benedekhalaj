@@ -172,7 +172,10 @@ def post_answer(question_id):
     if request.method == 'GET':
         selected_answers = data_manager.get_question_answers(question_id=question_id)
         selected_question = data_manager.get_data_by_id(table='question', id=question_id)
-        return render_template('post_answer.html', question=selected_question, answers=selected_answers)
+        return render_template('post_answer.html',
+                               question=selected_question,
+                               answers=selected_answers,
+                               header=QUESTION_HEADER)
     else:
         new_answer = {
             'question_id': question_id,
@@ -202,14 +205,36 @@ def edit_answer(answer_id):
         util.update_data_by_form(edited_answer, request.form)
         data_manager.update_answer(edited_answer)
         return redirect(f'/question/{question_id}')
-    return render_template('edit_answer.html', answer_id=answer_id,
+    return render_template('edit_answer.html',
+                           answer_id=answer_id,
                            message_to_edit=message,
-                           question=question)
+                           question=question,
+                           header=QUESTION_HEADER)
 
 
-@app.route('/comment/<comment_id>/edit', methods=['GET'])
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
-    return render_template('edit_comment.html')
+    comment = data_manager.get_data_by_id(table='comment' ,id=comment_id)
+    if comment['answer_id']:
+        id, header, table = comment['answer_id'], ANSWER_HEADER, 'answer'
+        question_id = data_manager.get_data_by_id(table=table, id=id)['question_id']
+    else:
+        id, header, table = comment['question_id'], QUESTION_HEADER, 'question'
+        question_id = data_manager.get_data_by_id(table=table, id=id)['id']
+    if request.method == 'GET':
+        answer = data_manager.get_data_by_id(table=table, id=id)
+        return render_template('edit_comment.html',
+                               comment_id=comment_id,
+                               message_to_edit=comment['message'],
+                               question=answer,
+                               h1=table.capitalize(),
+                               header=COMMENT_HEADER)
+    else:
+        comment['message'] = request.form.get('message')
+        comment['submission_time'] = util.add_submission_time()
+        data_manager.update_comment(message=request.form.get('message'), comment_id=comment_id)
+
+        return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/answer/<answer_id>/delete', methods=['POST'])

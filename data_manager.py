@@ -3,6 +3,7 @@ from psycopg2.sql import SQL, Literal, Identifier
 from psycopg2.extras import RealDictCursor
 
 from database_common import connection_handler as connection
+import util
 
 
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
@@ -188,21 +189,6 @@ def sort_questions(cursor, orders):
 
 
 @connection
-def update_table(cursor, table, data):
-    query = """
-        UPDATE {table}
-        SET title = {title}, message = {message}
-        WHERE id = {id}
-    """
-    cursor.execute(SQL(query).format(
-        table=Identifier(table),
-        title=Literal(data['title']),
-        message=Literal(data['message']),
-        id=Literal(data['id'])
-    ))
-
-
-@connection
 def update_answer(cursor, data):
     query = """
         UPDATE answer
@@ -213,6 +199,25 @@ def update_answer(cursor, data):
         submission_time=Literal(data['submission_time']),
         message=Literal(data['message']),
         answer_id=Literal(data['answer_id'])
+    ))
+
+
+@connection
+def update_comment(cursor, message, comment_id):
+    query = """
+    UPDATE comment
+    SET message = {message}, 
+        submission_time = {submission_time}, 
+        edited_count = CASE 
+                            WHEN edited_count IS NULL THEN 1
+                            ELSE edited_count +1
+                        END
+    WHERE id = {comment_id}
+    """
+    cursor.execute(SQL(query).format(
+        message=Literal(message),
+        submission_time=Literal(util.add_submission_time()),
+        comment_id=Literal(int(comment_id))
     ))
 
 
