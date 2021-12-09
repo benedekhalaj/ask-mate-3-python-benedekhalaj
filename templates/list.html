@@ -8,12 +8,6 @@
     {% endblock %}
     <h2>Questions</h2>
 
-    <form action="{{ url_for('search_question') }}">
-        <label for="search">Search:</label>
-        <input id="search" name="q" type="text">
-        <button type="submit">Search</button>
-    </form>
-
     <p><a href="/add-question">Add new question</a></p>
 
     {% block highlight %}
