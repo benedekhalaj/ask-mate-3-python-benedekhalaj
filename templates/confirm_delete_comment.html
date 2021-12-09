@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <table>
+    {% for key, value in comment.items() %}
+        {% if key in header %}
+        <tr>
+            <th>{{ key }}</th>
+        </tr>
+        <tr>
+            <td>{{ value }}</td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    </table><br>
+
+    <p>Delete comment</p>
+    <p>Are you sure???</p>
+
+    <form method="post">
+        <button type="submit", name="confirm_deleting" value="YES">Yes, please delete this comment</button>
+    </form><br>
+
+    <form method="post">
+        <button type="submit", name="confirm_deleting" value="NO">No, I've changed my mind</button>
+    </form>
+
+{% endblock %}
