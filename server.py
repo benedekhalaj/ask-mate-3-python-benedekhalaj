@@ -14,7 +14,7 @@ QUESTION_HEADER = ['title', 'message', 'image']
 @app.route("/list")
 def list_questions():
     if "list" not in request.base_url:
-        questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=5)
+        questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=3)
         is_main_page = True
     else:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions()
@@ -152,8 +152,10 @@ def change_question(question_id):
 def add_new_comment(question_id=None, answer_id=None):
     if 'question' in request.base_url:
         selected_post = data_manager.get_data_by_id(table='question', id=question_id)
+        header = QUESTION_HEADER
     else:
         selected_post = data_manager.get_data_by_id(table='answer', id=answer_id)
+        header = ANSWER_HEADER
     if request.method == 'POST':
         new_comment = {
             'question_id': question_id,
@@ -165,7 +167,10 @@ def add_new_comment(question_id=None, answer_id=None):
         if answer_id:
             question_id = selected_post['question_id']
         return redirect(f'/question/{question_id}')
-    return render_template('comments.html', question_id=question_id, answer_id=answer_id, question=selected_post)
+    return render_template('comments.html', question_id=question_id,
+                           answer_id=answer_id,
+                           question=selected_post,
+                           header=header)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -205,6 +210,9 @@ def edit_answer(answer_id):
         }
         util.update_data_by_form(edited_answer, request.form)
         data_manager.update_answer(edited_answer)
+        util.delete_file('answers', answer_id)
+        image_url = util.upload_file(request, answer_id)
+        data_manager.insert_image('answer', answer_id, image_url)
         return redirect(f'/question/{question_id}')
     return render_template('edit_answer.html',
                            answer_id=answer_id,

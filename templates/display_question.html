@@ -8,7 +8,13 @@
     <h2>Question {{ question['title'] }}</h2>
     <div class="manipulate_question">
 
-        <div class="edit_question"><p><a href="/question/{{ question['id'] }}/edit">Edit question</a></p></div>
+        <div class="edit_question">
+            <p>
+                <a href="/question/{{ question['id'] }}/edit">
+                    Edit question
+                </a>
+            </p>
+        </div>
         <div class="delete_question">
             <form action="/question/{{ question['id'] }}/delete" method="post">
                 <button type="submit">Delete question</button>
@@ -29,12 +35,9 @@
         </div>
         <div class="select_tags"><a href="{{ url_for('add_new_tag', question_id=question['id']) }}">Select Tag(s)</a></div>
     </div>
-    <br><br><br>
-
-
 
     <a href="{{ url_for('add_new_comment', question_id=question['id']) }}">Add new comment to this question</a><br>
-
+    <br>
     <h3>Comments for question {{ question['title'] }}</h3>
 
     <table>
@@ -55,7 +58,15 @@
                 <tr>
                 {% for key, value in comment.items() %}
                     {% if key in comment_header %}
-                        <td>{{ value }}</td>
+                        {% if value != 'None' %}
+                            {% if value %}
+                                <td>{{ value }}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
                  <td>
@@ -71,12 +82,17 @@
                 </tr>
             {% endif %}
         {% endfor %}
-    </table><br>
+    </table>
+    {% for _ in range(5) %}
+        <br>
+    {% endfor %}
 
     <h2>Answer(s) for question {{ question['title'] }}</h2>
+    <br>
 
 
         {% for answer in answers %}
+            <h3>Answer #{{ loop.index }}</h3>
             <table>
                 <tr>
                     {% for key in answers[0].keys() %}
@@ -125,6 +141,7 @@
                     <a href="{{ url_for('add_new_comment', answer_id=answer['id']) }}">Add new comment to this answer</a>
                 </td>
             </table>
+            <h3>Comments for this Answer</h3>
             <table>
                 <tr>
                     {% for key in comments[0].keys() %}
@@ -143,7 +160,11 @@
                         <tr>
                         {% for key, value in comment.items() %}
                             {% if key in comment_header %}
-                                <td>{{ value }}</td>
+                                {% if value %}
+                                    <td>{{ value }}</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                         <td>
@@ -159,7 +180,10 @@
                         </tr>
                     {% endif %}
                 {% endfor %}
-            </table><br>
+            </table>
+            {% for _ in range(5) %}
+                <br>
+            {% endfor %}
         {% endfor %}
     <p><a href="{{ question['id'] }}/new-answer">Add a new answer</a></p><br>
 {% endblock %}

@@ -11,7 +11,7 @@
         <input id="title" name="title" {% block question_title %}{% endblock %} required><br><br>
 
         <label for="message">Message:</label><br>
-        <textarea id="message" name="message" required>{% block message %}{% endblock %}</textarea><br><br>
+        <textarea id="message" name="message" rows="15" cols="90" required>{% block message %}{% endblock %}</textarea><br><br>
 
         <input type="file" name="file" id="file"><br><br>
         <button type="submit" value="Upload">{% block button %}Add new question{% endblock %}</button>

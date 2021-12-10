@@ -26,7 +26,7 @@
     {% block for_comment_page %}
         <form action="{% block edit_route %}/question/{{ question['id']}}/new-answer{% endblock %}" method="post" enctype="multipart/form-data">
             <label for="message">{% block label %}Answer:{% endblock %}</label><br>
-            <textarea id="message" name="message">{% block edit_value %}{% endblock %}</textarea><br><br>
+            <textarea id="message" name="message" rows="15" cols="90">{% block edit_value %}{% endblock %}</textarea><br><br>
 
             {% block image %}<input type="file" name="file"><br>{% endblock %}<br>
 
