@@ -1,0 +1,189 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Question {{ question['title'] }}
+{% endblock %}
+
+{% block content %}
+    <h2>Question {{ question['title'] }}</h2>
+    <div class="manipulate_question">
+
+        <div class="edit_question">
+            <p>
+                <a href="/question/{{ question['id'] }}/edit">
+                    Edit question
+                </a>
+            </p>
+        </div>
+        <div class="delete_question">
+            <form action="/question/{{ question['id'] }}/delete" method="post">
+                <button type="submit">Delete question</button>
+            </form><br>
+        </div>
+    </div>
+
+    {% set questions = [question] %}
+    {% include 'question_layout.html' %}
+
+    <div class="question-tags">
+        <div class="tags">
+        {% for tag in tags %}
+            {% if tag.id in question_tags %}
+                <b class="tag">{{ tag.name }}</b>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <div class="select_tags"><a href="{{ url_for('add_new_tag', question_id=question['id']) }}">Select Tag(s)</a></div>
+    </div>
+
+    <a href="{{ url_for('add_new_comment', question_id=question['id']) }}">Add new comment to this question</a><br>
+    <br>
+    <h3>Comments for question {{ question['title'] }}</h3>
+
+    <table>
+        <tr>
+            {% for key in comments[0].keys()  %}
+                {% if key in comment_header %}
+                    {% if key == 'message' %}
+                        <th>COMMENT</th>
+                    {% else %}
+                        <th>{{ key.replace('_', ' ').upper() }}</th>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </tr>
+
+        {% for comment in comments %}
+            {% if comment['question_id'] and question['id'] == comment['question_id'] %}
+                <tr>
+                {% for key, value in comment.items() %}
+                    {% if key in comment_header %}
+                        {% if value != 'None' %}
+                            {% if value %}
+                                <td>{{ value }}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                 <td>
+                    <form action="{{ url_for('edit_comment', comment_id=comment['id']) }}" name="edit" method="get">
+                        <button type="submit">Edit</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{{ url_for('delete_comment', comment_id=comment['id']) }}" name="delete" method="get">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    {% for _ in range(5) %}
+        <br>
+    {% endfor %}
+
+    <h2>Answer(s) for question {{ question['title'] }}</h2>
+    <br>
+
+
+        {% for answer in answers %}
+            <h3>Answer #{{ loop.index }}</h3>
+            <table>
+                <tr>
+                    {% for key in answers[0].keys() %}
+                        {% if key in answer_header %}
+                            {% if key == 'message' %}
+                                <th>{{ 'ANSWER' }}</th>
+                            {% else %}
+                                <th>{{ key.replace('_', ' ').upper() }}</th>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+
+                {% for key, value in answer.items() %}
+                    {% if key in answer_header %}
+                        {% if key == 'image' %}
+                           {% if value %}
+                                <td>
+                                    <a href="{{ url_for('static', filename = value) }}" target="_blank">
+                                        <img src="{{ url_for('static',filename = value) }}" alt="forum picture" style="max-height: 50px;">
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td><p>No image</p></td>
+                            {% endif %}
+                        {% else %}
+                            <td style="text-align: center; height: 50px;">{{ value }}</td>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <td>
+                    <form action="/answer/{{ answer['id'] }}/delete" method="post">
+                        <button type="submit">Delete answer</button>
+                    </form>
+                    <form action="{{ url_for('edit_answer', answer_id=answer['id']) }}">
+                        <button type="submit">Edit answer</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="/answer/{{ answer['id'] }}/vote_up">Vote up</a>
+                </td>
+                <td>
+                    <a href="/answer/{{ answer['id'] }}/vote_down">Vote down</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('add_new_comment', answer_id=answer['id']) }}">Add new comment to this answer</a>
+                </td>
+            </table>
+            <h3>Comments for this Answer</h3>
+            <table>
+                <tr>
+                    {% for key in comments[0].keys() %}
+                        {% if key in comment_header %}
+                            {% if key == 'message' %}
+                                <th>COMMENT</th>
+                            {% else %}
+                                <th>{{ key.replace('_', ' ').upper() }}</th>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% for comment in comments %}
+                    {% if comment['answer_id'] and answer['id'] == comment['answer_id'] %}
+
+                        <tr>
+                        {% for key, value in comment.items() %}
+                            {% if key in comment_header %}
+                                {% if value %}
+                                    <td>{{ value }}</td>
+                                {% else %}
+                                    <td>-</td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        <td>
+                            <form action="{{ url_for('edit_comment', comment_id=comment['id']) }}" name="edit" method="get">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="{{ url_for('delete_comment', comment_id=comment['id']) }}" name="delete" method="get">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+            {% for _ in range(5) %}
+                <br>
+            {% endfor %}
+        {% endfor %}
+    <p><a href="{{ question['id'] }}/new-answer">Add a new answer</a></p><br>
+{% endblock %}

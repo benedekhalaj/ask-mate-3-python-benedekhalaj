@@ -1,0 +1,21 @@
+{% extends 'post_answer.html' %}
+
+{% block title %}Comments{% endblock %}
+
+{% block question_title %}New comment{% endblock %}
+
+{% block h1 %}
+    {% if answer_id %} <!-- if answer -->
+        Answer
+    {% else %}
+        Question {{ question['title'] }}
+    {% endif %}
+{% endblock %}
+
+{% block for_comment_page %}
+    <form action="{{ url_for('add_new_comment', question_id=question_id, answer_id=answer_id) }}" method="post">
+        <label for="message">Add new comment:</label><br>
+        <textarea name="message" id="message" rows="15" cols="90"></textarea><br>
+        <button type="submit">Send</button><br>
+    </form>
+{% endblock %}

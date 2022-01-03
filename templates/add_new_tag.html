@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h2>Select Tag(s)</h2>
+
+<form method="post">
+    {% for tag in tags %}
+        {% if tag.id in question_tags %}
+            <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}" checked>
+        {% else %}
+            <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}">
+        {% endif %}
+        <label for="{{ tag.name }}">{{ tag.name }}</label>
+        <a href="{{ url_for('delete_tag', question_id=question_id, tag_id=tag.id) }}">X</a>
+        <br>
+    {% endfor %}
+<br>
+    <button type="submit" name="submit_button" value="select_tags">Select</button>
+</form>
+    <br><br>
+
+<form method="post">
+    <label for="new_tag">Add new tag:</label>
+    <input type="text" id="new_tag" name="new_tag">
+    <button type="submit" name="submit_button" value="add_new_tag">Add</button>
+</form>
+{% endblock %}

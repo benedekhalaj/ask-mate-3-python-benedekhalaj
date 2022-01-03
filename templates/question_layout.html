@@ -1,0 +1,35 @@
+{% for question in questions %}
+            <div class="question">
+            {% for title, value in question.items() %}
+                    {% if title == 'title' %}
+
+                        {% include 'highlight_layout.html' %}
+
+                    {% elif title in ['vote_number', 'submission_time'] %}
+                        <div class="{{ title }}"><p>{{ value }}</p></div>
+
+                    {% elif title == 'message' %}
+                        {% include 'highlight_layout.html' %}
+
+                    {% elif title == 'view_number' %}
+                        <div class="{{ title }}"><p>Viewed: {{ value }} times</p></div>
+                    {% elif title == 'image' %}
+                        {% if value %}
+                            <div class="image"><a href="{{ url_for('static', filename=value) }}" target="_blank">
+                                <img src="{{ url_for('static',filename=value) }}" style="max-height: 50px;">
+                            </a></div>
+
+                        {% else %}
+                            <div class="image">No image</div>
+                        {% endif %}
+                    {% endif %}
+            {% endfor %}
+                <div class="vote_up vote"><a href="/question/{{ question['id'] }}/vote_up">🔺</a></div>
+                <div class="vote_down vote"><a href="/question/{{ question['id'] }}/vote_down">🔻</a></div>
+            </div>
+
+    {% if search %}
+        {% include 'answer_layout.html' %}
+    {% endif %}
+
+    {% endfor %}

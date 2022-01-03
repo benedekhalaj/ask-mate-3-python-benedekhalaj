@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Add question
+{% endblock %}
+
+{% block content %}
+    {% block headline %}{% endblock %}
+    <form action="{% block action %}/add-question{% endblock %}" method="post" enctype="multipart/form-data">
+        <label for="title">Title:</label><br>
+        <input id="title" name="title" {% block question_title %}{% endblock %} required><br><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="15" cols="90" required>{% block message %}{% endblock %}</textarea><br><br>
+
+        <input type="file" name="file" id="file"><br><br>
+        <button type="submit" value="Upload">{% block button %}Add new question{% endblock %}</button>
+    </form>
+{% endblock %}

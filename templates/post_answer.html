@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Post Answer
+{% endblock %}
+
+{% block content %}
+    <h1>{% block h1 %}Question {{ question['title'] }}{% endblock %}</h1>
+    <table>
+        <tr>
+            {% for key in question.keys() %}
+                {% if key in header %}
+                    <th>{{ key.replace('_', ' ').upper() }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for key, value in question.items() %}
+                {% if key in header %}
+                    <td>{{ value }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </table><br>
+
+    {% block for_comment_page %}
+        <form action="{% block edit_route %}/question/{{ question['id']}}/new-answer{% endblock %}" method="post" enctype="multipart/form-data">
+            <label for="message">{% block label %}Answer:{% endblock %}</label><br>
+            <textarea id="message" name="message" rows="15" cols="90">{% block edit_value %}{% endblock %}</textarea><br><br>
+
+            {% block image %}<input type="file" name="file"><br>{% endblock %}<br>
+
+            <button type="submit">{% block edit_submit %}Add new Answer{% endblock %}</button>
+        </form>
+    {% endblock %}
+{% endblock %}
