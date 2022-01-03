@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block navbar %}{% endblock %}
+
+{% block back %}{% endblock %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <h2>Welcome!</h2>
+    <h3>Please Login</h3>
+    <form>
+        <label for="username">Username</label>
+        <br>
+        <input id="username" name="username" type="text" placeholder="Enter Your username here">
+        <br><br>
+        <label for="password">Password</label>
+        <br>
+        <input id="password" name="password" type="password" placeholder="Enter Your password here">
+        <br><br>
+        <button type="submit">Login</button>
+    </form>
+    <br><br>
+    <label for="register">Are You a new Whale?</label>
+    <br>
+    <a id="register" href="{{ url_for("register") }}">Register</a>
+{% endblock %}

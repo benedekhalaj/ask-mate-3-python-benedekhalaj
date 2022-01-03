@@ -7,17 +7,19 @@
     <title>{% block title %}{% endblock %}-Jinja3</title>
 </head>
 <body>
-<nav id="nav">
-    <ul>
-        <li><a href="{{ url_for('list_questions') }}">Home</a></li>
-        <li><a href="{{ url_for('list_questions') }}">Questions</a></li>
-        <li><form action="{{ url_for('search_question') }}" class="nav-search">
-        <label for="search">Search</label>
-        <input id="search" name="q" type="text">
-        <button type="submit">Search</button>
-    </form></li>
-    </ul>
-</nav>
+{% block navbar %}
+    <nav id="nav">
+        <ul>
+            <li><a href="{{ url_for('list_questions') }}">Home</a></li>
+            <li><a href="{{ url_for('list_questions') }}">Questions</a></li>
+            <li><form action="{{ url_for('search_question') }}" class="nav-search">
+            <label for="search">Search</label>
+            <input id="search" name="q" type="text">
+            <button type="submit">Search</button>
+        </form></li>
+        </ul>
+    </nav>
+{% endblock %}
     {% block back %}
         <a href="/" id="back">Back to Main Page</a><br>
     {% endblock %}

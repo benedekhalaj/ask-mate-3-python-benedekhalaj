@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
-import data_manager, util
+from flask import Flask, render_template, request, redirect, url_for, session, escape
+import data_manager
+import util
 from bonus_questions import SAMPLE_QUESTIONS
 
 app = Flask(__name__)
@@ -10,6 +11,15 @@ QUESTION_HEADER = ['title', 'message', 'image']
 
 
 @app.route('/')
+def login():
+    return render_template('login.html')
+
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+
 @app.route("/list")
 def list_questions():
     if "list" not in request.base_url:
