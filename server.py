@@ -18,7 +18,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('registration.html')
     else:
         user_account = dict(request.form)
         user_account['registration_date'] = helper.add_submission_time()
