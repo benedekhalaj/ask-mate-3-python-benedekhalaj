@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, escape
 import data_manager
-import util
+import helper
 from bonus_questions import SAMPLE_QUESTIONS
 
 app = Flask(__name__)

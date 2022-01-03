@@ -3,7 +3,7 @@ from psycopg2.sql import SQL, Literal, Identifier
 from psycopg2.extras import RealDictCursor
 
 from database_common import connection_handler as connection
-import util
+import helper
 
 
 QUESTION_HEADERS = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
