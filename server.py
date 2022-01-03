@@ -22,6 +22,7 @@ def register():
     else:
         user_account = dict(request.form)
         user_account['registration_date'] = helper.add_submission_time()
+        user_account['password'] = helper.hash_password(user_account['password'])
         data_manager.add_user_account(user_account)
         return redirect(url_for('list_questions'))
 
