@@ -1,6 +1,7 @@
 from werkzeug.utils import secure_filename
 import os
 import datetime
+import bcrypt
 
 UPLOAD_FOLDER = './static/images'
 
@@ -45,3 +46,12 @@ def delete_file(r_type, id):
 
 def add_submission_time():
     return datetime.datetime.now().isoformat()
+
+
+def hash_password(plain_text_password):
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+
+def verify_password(plain_text_password, hashed_password):
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password.encode('utf-8'))
