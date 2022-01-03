@@ -359,3 +359,26 @@ def delete_tag(cursor, tag_id):
     cursor.execute(SQL(query).format(
         tag_id=Literal(tag_id)
     ))
+
+
+@connection
+def add_user_account(cursor, user_account):
+    query = """
+    INSERT INTO user_account(username, email, password, registration_date, admin)
+    VALUES(
+        {username},
+        {email},
+        {password},
+        {registration_date},
+        {admin}
+    )
+    """
+
+    cursor.execute(SQL(query).format(
+        username=Literal(user_account['username']),
+        email=Literal(user_account['email']),
+        password=Literal(user_account['password']),
+        registration_date=Literal(user_account['registration_date']),
+        admin=Literal(False)
+    ))
+

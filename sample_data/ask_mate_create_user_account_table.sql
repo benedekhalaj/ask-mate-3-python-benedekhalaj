@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS user_account;
 
 CREATE TABLE user_account(
-    id INTEGER PRIMARY KEY,
+    id SERIAL NOT NULL,
     username TEXT,
     email TEXT,
     password TEXT,
-    registration_date DATE,
+    registration_date TIMESTAMP,
     admin BOOLEAN
 );

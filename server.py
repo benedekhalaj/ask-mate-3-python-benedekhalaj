@@ -15,9 +15,15 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
+        user_account = dict(request.form)
+        user_account['registration_date'] = helper.add_submission_time()
+        data_manager.add_user_account(user_account)
+        return redirect(url_for('list_questions'))
 
 
 @app.route("/list")
