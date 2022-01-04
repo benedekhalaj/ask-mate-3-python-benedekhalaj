@@ -5,14 +5,31 @@ from bonus_questions import SAMPLE_QUESTIONS
 
 app = Flask(__name__)
 
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 COMMENT_HEADER = ['submission_time', 'message', 'edited_count']
 ANSWER_HEADER = ['submission_time', 'vote_number', 'message', 'image']
 QUESTION_HEADER = ['title', 'message', 'image']
 
 
-@app.route('/')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    invalid_account = False
+    if request.method == 'POST':
+        try:
+            user_login = dict(request.form)
+            hashed_password = dict(data_manager.get_password_hash(user_login['username']))['password']
+            verified_password = helper.verify_password(user_login['password'], hashed_password)
+            valid_account = data_manager.valid_account(user_login['username'], hashed_password)
+            if valid_account and verified_password:
+                session['username'] = user_login['username']
+                return redirect(url_for('list_questions'))
+            else:
+                invalid_account = True
+        except ValueError:
+            return render_template('login.html', invalid_account=invalid_account)
+
+    return render_template('login.html', invalid_account=invalid_account)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -27,6 +44,7 @@ def register():
         return redirect(url_for('list_questions'))
 
 
+@app.route('/')
 @app.route("/list")
 def list_questions():
     if "list" not in request.base_url:
