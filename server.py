@@ -55,7 +55,8 @@ def logout():
 @app.route('/users')
 def list_users():
     if 'username' in session:
-        return render_template('list_users.html')
+        users = data_manager.list_users()
+        return render_template('list_users.html', logged_in=session.get('username'))
     return redirect(url_for('login'))
 
 

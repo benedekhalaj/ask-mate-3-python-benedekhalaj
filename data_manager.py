@@ -216,7 +216,7 @@ def update_comment(cursor, message, comment_id):
     """
     cursor.execute(SQL(query).format(
         message=Literal(message),
-        submission_time=Literal(util.add_submission_time()),
+        submission_time=Literal(helper.add_submission_time()),
         comment_id=Literal(int(comment_id))
     ))
 
@@ -438,3 +438,14 @@ def get_user_id(cursor, username):
         username=Literal(username)
     ))
     return cursor.fetchone()
+
+
+@connection
+def list_users(cursor):
+    query = """
+    SELECT id, username, registration_date
+    FROM user_account
+    ORDER BY username ASC
+    """
+    cursor.execute(SQL(query))
+    return cursor.fetchall()
