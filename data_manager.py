@@ -408,3 +408,33 @@ def get_password_hash(cursor, username):
         username=Literal(username)
     ))
     return cursor.fetchone()
+
+
+@connection
+def insert_user_post(cursor, post, user_id, post_id):
+    pass
+    query = """
+    INSERT INTO {post}
+    VALUES (
+        {user_id},
+        {post_id}
+    )
+    """
+    cursor.execute(SQL(query).format(
+        user_id=Literal(user_id),
+        post_id=Literal(post_id),
+        post=Identifier(post)
+    ))
+
+
+@connection
+def get_user_id(cursor, username):
+    query = """
+    SELECT id
+    FROM user_account
+    WHERE username = {username}
+    """
+    cursor.execute(SQL(query).format(
+        username=Literal(username)
+    ))
+    return cursor.fetchone()
