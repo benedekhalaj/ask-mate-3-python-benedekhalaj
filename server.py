@@ -268,6 +268,11 @@ def post_answer(question_id):
         image_url = helper.upload_file(request, new_answer_id, 'answers')
         data_manager.insert_image('answer', new_answer_id, image_url)
 
+        if 'username' in session:
+            answer_id = data_manager.get_new_id(new_answer['submission_time'], 'answer')
+            user_id = data_manager.get_user_id(session['username'])['id']
+            data_manager.insert_user_post('user_answer', user_id, answer_id)
+
         return redirect(f'/question/{question_id}')
 
 
