@@ -11,9 +11,15 @@
 {% block navbar %}
     <nav id="nav">
         <ul>
-            <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% if not logged_in %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
             <li><a href="{{ url_for('list_questions') }}">Home</a></li>
             <li><a href="{{ url_for('list_questions') }}">Questions</a></li>
+            {% if logged_in %}
+                <li><a href="{{ url_for('list_users') }}">Users</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li><br><br>
+            {% endif %}
             <li><form action="{{ url_for('search_question') }}" class="nav-search">
             <label for="search">Search</label>
             <input id="search" name="q" type="text">

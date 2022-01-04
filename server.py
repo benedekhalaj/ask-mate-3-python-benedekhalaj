@@ -29,7 +29,8 @@ def login():
         except TypeError:
             return render_template('login.html', invalid_account=invalid_account)
 
-    return render_template('login.html', invalid_account=invalid_account)
+    return render_template('login.html',
+                           invalid_account=invalid_account)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -44,16 +45,37 @@ def register():
         return redirect(url_for('list_questions'))
 
 
+@app.route('/logout')
+def logout():
+    if 'username' in session:
+        session.pop('username', None)
+    return redirect(url_for('login'))
+
+
+@app.route('/users')
+def list_users():
+    if 'username' in session:
+        return render_template('list_users.html')
+    return redirect(url_for('login'))
+
+
 @app.route('/')
 @app.route("/list")
 def list_questions():
+    logged_in = False
+    if 'username' in session:
+        logged_in = True
     if "list" not in request.base_url:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=3)
         is_main_page = True
     else:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions()
         is_main_page = False
-    return render_template('list.html', questions=reversed(questions), titles=data_manager.QUESTION_HEADERS, main_page=is_main_page)
+    return render_template('list.html',
+                           questions=reversed(questions),
+                           titles=data_manager.QUESTION_HEADERS,
+                           main_page=is_main_page,
+                           logged_in=session.get('username'))
 
 
 @app.route('/search')
@@ -77,7 +99,8 @@ def search_question():
                            answers=searched_answers,
                            titles=data_manager.QUESTION_HEADERS,
                            keyword=keyword,
-                           search=True)
+                           search=True,
+                           logged_in=session.get('username'))
 
 
 @app.route('/question/<question_id>/view')
@@ -105,7 +128,8 @@ def display_question(question_id):
                            answer_header=ANSWER_HEADER,
                            comments=comments,
                            comment_header=COMMENT_HEADER,
-                           tags=tags)
+                           tags=tags,
+                           logged_in=session.get('username'))
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -120,7 +144,7 @@ def add_question():
         data_manager.insert_image('question', new_question_id, image_url)
 
         return redirect(f'/question/{new_question_id}')
-    return render_template('add_question.html')
+    return render_template('add_question.html', logged_in=session.get('username'))
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -135,7 +159,7 @@ def edit_question(question_id):
         data_manager.insert_image('question', question_id, image_url)
 
         return redirect(f'/question/{question_id}')
-    return render_template('edit_question.html', question=question)
+    return render_template('edit_question.html', question=question, logged_in=session.get('username'))
 
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
@@ -145,7 +169,11 @@ def add_new_tag(question_id):
     question_tags = [tag['tag_id'] for tag in question_tags]
     print(question_tags)
     if request.method == 'GET':
-        return render_template('add_new_tag.html', tags=tags, question_tags=question_tags, question_id=question_id)
+        return render_template('add_new_tag.html',
+                               tags=tags,
+                               question_tags=question_tags,
+                               question_id=question_id,
+                               logged_in=session.get('username'))
 
     else:
         if request.form['submit_button'] == 'add_new_tag':
@@ -204,7 +232,8 @@ def add_new_comment(question_id=None, answer_id=None):
     return render_template('comments.html', question_id=question_id,
                            answer_id=answer_id,
                            question=selected_post,
-                           header=header)
+                           header=header,
+                           logged_in=session.get('username'))
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -215,7 +244,8 @@ def post_answer(question_id):
         return render_template('post_answer.html',
                                question=selected_question,
                                answers=selected_answers,
-                               header=QUESTION_HEADER)
+                               header=QUESTION_HEADER,
+                               logged_in=session.get('username'))
     else:
         new_answer = {
             'question_id': question_id,
@@ -252,7 +282,8 @@ def edit_answer(answer_id):
                            answer_id=answer_id,
                            message_to_edit=message,
                            question=question,
-                           header=QUESTION_HEADER)
+                           header=QUESTION_HEADER,
+                           logged_in=session.get('username'))
 
 
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
@@ -271,7 +302,8 @@ def edit_comment(comment_id):
                                message_to_edit=comment['message'],
                                question=answer,
                                h1=table.capitalize(),
-                               header=COMMENT_HEADER)
+                               header=COMMENT_HEADER,
+                               logged_in=session.get('username'))
     else:
         comment['message'] = request.form.get('message')
         comment['submission_time'] = helper.add_submission_time()
@@ -310,12 +342,15 @@ def delete_comment(comment_id):
             return redirect(f'/question/{id_for_redirect}')
     return render_template('confirm_delete_comment.html',
                            comment=comment,
-                           header=COMMENT_HEADER)
+                           header=COMMENT_HEADER,
+                           logged_in=session.get('username'))
 
 
 @app.route("/bonus-questions")
 def bonus_questions():
-    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
+    return render_template('bonus_questions.html',
+                           questions=SAMPLE_QUESTIONS,
+                           logged_in=session.get('username'))
 
 
 if __name__ == "__main__":
