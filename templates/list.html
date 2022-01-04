@@ -9,8 +9,9 @@
     {% endblock %}
     <h2>Questions</h2>
 
-    <p><a href="/add-question">Add new question</a></p>
-
+    {% if logged_in %}
+        <p><a href="/add-question">Add new question</a></p>
+    {% endif %}
     <!--Link for bonus questions-->
     <a href="{{ url_for('bonus_questions') }}">Bonus Questions</a>
 
