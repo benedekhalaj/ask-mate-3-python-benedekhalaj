@@ -26,7 +26,7 @@ def login():
                 return redirect(url_for('list_questions'))
             else:
                 invalid_account = True
-        except ValueError:
+        except TypeError:
             return render_template('login.html', invalid_account=invalid_account)
 
     return render_template('login.html', invalid_account=invalid_account)
