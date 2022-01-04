@@ -382,3 +382,29 @@ def add_user_account(cursor, user_account):
         admin=Literal(False)
     ))
 
+
+@connection
+def valid_account(cursor, username, password):
+    query = """
+        SELECT * FROM user_account
+        WHERE username = {username} 
+        AND password = {password}
+        
+    """
+    cursor.execute(SQL(query).format(
+        username=Literal(username),
+        password=Literal(password)
+    ))
+    return cursor.fetchone()
+
+
+@connection
+def get_password_hash(cursor, username):
+    query = """
+    SELECT password FROM user_account
+    WHERE username = {username}
+    """
+    cursor.execute(SQL(query).format(
+        username=Literal(username)
+    ))
+    return cursor.fetchone()

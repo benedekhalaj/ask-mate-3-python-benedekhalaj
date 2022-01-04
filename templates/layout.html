@@ -11,6 +11,7 @@
 {% block navbar %}
     <nav id="nav">
         <ul>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('list_questions') }}">Home</a></li>
             <li><a href="{{ url_for('list_questions') }}">Questions</a></li>
             <li><form action="{{ url_for('search_question') }}" class="nav-search">
