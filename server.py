@@ -142,10 +142,10 @@ def add_question():
         new_question_id = data_manager.get_new_id(new_question['submission_time'])
         image_url = helper.upload_file(request, new_question_id)
         data_manager.insert_image('question', new_question_id, image_url)
-        #
+
         if 'username' in session:
-            user_id = data_manager.get_user_id(session['username'])
-            data_manager.insert_user_post('user_question', user_id['id'], new_question_id)
+            user_id = data_manager.get_user_id(session['username'])['id']
+            data_manager.insert_user_post('user_question', user_id, new_question_id)
 
         return redirect(f'/question/{new_question_id}')
     return render_template('add_question.html', logged_in=session.get('username'))
@@ -232,6 +232,12 @@ def add_new_comment(question_id=None, answer_id=None):
         data_manager.add_new_comment(new_comment)
         if answer_id:
             question_id = selected_post['question_id']
+
+        if 'username' in session:
+            comment_id = data_manager.get_new_id(new_comment['submission_time'], 'comment')
+            user_id = data_manager.get_user_id(session['username'])['id']
+            data_manager.insert_user_post('user_comment', user_id, comment_id)
+
         return redirect(f'/question/{question_id}')
     return render_template('comments.html', question_id=question_id,
                            answer_id=answer_id,
