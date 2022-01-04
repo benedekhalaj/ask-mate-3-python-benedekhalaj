@@ -142,6 +142,10 @@ def add_question():
         new_question_id = data_manager.get_new_id(new_question['submission_time'])
         image_url = helper.upload_file(request, new_question_id)
         data_manager.insert_image('question', new_question_id, image_url)
+        #
+        if 'username' in session:
+            user_id = data_manager.get_user_id(session['username'])
+            data_manager.insert_user_post('user_question', user_id['id'], new_question_id)
 
         return redirect(f'/question/{new_question_id}')
     return render_template('add_question.html', logged_in=session.get('username'))
