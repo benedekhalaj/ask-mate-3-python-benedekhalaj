@@ -443,9 +443,20 @@ def get_user_id(cursor, username):
 @connection
 def list_users(cursor):
     query = """
-    SELECT id, username, registration_date
+    SELECT username, registration_date, sum_answer, sum_comment, sum_question 
     FROM user_account
-    ORDER BY username ASC
+    FULL JOIN (
+        SELECT COUNT(user_id) AS "sum_answer", user_id
+        FROM user_answer
+        GROUP BY user_id) user_answer ON user_answer.user_id = user_account.id
+    FULL JOIN (
+        SELECT COUNT(user_id) AS "sum_comment", user_id
+        FROM user_comment
+        GROUP BY user_id) user_comment ON user_comment.user_id = user_account.id
+    FULL JOIN (
+        SELECT COUNT(user_id) AS "sum_question", user_id
+        FROM user_question
+        GROUP BY user_id) user_question ON user_question.user_id = user_account.id;
     """
     cursor.execute(SQL(query))
     return cursor.fetchall()
