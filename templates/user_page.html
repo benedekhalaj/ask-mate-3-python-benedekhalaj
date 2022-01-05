@@ -3,16 +3,26 @@
 {% block content %}
 
     <h2>User Profile Information</h2>
-    <table>
-        <tr>
+    <ul>
     {% for info in user %}
-        <th>{{ info }}</th>
+        <li>{{ info }}: {{ user[info] }}</li>
     {% endfor %}
-        </tr>
+    </ul>
 
-    {% for info in user %}
-        <td>{{ user[info] }}</td>
+    <h3>User related Questions</h3>
+    {% for question in questions %}
+    <p>{{ question }}</p>
     {% endfor %}
 
-    </table>
+    <h3>User related Answers</h3>
+    {% for answer in answers %}
+        <p>{{ answer }}</p>
+    {% endfor %}
+
+    <h3>User related Comments</h3>
+    {% for comment in comments %}
+        <p>{{ comment }}</p>
+    {% endfor %}
+
+
 {% endblock %}
