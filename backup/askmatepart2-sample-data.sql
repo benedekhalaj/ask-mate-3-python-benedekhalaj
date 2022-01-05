@@ -94,8 +94,9 @@ ALTER TABLE ONLY question_tag
 
 
 -- Recreate user account table
-DROP TABLE IF EXISTS user_account;
+ALTER TABLE IF EXISTS ONLY user_account DROP CONSTRAINT IF EXISTS pk_account_id CASCADE;
 
+DROP TABLE IF EXISTS user_account;
 CREATE TABLE user_account(
     id SERIAL NOT NULL,
     username TEXT,
@@ -104,27 +105,45 @@ CREATE TABLE user_account(
     registration_date TIMESTAMP,
     admin BOOLEAN
 );
-
+ALTER TABLE ONLY user_account ADD CONSTRAINT pk_account_id PRIMARY KEY (id);
 
 -- Recreate user relation tables
 ALTER TABLE IF EXISTS ONLY user_question DROP CONSTRAINT IF EXISTS fk_question_id CASCADE;
 ALTER TABLE IF EXISTS ONLY user_answer DROP CONSTRAINT IF EXISTS fk_answer_id CASCADE;
 ALTER TABLE IF EXISTS ONLY user_comment DROP CONSTRAINT IF EXISTS fk_comment_id CASCADE;
+ALTER TABLE IF EXISTS ONLY user_reputation DROP CONSTRAINT IF EXISTS fk_user_id CASCADE;
 
 DROP TABLE IF EXISTS user_question;
-CREATE TABLE user_question(user_id INTEGER, question_id INTEGER);
+CREATE TABLE user_question(
+    user_id INTEGER,
+    question_id INTEGER
+);
 
 DROP TABLE IF EXISTS user_answer;
-CREATE TABLE user_answer(user_id INTEGER, answer_id INTEGER);
+CREATE TABLE user_answer(
+    user_id INTEGER,
+    answer_id INTEGER
+);
 
 DROP TABLE IF EXISTS user_comment;
-CREATE TABLE user_comment(user_id INTEGER, comment_id INTEGER);
+CREATE TABLE user_comment(
+    user_id INTEGER,
+    comment_id INTEGER
+);
+
+DROP TABLE IF EXISTS user_reputation;
+CREATE TABLE user_reputation(
+    user_id INTEGER,
+    reputation INTEGER
+);
 
 ALTER TABLE ONLY user_question ADD CONSTRAINT fk_question_id FOREIGN KEY(question_id) REFERENCES question(id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY user_answer ADD CONSTRAINT fk_answer_id FOREIGN KEY(answer_id) REFERENCES answer(id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY user_comment ADD CONSTRAINT fk_comment_id FOREIGN KEY(comment_id) REFERENCES comment(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY user_reputation ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE;
 
 
 

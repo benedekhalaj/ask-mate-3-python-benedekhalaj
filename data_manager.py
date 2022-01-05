@@ -496,3 +496,11 @@ def current_user_question(cursor, question_id, username):
         return True
     return False
 
+@connection
+def get_users(cursor):
+    query = """
+    SELECT  username, id FROM user_account
+    """
+    cursor.execute(SQL(query))
+
+    return cursor.fetchall()

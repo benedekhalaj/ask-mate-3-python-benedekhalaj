@@ -11,6 +11,8 @@ COMMENT_HEADER = ['submission_time', 'message', 'edited_count']
 ANSWER_HEADER = ['submission_time', 'vote_number', 'message', 'image']
 QUESTION_HEADER = ['title', 'message', 'image']
 
+users = data_manager.get_users()
+print(users)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
