@@ -107,9 +107,13 @@
                         {% if answer['accepted'] %}
                             <img id="accept_answer" src="{{ url_for("static", filename='checkmark.png') }}">
                             <br>
-                            <a href="{{ url_for('accept_answer', question_id=question['id'], accepted_answer_id=answer['id'], accepted='False') }}">X</a>
+                            {% if current_user_question %}
+                                <a href="{{ url_for('accept_answer', question_id=question['id'], accepted_answer_id=answer['id'], accepted='False') }}">X</a>
+                            {% endif %}
                         {% else %}
-                            <a href="{{ url_for('accept_answer', question_id=question['id'], accepted_answer_id=answer['id'], accepted='True') }}">Accept Answer</a>
+                            {% if current_user_question %}
+                                <a href="{{ url_for('accept_answer', question_id=question['id'], accepted_answer_id=answer['id'], accepted='True') }}">Accept Answer</a>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

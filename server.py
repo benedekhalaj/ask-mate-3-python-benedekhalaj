@@ -65,16 +65,26 @@ def list_users():
 
 
 @app.route('/users/<user_id>')
-def user_page(user_id):
-    return render_template('user_page.html')
+def user_profile(user_id):
+    users = data_manager.list_users()
+    current_user = ''
+    for user in users:
+        if user['username'] == session['username']:
+            current_user = user
+            break
+    print(current_user)
+    return render_template('user_page.html',
+                           logged_in=session.get('username'),
+                           user=current_user)
+
 
 
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    logged_in = False
-    if 'username' in session:
-        logged_in = True
+    user_id = data_manager.get_user_id(session.get('username'))
+    if user_id:
+        user_id = user_id['id']
     if "list" not in request.base_url:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=3)
         is_main_page = True
@@ -85,7 +95,8 @@ def list_questions():
                            questions=reversed(questions),
                            titles=data_manager.QUESTION_HEADERS,
                            main_page=is_main_page,
-                           logged_in=session.get('username'))
+                           logged_in=session.get('username'),
+                           user_id=user_id)
 
 
 @app.route('/search')
@@ -124,6 +135,8 @@ def display_question(question_id):
     questions = data_manager.get_questions()
     question_answers = data_manager.get_question_answers(question_id)
     question = helper.get_data_by_id(questions, 'id', question_id)
+
+    current_user_question = data_manager.current_user_question(question_id, session.get('username'))
     comments = data_manager.get_comments()
 
     tags = data_manager.get_tags()
@@ -134,6 +147,7 @@ def display_question(question_id):
                            question=question,
                            question_tags=question_tags,
                            question_header=QUESTION_HEADER,
+                           current_user_question=current_user_question,
                            answers=question_answers,
                            answer_header=ANSWER_HEADER,
                            comments=comments,
