@@ -496,6 +496,7 @@ def current_user_question(cursor, question_id, username):
         return True
     return False
 
+
 @connection
 def get_user_answers(cursor, user_id):
     query = """
@@ -549,4 +550,14 @@ def get_tags_with_usage(cursor):
     ORDER BY "number of questions" DESC;
     """
     cursor.execute(SQL(query))
+    return cursor.fetchall()
+
+
+@connection
+def get_users(cursor):
+    query = """
+    SELECT  username, id FROM user_account
+    """
+    cursor.execute(SQL(query))
+
     return cursor.fetchall()
