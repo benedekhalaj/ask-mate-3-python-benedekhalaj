@@ -554,14 +554,37 @@ def get_tags_with_usage(cursor):
 
 
 @connection
-def get_users(cursor):
+def get_user_id_by_post_id(cursor, table, column, id):
     query = """
-    SELECT  username, id FROM user_account
+    SELECT user_id FROM {table}
+    WHERE {column} = {id}
+    
     """
-    cursor.execute(SQL(query))
+    cursor.execute(SQL(query).format(
+        table=Identifier(table),
+        column=Identifier(column),
+        id=Literal(id)
+    ))
+    return cursor.fetchone()
 
-    return cursor.fetchall()
 
-
-
+@connection
+def modify_reputation_number(cursor, voting, id):
+    if 'vote_up' in voting:
+        vote_value = 5
+        if 'answer' in voting:
+            vote_value = 10
+    elif 'accept' in voting:
+        vote_value = 15
+    else:
+        vote_value = -2
+    query = """
+    UPDATE user_reputation
+    SET reputation = reputation + {vote_value}
+    WHERE user_id = {user_id}
+    """
+    cursor.execute(SQL(query).format(
+        vote_value=Literal(vote_value),
+        user_id=Literal(id)
+    ))
 

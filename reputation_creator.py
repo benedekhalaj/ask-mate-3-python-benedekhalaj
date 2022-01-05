@@ -2,6 +2,17 @@ from psycopg2.sql import SQL, Literal, Identifier
 from database_common import connection_handler as connection
 import data_manager
 
+
+@connection
+def get_users(cursor):
+    query = """
+    SELECT  username, id FROM user_account
+    """
+    cursor.execute(SQL(query))
+
+    return cursor.fetchall()
+
+
 @connection
 def count_question_votes(cursor, user):
     query = """
@@ -49,23 +60,26 @@ def fix_reputation(cursor, user, reputation):
     ))
 
 
-def main():
-    def create_reputation():
-        for user in data_manager.get_users():
-            total_question_votes = dict(count_question_votes(user))
-            total_answer_votes = dict(count_answer_votes(user))
-            total_votes = total_question_votes['vote_number'] + total_answer_votes['vote_number']
-            reputation_from_votes = (5 * total_question_votes['vote_number']) + (10 * total_answer_votes['vote_number'])
+def create_reputation():
+    for user in get_users():
+        total_question_votes = dict(count_question_votes(user))
+        total_answer_votes = dict(count_answer_votes(user))
+        total_votes = total_question_votes['vote_number'] + total_answer_votes['vote_number']
+        reputation_from_votes = (5 * total_question_votes['vote_number']) + (10 * total_answer_votes['vote_number'])
 
-            print(f"""
-            User: {user['username']}:
-            Votes on questions: {total_question_votes['vote_number']}
-            Votes on answers: {total_answer_votes['vote_number']}
-            Total votes: {total_votes}
-            reputation = {reputation_from_votes}
-            """)
-            # THIS fix_reputation CAN REWRITE THE WHOLE REPUTATION DATABASE!!! #
-            # data_manager.fix_reputation(user, reputation_from_votes)
+        print(f"""
+        User: {user['username']}:
+        Votes on questions: {total_question_votes['vote_number']}
+        Votes on answers: {total_answer_votes['vote_number']}
+        Total votes: {total_votes}
+        reputation = {reputation_from_votes}
+        """)
+        # THIS fix_reputation CAN REWRITE THE WHOLE REPUTATION DATABASE!!! #
+        # data_manager.fix_reputation(user, reputation_from_votes)
+
+
+def main():
+    create_reputation()
 
 
 if __name__ == "__main__":

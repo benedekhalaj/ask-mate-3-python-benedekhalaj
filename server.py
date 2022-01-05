@@ -239,6 +239,12 @@ def delete_tag(question_id, tag_id):
 def change_question(question_id, action=''):
     if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
+        user_id = dict(data_manager.get_user_id_by_post_id(
+            table='user_question',
+            column='question_id',
+            id=int(question_id)))['user_id']
+
+        data_manager.modify_reputation_number(voting=request.base_url, id=user_id)
     else:
         data_manager.delete_table_data(table='question', data_id=question_id)
         helper.delete_file('questions', question_id)
@@ -367,6 +373,12 @@ def change_answer(answer_id):
     question_id = helper.get_data_by_id(answers, "id", answer_id)["question_id"]
     if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='answer', voting=request.base_url, id=answer_id)
+        user_id = dict(data_manager.get_user_id_by_post_id(
+            table='user_answer',
+            column='answer_id',
+            id=answer_id))['user_id']
+
+        data_manager.modify_reputation_number(voting=request.base_url, id=user_id)
     else:
         data_manager.delete_table_data(table='answer', data_id=answer_id)
         helper.delete_file('answers', answer_id)
@@ -378,6 +390,13 @@ def accept_answer(accepted_answer_id, question_id, accepted):
     if accepted_answer_id:
         data_manager.accept_answer(accepted_answer_id, question_id, accepted)
         print(accepted_answer_id, question_id)
+        if accepted == 'True':
+            user_id = dict(data_manager.get_user_id_by_post_id(
+                table='user_answer',
+                column='answer_id',
+                id=accepted_answer_id))['user_id']
+            data_manager.modify_reputation_number(voting='accept', id=user_id)
+
         return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -412,21 +431,6 @@ def bonus_questions():
                            questions=SAMPLE_QUESTIONS,
                            logged_in=session.get('username'))
 
-
-@app.route('/create_reputation')
-def create_reputation():
-    for user in data_manager.get_users():
-        total_question_votes = dict(data_manager.count_question_votes(user))
-        total_answer_votes = dict(data_manager.count_answer_votes(user))
-        total_votes = total_question_votes['vote_number'] + total_answer_votes['vote_number']
-        reputation_from_votes = (5 * total_question_votes['vote_number']) + (10 * total_answer_votes['vote_number'])
-        #data_manager.fix_reputation(user, reputation_from_votes)
-        print(f"""
-        User: {user['username']}: 
-        Total votes: {total_votes}
-        reputation = {reputation_from_votes}
-        """)
-    return redirect('/')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',
