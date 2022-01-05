@@ -3,20 +3,22 @@
 {% block content %}
     <table>
         <tr>
-            <th></th>
+            {% for header in headers.keys() %}
+                <th>{{ header.replace('_', ' ').capitalize() }}</th>
+            {% endfor %}
         </tr>
+    {% for user in users %}
         <tr>
-            <td></td>
+            {% for key, value in user.items() %}
+                {% if key == 'registration_date' %}
+                    <td>{{ value.strftime("%Y-%m-%d %H:%M") }}</td>
+                {% else %}
+                    <td>{{ value if value else "0" }}</td>
+                {% endif %}
+            {% endfor %}
         </tr>
-        <tr>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-        </tr>
+    {% endfor %}
     </table>
-
-
 
 
 {% endblock %}
