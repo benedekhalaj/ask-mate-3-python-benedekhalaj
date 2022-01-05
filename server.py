@@ -55,15 +55,27 @@ def logout():
 @app.route('/users')
 def list_users():
     if 'username' in session:
-        users = dict(data_manager.list_users()[0])
+        users = data_manager.list_users()
+        headers = dict(users[0])
         print(users)
-        return render_template('list_users.html', logged_in=session.get('username'))
+        return render_template('list_users.html',
+                               logged_in=session.get('username'),
+                               users=users,
+                               headers=headers)
     return redirect(url_for('login'))
+
+
+@app.route('/users/<user_id>')
+def user_page(user_id):
+    return render_template('user_page.html')
 
 
 @app.route('/')
 @app.route("/list")
 def list_questions():
+    logged_in = False
+    if 'username' in session:
+        logged_in = True
     if "list" not in request.base_url:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=3)
         is_main_page = True
@@ -329,7 +341,7 @@ def edit_comment(comment_id):
 @app.route('/answer/<answer_id>/delete', methods=['POST'])
 @app.route('/answer/<answer_id>/vote_up')
 @app.route('/answer/<answer_id>/vote_down')
-def change_answer(answer_id=None, ):
+def change_answer(answer_id):
     answers = data_manager.get_answers()
     question_id = helper.get_data_by_id(answers, "id", answer_id)["question_id"]
     if 'delete' not in request.base_url:

@@ -443,18 +443,18 @@ def get_user_id(cursor, username):
 @connection
 def list_users(cursor):
     query = """
-    SELECT username, registration_date, sum_answer, sum_comment, sum_question 
+    SELECT id, username, registration_date, "Number of answer(s)", "Number of comment(s)", "Number of question(s)"
     FROM user_account
     FULL JOIN (
-        SELECT COUNT(user_id) AS "sum_answer", user_id
+        SELECT COUNT(user_id) AS "Number of answer(s)", user_id
         FROM user_answer
         GROUP BY user_id) user_answer ON user_answer.user_id = user_account.id
     FULL JOIN (
-        SELECT COUNT(user_id) AS "sum_comment", user_id
+        SELECT COUNT(user_id) AS "Number of comment(s)", user_id
         FROM user_comment
         GROUP BY user_id) user_comment ON user_comment.user_id = user_account.id
     FULL JOIN (
-        SELECT COUNT(user_id) AS "sum_question", user_id
+        SELECT COUNT(user_id) AS "Number of question(s)", user_id
         FROM user_question
         GROUP BY user_id) user_question ON user_question.user_id = user_account.id;
     """
