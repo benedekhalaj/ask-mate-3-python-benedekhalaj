@@ -11,8 +11,6 @@ COMMENT_HEADER = ['submission_time', 'message', 'edited_count']
 ANSWER_HEADER = ['submission_time', 'vote_number', 'message', 'image']
 QUESTION_HEADER = ['title', 'message', 'image']
 
-users = data_manager.get_users()
-print(users)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -414,6 +412,21 @@ def bonus_questions():
                            questions=SAMPLE_QUESTIONS,
                            logged_in=session.get('username'))
 
+
+@app.route('/create_reputation')
+def create_reputation():
+    for user in data_manager.get_users():
+        total_question_votes = dict(data_manager.count_question_votes(user))
+        total_answer_votes = dict(data_manager.count_answer_votes(user))
+        total_votes = total_question_votes['vote_number'] + total_answer_votes['vote_number']
+        reputation_from_votes = (5 * total_question_votes['vote_number']) + (10 * total_answer_votes['vote_number'])
+        #data_manager.fix_reputation(user, reputation_from_votes)
+        print(f"""
+        User: {user['username']}: 
+        Total votes: {total_votes}
+        reputation = {reputation_from_votes}
+        """)
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',

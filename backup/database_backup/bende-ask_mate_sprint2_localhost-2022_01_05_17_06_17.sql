@@ -46,7 +46,24 @@ Caused by: java.io.IOException: The process cannot access the file because anoth
 ', 'images/questions/index_8.jpeg');
 INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (0, '2017-04-28 08:29:00', 31, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', 'images/questions/tenor_0.png');
 INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (5, '2021-12-10 08:07:16.877175', 468, 68975, 'can you recommend a good IT school ?', 'Hello Guys!! I decided to i want to try myself as a programmer :). I would like to learn Python as my first programming language, becouse i heard this is a good programming language for those who''s never programmed before.  Can anyone suggest a good IT school for me? :)  ', NULL);
-INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (7, '2021-12-10 08:30:11.448276', 34, 68, 'Looping through nested array of objects', '
+INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (6, '2021-12-10 08:28:34.410508', 34, 16, 'IPVLAN CNI based pods across hosts using VLAN headers', 'I have 2 worker nodes in a Kubernetes cluster. The worker nodes are on the same L2 domain.
+
+Pod00 on Worker-node0 is using IPVLAN. So, net1 gets 10.1.1.1
+
+Pod01 on Worker-node1 is using IPVLAN. So, net1 gets 10.1.1.2
+
+I want to able to ping 10.1.1.1 <---> 10.1.1.2 and it should carry the VLAN header. I don''t see any in the tcpdump. Questions:
+
+    I assumed that the VLAN header is inserted by the Pod itself. However, in the IPVLAN CNI I don''t see any code where VLAN information is taken via config. Is my understanding correct?
+
+    Should interfaces in pod be explicitly configured as vlan-subinterfaces (net1.10) or should I do it on the worker node (enp1s0.10)?
+
+    What should I use as ''master'' interface? enp1s0 or enp1s0.10?
+
+Thanks
+', NULL);
+INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (4, '2021-12-10 07:50:39.102181', 19, 5, 'My SQL query won''t working!!!', 'I wrote this query, but it doesn''t want to work: SELECT * FROM my_table_name here WHERE id = FOUR ; What is the problem wit this?', NULL);
+INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (7, '2021-12-10 08:30:11.448276', 34, 69, 'Looping through nested array of objects', '
 
 I have following array of objects with nested arrays in it. I wanted to traverse through those arrays and extract all those impact information to separate array:
 
@@ -171,30 +188,13 @@ violations.forEach(({ nodes, impact }) => {
 
 is there any better and shorter way to do the same?
 ', NULL);
-INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (6, '2021-12-10 08:28:34.410508', 34, 16, 'IPVLAN CNI based pods across hosts using VLAN headers', 'I have 2 worker nodes in a Kubernetes cluster. The worker nodes are on the same L2 domain.
-
-Pod00 on Worker-node0 is using IPVLAN. So, net1 gets 10.1.1.1
-
-Pod01 on Worker-node1 is using IPVLAN. So, net1 gets 10.1.1.2
-
-I want to able to ping 10.1.1.1 <---> 10.1.1.2 and it should carry the VLAN header. I don''t see any in the tcpdump. Questions:
-
-    I assumed that the VLAN header is inserted by the Pod itself. However, in the IPVLAN CNI I don''t see any code where VLAN information is taken via config. Is my understanding correct?
-
-    Should interfaces in pod be explicitly configured as vlan-subinterfaces (net1.10) or should I do it on the worker node (enp1s0.10)?
-
-    What should I use as ''master'' interface? enp1s0 or enp1s0.10?
-
-Thanks
-', NULL);
-INSERT INTO public.question (id, submission_time, view_number, vote_number, title, message, image) VALUES (4, '2021-12-10 07:50:39.102181', 19, 5, 'My SQL query won''t working!!!', 'I wrote this query, but it doesn''t want to work: SELECT * FROM my_table_name here WHERE id = FOUR ; What is the problem wit this?', NULL);
 
 
 --
 -- Data for Name: answer; Type: TABLE DATA; Schema: public; Owner: bende
 --
 
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (12, '2021-12-10 08:31:44.921047', 0, 7, '
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (12, '2021-12-10 08:31:44.921047', 0, NULL, 7, '
 
 You can achieve your result like below snippet:
 
@@ -309,19 +309,19 @@ const newItems = items.violations.reduce((acc, {impact, nodes})=> {
 }, []);
 
 console.log(newItems);', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (6, '2021-12-10 07:45:20.922606', 3, 0, 'First of try to use this forum if you have any programming question :)
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (6, '2021-12-10 07:45:20.922606', 3, NULL, 0, 'First of try to use this forum if you have any programming question :)
    Welcome here.', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (7, '2021-12-10 07:47:10.661185', 1, 0, '    
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (7, '2021-12-10 07:47:10.661185', 1, NULL, 0, '    
 name = ''Newcomer''        
 print(f''Helo {name})', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (13, '2021-12-10 08:36:37.285243', 8, 8, 'I found the following related JIRAs:
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (13, '2021-12-10 08:36:37.285243', 8, NULL, 8, 'I found the following related JIRAs:
  - http://www.jetbrains.net/jira/browse/IDEADEV-32032 - same stack trace but with an additional JVM crash - unfortunately no build version is mentioned
  - http://www.jetbrains.net/jira/browse/IDEA-18953 - same stack trace but not at startup - ref to JDK bug: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4938372
 
 That JDK bug was reported on 1.4.2 and fixed on 7b10 if I read well. I hope you (JetBrains) will not invalidate this bug for that reason. It makes 8.0 completely unusable for me (for my main project at least), Furthermore, the fact that earlier versions (upto #8940) do not have this problem makes me believe that it is preventable.', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (14, '2021-12-10 08:36:55.930278', 13, 8, 'Please, check your antivirus software does not scan IDEA system directory', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (15, '2021-12-10 08:37:38.166824', 1, 8, 'I am getting this stage as well.  Any updates?  I have noticed that it is not deterministic', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (4, '2021-12-10 07:18:47.454089', -3, 2, '
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (14, '2021-12-10 08:36:55.930278', 13, NULL, 8, 'Please, check your antivirus software does not scan IDEA system directory', NULL);
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (15, '2021-12-10 08:37:38.166824', 1, NULL, 8, 'I am getting this stage as well.  Any updates?  I have noticed that it is not deterministic', NULL);
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (4, '2021-12-10 07:18:47.454089', -3, NULL, 2, '
 
 on the option section, set as DATA_URL :
 
@@ -333,23 +333,21 @@ this will get image as base64 format, to display the image, add
 
 then the canvas draw from this img tag
 ', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (1, '2017-04-28 16:49:00', 5, 1, 'You need to use brackets: my_list = []', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (8, '2021-12-10 07:52:50.107457', 14, 4, 'Is your id INTEGER? becouse you have to specify the integer by number, not like string. Try this : SELECT * FROM my_table_name_here WHERE id = 4; It should have work', NULL);
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (2, '2021-12-10 07:39:11.125062', 35, 1, 'Look it up in the Python docs', 'images/questions/docs_screen_Su96LAK_2.png');
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (9, '2021-12-10 08:12:57.721925', 39, 5, 'I This your best choice would be CodeCool :)', 'images/answers/codecool_9.png');
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (10, '2021-12-10 08:16:31.177571', 135, 5, 'Try Codecool!! You wont be dissapointed for sure!!! They have the best mentors and their teaching technics.... well just have to experience it :)', 'images/answers/a8f2f47c57b1ff6e2c5c26229d7083ff_10.jpeg');
-INSERT INTO public.answer (id, submission_time, vote_number, question_id, message, image) VALUES (11, '2021-12-10 08:26:01.203977', 16548, 5, 'CODECOOL !!!!! Forget University or some other bootcamps like Greenfox :'')... I recommend Codecool , you wont dissapointed. i learned there and that year was the greatest year in my life . I finished the school in 2019 and now i have a huge IT company: Jinja3 Foum :). they have everything what you need :)', 'images/answers/balna_eye_11.png');
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (1, '2017-04-28 16:49:00', 5, NULL, 1, 'You need to use brackets: my_list = []', NULL);
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (8, '2021-12-10 07:52:50.107457', 14, NULL, 4, 'Is your id INTEGER? becouse you have to specify the integer by number, not like string. Try this : SELECT * FROM my_table_name_here WHERE id = 4; It should have work', NULL);
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (2, '2021-12-10 07:39:11.125062', 35, NULL, 1, 'Look it up in the Python docs', 'images/questions/docs_screen_Su96LAK_2.png');
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (9, '2021-12-10 08:12:57.721925', 39, NULL, 5, 'I This your best choice would be CodeCool :)', 'images/answers/codecool_9.png');
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (10, '2021-12-10 08:16:31.177571', 135, NULL, 5, 'Try Codecool!! You wont be dissapointed for sure!!! They have the best mentors and their teaching technics.... well just have to experience it :)', 'images/answers/a8f2f47c57b1ff6e2c5c26229d7083ff_10.jpeg');
+INSERT INTO public.answer (id, submission_time, vote_number, accepted, question_id, message, image) VALUES (11, '2021-12-10 08:26:01.203977', 16548, NULL, 5, 'CODECOOL !!!!! Forget University or some other bootcamps like Greenfox :'')... I recommend Codecool , you wont dissapointed. i learned there and that year was the greatest year in my life . I finished the school in 2019 and now i have a huge IT company: Jinja3 Foum :). they have everything what you need :)', 'images/answers/balna_eye_11.png');
 
 
 --
 -- Data for Name: comment; Type: TABLE DATA; Schema: public; Owner: bende
 --
 
-INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (1, 0, NULL, 'heloo,belooo,ezt editeltem.', '2021-12-09 12:43:37.958262', NULL);
 INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (7, 1, NULL, 'Do you really need to use multiple versions of jQuery? Doing that normally creates more problems than it solves.', '2021-12-10 07:26:10.661588', 1);
 INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (14, 1, NULL, 'no, no, no exactly BECAUSE i have multiple versions (wordpress loads jquery and my theme loads jquery) it causes problems.', '2021-12-10 07:26:38.717418', NULL);
 INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (15, NULL, 2, 'https://docs.python.org/3/', '2021-12-10 07:28:37.769986', NULL);
-INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (16, 0, NULL, 'heloooo:)', '2021-12-10 07:45:51.824521', NULL);
 INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (17, NULL, 7, 'Ohhh i understand this codeee :'')', '2021-12-10 07:47:52.280575', NULL);
 INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (18, 0, NULL, 'heey :) Welcome Here!!!', '2021-12-10 07:48:13.476414', NULL);
 INSERT INTO public.comment (id, question_id, answer_id, message, submission_time, edited_count) VALUES (20, 5, NULL, 'Maybe you should look for ion internet first :)', '2021-12-10 08:10:24.158453', NULL);
@@ -408,24 +406,78 @@ INSERT INTO public.question_tag (question_id, tag_id) VALUES (2, 7);
 --
 
 INSERT INTO public.user_account (id, username, email, password, registration_date, admin) VALUES (1, 'bende', 'dudaskobende@gmail.com', '$2b$12$6bQAyohbTKxYN7Jn3EdH3uuAB.EzvYL4CrbtYlAXyw5rBbdHKw3U6', '2022-01-04 19:32:57.80833', true);
+INSERT INTO public.user_account (id, username, email, password, registration_date, admin) VALUES (2, 'zsu', 'zsezsu6@gmail.com', '$2b$12$5F5X7x6zmhWxGY8cqh0jl.ANYWMP/yzBEDVeQ9faz5.0go1M2Td6W', '2022-01-05 11:52:42.870274', false);
+INSERT INTO public.user_account (id, username, email, password, registration_date, admin) VALUES (3, 'Beni', 'beni@benimail.hu', '$2b$12$NfwKgv45MXmLFfFhfUAJM.mVD0u4sVewrLBQBT3bIxoyeeO05LZm.', '2022-01-05 12:18:52.885141', false);
+INSERT INTO public.user_account (id, username, email, password, registration_date, admin) VALUES (4, 'Eddie Murphy', 'eddie@murphy.com', '$2b$12$fQbcNM5hWqaWpbfzbGiKEuNB0Wr74BMdVbBCCC8ahVrLqDILd6L1q', '2022-01-05 12:22:15.676845', false);
+INSERT INTO public.user_account (id, username, email, password, registration_date, admin) VALUES (5, 'Johnny Deep', 'dzsonni@depp.hu', '$2b$12$1xMc3aY6evgXGzq3Wm6LA.2OHwYAgHwHX04X36Z.aesrfIRRO22C6', '2022-01-05 12:26:19.241824', false);
+INSERT INTO public.user_account (id, username, email, password, registration_date, admin) VALUES (6, 'Scarlet', 'scarlet@johansson.com', '$2b$12$zz7ngbedWx3Fsb6QJqD.vOAeK0cLvK4h.6evYnpZ7aTF7rQjGmSPW', '2022-01-05 12:27:27.846725', false);
 
 
 --
 -- Data for Name: user_answer; Type: TABLE DATA; Schema: public; Owner: bende
 --
 
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (1, 1);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (1, 2);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (1, 4);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (2, 6);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (2, 7);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (2, 8);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (3, 9);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (3, 10);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (4, 11);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (4, 12);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (5, 13);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (6, 14);
+INSERT INTO public.user_answer (user_id, answer_id) VALUES (6, 15);
 
 
 --
 -- Data for Name: user_comment; Type: TABLE DATA; Schema: public; Owner: bende
 --
 
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (1, 7);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (1, 14);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (6, 15);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (1, 17);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (5, 18);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (5, 19);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (6, 21);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (4, 21);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (3, 22);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (1, 23);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (3, 24);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (2, 25);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (3, 26);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (2, 27);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (2, 28);
+INSERT INTO public.user_comment (user_id, comment_id) VALUES (2, 29);
 
 
 --
 -- Data for Name: user_question; Type: TABLE DATA; Schema: public; Owner: bende
 --
 
+INSERT INTO public.user_question (user_id, question_id) VALUES (1, 6);
+INSERT INTO public.user_question (user_id, question_id) VALUES (1, 7);
+INSERT INTO public.user_question (user_id, question_id) VALUES (2, 0);
+INSERT INTO public.user_question (user_id, question_id) VALUES (2, 8);
+INSERT INTO public.user_question (user_id, question_id) VALUES (3, 2);
+INSERT INTO public.user_question (user_id, question_id) VALUES (4, 4);
+INSERT INTO public.user_question (user_id, question_id) VALUES (5, 5);
+INSERT INTO public.user_question (user_id, question_id) VALUES (6, 1);
+
+
+--
+-- Data for Name: user_reputation; Type: TABLE DATA; Schema: public; Owner: bende
+--
+
+INSERT INTO public.user_reputation (user_id, reputation) VALUES (1, 795);
+INSERT INTO public.user_reputation (user_id, reputation) VALUES (2, 915);
+INSERT INTO public.user_reputation (user_id, reputation) VALUES (3, 2100);
+INSERT INTO public.user_reputation (user_id, reputation) VALUES (4, 165505);
+INSERT INTO public.user_reputation (user_id, reputation) VALUES (5, 344955);
+INSERT INTO public.user_reputation (user_id, reputation) VALUES (6, 190);
 
 
 --
@@ -460,7 +512,7 @@ SELECT pg_catalog.setval('public.tag_id_seq', 22, true);
 -- Name: user_account_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bende
 --
 
-SELECT pg_catalog.setval('public.user_account_id_seq', 1, true);
+SELECT pg_catalog.setval('public.user_account_id_seq', 6, true);
 
 
 --

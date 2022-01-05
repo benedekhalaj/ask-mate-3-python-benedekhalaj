@@ -561,3 +561,7 @@ def get_users(cursor):
     cursor.execute(SQL(query))
 
     return cursor.fetchall()
+
+
+
+
