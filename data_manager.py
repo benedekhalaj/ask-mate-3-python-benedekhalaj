@@ -443,18 +443,18 @@ def get_user_id(cursor, username):
 @connection
 def list_users(cursor):
     query = """
-    SELECT id, username, registration_date, "Number of answer(s)", "Number of comment(s)", "Number of question(s)"
+    SELECT id, username, registration_date, "Number of answers", "Number of comments", "Number of questions"
     FROM user_account
     FULL JOIN (
-        SELECT COUNT(user_id) AS "Number of answer(s)", user_id
+        SELECT COUNT(user_id) AS "Number of answers", user_id
         FROM user_answer
         GROUP BY user_id) user_answer ON user_answer.user_id = user_account.id
     FULL JOIN (
-        SELECT COUNT(user_id) AS "Number of comment(s)", user_id
+        SELECT COUNT(user_id) AS "Number of comments", user_id
         FROM user_comment
         GROUP BY user_id) user_comment ON user_comment.user_id = user_account.id
     FULL JOIN (
-        SELECT COUNT(user_id) AS "Number of question(s)", user_id
+        SELECT COUNT(user_id) AS "Number of questions", user_id
         FROM user_question
         GROUP BY user_id) user_question ON user_question.user_id = user_account.id;
     """
@@ -475,3 +475,24 @@ def accept_answer(cursor, accepted_answer_id, question_id, accepted):
         question_id=Literal(question_id),
         accepted=SQL(accepted)
     ))
+
+
+@connection
+def current_user_question(cursor, question_id, username):
+    query = """
+        SELECT * FROM user_question
+        INNER JOIN (
+        SELECT id FROM user_account
+        WHERE user_account.username = {username}
+        ) user_account ON user_account.id = user_question.user_id
+        WHERE user_id = user_account.id AND
+        question_id = {question_id}
+    """
+    cursor.execute(SQL(query).format(
+        username=Literal(username),
+        question_id=Literal(question_id)
+    ))
+    if cursor.fetchone():
+        return True
+    return False
+
