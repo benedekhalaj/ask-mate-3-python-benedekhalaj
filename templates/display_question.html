@@ -10,16 +10,14 @@
         <div class="manipulate_question">
 
             <div class="edit_question">
-                <p>
-                    <a href="/question/{{ question['id'] }}/edit">
-                        Edit question
-                    </a>
-                </p>
+                <form action="/question/{{ question['id'] }}/edit">
+                    <button type="submit">Edit question</button>
+                </form>
             </div>
             <div class="delete_question">
                 <form action="/question/{{ question['id'] }}/delete" method="post">
                     <button type="submit">Delete question</button>
-                </form><br>
+                </form>
             </div>
         </div>
     {% endif %}
