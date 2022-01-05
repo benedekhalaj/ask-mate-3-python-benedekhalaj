@@ -351,6 +351,14 @@ def change_answer(answer_id):
     return redirect(f'/question/{question_id}')
 
 
+@app.route('/answer/accept_answer/<accepted_answer_id>/question_id/<question_id>/<accepted>')
+def accept_answer(accepted_answer_id, question_id, accepted):
+    if accepted_answer_id:
+        data_manager.accept_answer(accepted_answer_id, question_id, accepted)
+        print(accepted_answer_id, question_id)
+        return redirect(url_for('display_question', question_id=question_id))
+
+
 @app.route('/comment/<comment_id>/delete', methods=['GET', 'POST'])
 def delete_comment(comment_id):
     comments = data_manager.get_comments()
