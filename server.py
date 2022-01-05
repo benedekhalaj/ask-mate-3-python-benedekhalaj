@@ -42,7 +42,7 @@ def register():
         user_account['registration_date'] = helper.add_submission_time()
         user_account['password'] = helper.hash_password(user_account['password'])
         data_manager.add_user_account(user_account)
-        return redirect(url_for('list_questions'))
+        return redirect(url_for('login'))
 
 
 @app.route('/logout')
@@ -143,6 +143,8 @@ def display_question(question_id):
     questions = data_manager.get_questions()
     question_answers = data_manager.get_question_answers(question_id)
     question = helper.get_data_by_id(questions, 'id', question_id)
+
+    current_user_question = data_manager.current_user_question(question_id, session.get('username'))
     comments = data_manager.get_comments()
 
     tags = data_manager.get_tags()
@@ -153,6 +155,7 @@ def display_question(question_id):
                            question=question,
                            question_tags=question_tags,
                            question_header=QUESTION_HEADER,
+                           current_user_question=current_user_question,
                            answers=question_answers,
                            answer_header=ANSWER_HEADER,
                            comments=comments,
