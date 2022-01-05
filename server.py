@@ -69,7 +69,7 @@ def user_profile(user_id):
     users = data_manager.list_users()
     current_user = ''
     for user in users:
-        if user['username'] == session['username']:
+        if user['id'] == int(user_id):
             current_user = user
             break
     user_questions = data_manager.get_user_questions(user_id)
