@@ -57,7 +57,6 @@ def list_users():
     if 'username' in session:
         users = data_manager.list_users()
         headers = dict(users[0])
-        print(users)
         return render_template('list_users.html',
                                logged_in=session.get('username'),
                                users=users,
