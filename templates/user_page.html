@@ -9,20 +9,92 @@
     {% endfor %}
     </ul>
 
+
     <h3>User related Questions</h3>
-    {% for question in questions %}
-    <p>{{ question }}</p>
-    {% endfor %}
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Question</th>
+        </tr>
+        {% for question in user_questions %}
+            <tr>
+                {% for data in question %}
+                    {% if data == 'title' %}
+                        <td><a href="{{ url_for('display_question', question_id=question['id']) }}">{{ question[data] }}</a></td>
+                    {% elif data == 'message' %}
+                        <td>{{ question[data] }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+
 
     <h3>User related Answers</h3>
-    {% for answer in answers %}
-        <p>{{ answer }}</p>
+    <table>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+        </tr>
+    {% for answer in user_answers %}
+
+        <tr>
+        {% for question in all_questions %}
+            {% if answer['question_id'] == question['id'] %}
+                <td><a href="{{ url_for('display_question', question_id=question['id']) }}">{{ question['title'] }}</a></td>
+            {% endif %}
+        {% endfor %}
+
+        {% for data in answer %}
+            {% if data == 'message' %}
+                <td>{{ answer[data] }}</td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+
     {% endfor %}
+
+    </table>
+
+
+
 
     <h3>User related Comments</h3>
-    {% for comment in comments %}
-        <p>{{ comment }}</p>
+    <table>
+        <tr>
+            <th>Question</th>
+            <th>Comment</th>
+        </tr>
+    {% for comment in user_comments %}
+
+        <tr>
+        {% for question in all_questions %}
+            {% if comment['question_id'] == question['id'] %}
+                <td><a href="{{ url_for('display_question', question_id=question['id']) }}">{{ question['title'] }}</a></td>
+            {% endif %}
+        {% endfor %}
+
+        {% for answer in all_answers %}
+            {% if comment['answer_id'] == answer['id'] %}
+                {% for question in all_questions %}
+                    {% if answer['question_id'] == question['id'] %}
+                        <td><a href="{{ url_for('display_question', question_id=question['id']) }}">{{ question['title'] }}</a></td>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+
+        {% for data in comment %}
+            {% if data == 'message' %}
+                <td>{{ comment[data] }}</td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+
     {% endfor %}
 
+    </table>
 
 {% endblock %}

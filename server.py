@@ -75,13 +75,16 @@ def user_profile(user_id):
     user_questions = data_manager.get_user_questions(user_id)
     user_answers = data_manager.get_user_answers(user_id)
     user_comments = data_manager.get_user_comments(user_id)
+    all_questions = data_manager.get_questions()
+    all_answers = data_manager.get_answers()
     return render_template('user_page.html',
                            logged_in=session.get('username'),
                            user=current_user,
-                           questions=user_questions,
-                           answers=user_answers,
-                           comments=user_comments)
-
+                           user_questions=user_questions,
+                           user_answers=user_answers,
+                           user_comments=user_comments,
+                           all_questions=all_questions,
+                           all_answers=all_answers)
 
 
 @app.route('/')
