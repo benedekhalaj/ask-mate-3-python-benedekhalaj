@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+    <p><a href="{{ url_for('tags') }}">View Tags</a></p>
     <h2>Question {{ question['title'] }}</h2>
     {% if logged_in %}
         <div class="manipulate_question">

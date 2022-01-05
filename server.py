@@ -74,11 +74,19 @@ def user_profile(user_id):
         if user['username'] == session['username']:
             current_user = user
             break
-    print(current_user)
+    user_questions = data_manager.get_user_questions(user_id)
+    user_answers = data_manager.get_user_answers(user_id)
+    user_comments = data_manager.get_user_comments(user_id)
+    all_questions = data_manager.get_questions()
+    all_answers = data_manager.get_answers()
     return render_template('user_page.html',
                            logged_in=session.get('username'),
-                           user=current_user)
-
+                           user=current_user,
+                           user_questions=user_questions,
+                           user_answers=user_answers,
+                           user_comments=user_comments,
+                           all_questions=all_questions,
+                           all_answers=all_answers)
 
 
 @app.route('/')
@@ -230,7 +238,7 @@ def delete_tag(question_id, tag_id):
 @app.route('/question/<question_id>/delete', methods=['POST'])
 @app.route('/question/<question_id>/vote_up')
 @app.route('/question/<question_id>/vote_down')
-def change_question(question_id):
+def change_question(question_id, action=''):
     if 'delete' not in request.base_url:
         data_manager.modify_vote_number(table='question', voting=request.base_url, id=question_id)
     else:
@@ -393,6 +401,11 @@ def delete_comment(comment_id):
                            comment=comment,
                            header=COMMENT_HEADER,
                            logged_in=session.get('username'))
+
+
+@app.route('/tags')
+def tags():
+    return render_template('tags.html', tags=data_manager.get_tags_with_usage(), logged_in=session.get('username'))
 
 
 @app.route("/bonus-questions")

@@ -22,7 +22,9 @@
                         {% endif %}
                     {% endif %}
             {% endfor %}
+                {% if question %}
                 <div class="vote_up vote"><a href="/question/{{ question['id'] }}/vote_up">🔺</a></div>
                 <div class="vote_down vote"><a href="/question/{{ question['id'] }}/vote_down">🔻</a></div>
+                {% endif %}
             </div>
     {% endfor %}
