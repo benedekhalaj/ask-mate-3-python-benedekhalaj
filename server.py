@@ -401,6 +401,11 @@ def delete_comment(comment_id):
                            logged_in=session.get('username'))
 
 
+@app.route('/tags')
+def tags():
+    return render_template('tags.html', tags=data_manager.get_tags_with_usage(), logged_in=session.get('username'))
+
+
 @app.route("/bonus-questions")
 def bonus_questions():
     return render_template('bonus_questions.html',

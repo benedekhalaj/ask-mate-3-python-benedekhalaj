@@ -536,3 +536,17 @@ def get_user_comments(cursor, user_id):
         user_id=Literal(user_id)
     ))
     return cursor.fetchall()
+
+
+@connection
+def get_tags_with_usage(cursor):
+    query = """
+    SELECT tag.name, COUNT(question_id) AS "number of questions"
+    FROM question_tag
+    INNER JOIN tag
+    ON question_tag.tag_id = tag.id
+    GROUP BY tag.name
+    ORDER BY "number of questions" DESC;
+    """
+    cursor.execute(SQL(query))
+    return cursor.fetchall()
