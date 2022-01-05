@@ -496,3 +496,43 @@ def current_user_question(cursor, question_id, username):
         return True
     return False
 
+@connection
+def get_user_answers(cursor, user_id):
+    query = """
+    SELECT * FROM answer
+    INNER JOIN user_answer
+    ON answer.id=user_answer.answer_id
+    WHERE user_answer.user_id = {user_id}
+    """
+    cursor.execute(SQL(query).format(
+        user_id=Literal(user_id)
+    ))
+    return cursor.fetchall()
+
+
+@connection
+def get_user_questions(cursor, user_id):
+    query = """
+    SELECT * FROM question
+    INNER JOIN user_question
+    ON question.id=user_question.question_id
+    WHERE user_question.user_id = {user_id}
+    """
+    cursor.execute(SQL(query).format(
+        user_id=Literal(user_id)
+    ))
+    return cursor.fetchall()
+
+
+@connection
+def get_user_comments(cursor, user_id):
+    query = """
+    SELECT * FROM comment
+    INNER JOIN user_comment
+    ON comment.id=user_comment.comment_id
+    WHERE user_comment.user_id = {user_id}
+    """
+    cursor.execute(SQL(query).format(
+        user_id=Literal(user_id)
+    ))
+    return cursor.fetchall()
