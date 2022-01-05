@@ -4,13 +4,21 @@
     <table>
         <tr>
             {% for header in headers.keys() %}
-                <th>{{ header.replace('_', ' ').capitalize() }}</th>
+                {% if not header == 'id' %}
+                    <th>{{ header.replace('_', ' ').capitalize() }}</th>
+                {% elif header == 'username' %}
+                    <th>{{ header.capitalize() }}</th>
+                {% else %}
+                {% endif %}
             {% endfor %}
         </tr>
     {% for user in users %}
         <tr>
             {% for key, value in user.items() %}
-                {% if key == 'registration_date' %}
+                {% if key == 'id' %}
+                {% elif key == 'username' %}
+                    <td><a href="{{ url_for('user_page', user_id=user['id']) }}">{{ value }}</a></td>
+                {% elif key == 'registration_date' %}
                     <td>{{ value.strftime("%Y-%m-%d %H:%M") }}</td>
                 {% else %}
                     <td>{{ value if value else "0" }}</td>
