@@ -55,8 +55,8 @@ def logout():
 @app.route('/users')
 def list_users():
     if 'username' in session:
-        users = data_manager.list_users()
-        #print(users)
+        users = dict(data_manager.list_users()[0])
+        print(users)
         return render_template('list_users.html', logged_in=session.get('username'))
     return redirect(url_for('login'))
 
@@ -64,9 +64,6 @@ def list_users():
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    logged_in = False
-    if 'username' in session:
-        logged_in = True
     if "list" not in request.base_url:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=3)
         is_main_page = True
@@ -332,7 +329,7 @@ def edit_comment(comment_id):
 @app.route('/answer/<answer_id>/delete', methods=['POST'])
 @app.route('/answer/<answer_id>/vote_up')
 @app.route('/answer/<answer_id>/vote_down')
-def change_answer(answer_id):
+def change_answer(answer_id=None, ):
     answers = data_manager.get_answers()
     question_id = helper.get_data_by_id(answers, "id", answer_id)["question_id"]
     if 'delete' not in request.base_url:
@@ -341,6 +338,14 @@ def change_answer(answer_id):
         data_manager.delete_table_data(table='answer', data_id=answer_id)
         helper.delete_file('answers', answer_id)
     return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/accept_answer/<accepted_answer_id>/question_id/<question_id>/<accepted>')
+def accept_answer(accepted_answer_id, question_id, accepted):
+    if accepted_answer_id:
+        data_manager.accept_answer(accepted_answer_id, question_id, accepted)
+        print(accepted_answer_id, question_id)
+        return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/comment/<comment_id>/delete', methods=['GET', 'POST'])

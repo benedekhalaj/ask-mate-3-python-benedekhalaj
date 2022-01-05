@@ -460,3 +460,18 @@ def list_users(cursor):
     """
     cursor.execute(SQL(query))
     return cursor.fetchall()
+
+
+@connection
+def accept_answer(cursor, accepted_answer_id, question_id, accepted):
+    query = """
+        UPDATE answer 
+        SET accepted = {accepted}
+        WHERE id = {answer_id} AND
+              question_id = {question_id}
+    """
+    cursor.execute(SQL(query).format(
+        answer_id=Literal(accepted_answer_id),
+        question_id=Literal(question_id),
+        accepted=SQL(accepted)
+    ))

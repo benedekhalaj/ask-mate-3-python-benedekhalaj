@@ -224,3 +224,8 @@ input, textarea {
     padding: 5px;
     margin: 0;
 }
+
+#accept_answer {
+    width: 20%;
+    height: auto;
+}
