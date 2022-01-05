@@ -5,6 +5,10 @@
 
 
 {% block content %}
+    {% if user_id %}
+        <p><a href="{{ url_for('user_profile', user_id=user_id) }}">View User Profile</a></p>
+    {% endif %}
+
     {% block back %}
     {% endblock %}
     <h2>Questions</h2>

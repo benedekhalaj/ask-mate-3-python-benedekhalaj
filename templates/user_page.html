@@ -1,1 +1,18 @@
 {% extends 'layout.html' %}
+
+{% block content %}
+
+    <h2>User Profile Information</h2>
+    <table>
+        <tr>
+    {% for info in user %}
+        <th>{{ info }}</th>
+    {% endfor %}
+        </tr>
+
+    {% for info in user %}
+        <td>{{ user[info] }}</td>
+    {% endfor %}
+
+    </table>
+{% endblock %}

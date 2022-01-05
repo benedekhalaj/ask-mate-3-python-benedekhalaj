@@ -57,7 +57,6 @@ def list_users():
     if 'username' in session:
         users = data_manager.list_users()
         headers = dict(users[0])
-        print(users)
         return render_template('list_users.html',
                                logged_in=session.get('username'),
                                users=users,
@@ -66,16 +65,26 @@ def list_users():
 
 
 @app.route('/users/<user_id>')
-def user_page(user_id):
-    return render_template('user_page.html')
+def user_profile(user_id):
+    users = data_manager.list_users()
+    current_user = ''
+    for user in users:
+        if user['username'] == session['username']:
+            current_user = user
+            break
+    print(current_user)
+    return render_template('user_page.html',
+                           logged_in=session.get('username'),
+                           user=current_user)
+
 
 
 @app.route('/')
 @app.route("/list")
 def list_questions():
-    logged_in = False
-    if 'username' in session:
-        logged_in = True
+    user_id = data_manager.get_user_id(session.get('username'))
+    if user_id:
+        user_id = user_id['id']
     if "list" not in request.base_url:
         questions = data_manager.sort_questions(request.args) if request.args else data_manager.get_questions(limit=3)
         is_main_page = True
@@ -86,7 +95,8 @@ def list_questions():
                            questions=reversed(questions),
                            titles=data_manager.QUESTION_HEADERS,
                            main_page=is_main_page,
-                           logged_in=session.get('username'))
+                           logged_in=session.get('username'),
+                           user_id=user_id)
 
 
 @app.route('/search')
