@@ -1,25 +1,23 @@
 // you receive an array of objects which you must sort in the by the key "sortField" in the "sortDirection"
 function getSortedItems(items, sortField, sortDirection) {
-    console.log(items)
-    console.log(sortField)
-    console.log(sortDirection)
+    let numberFields = ['VoteCount', 'ViewNumber']
 
-    // === SAMPLE CODE ===
-    // if you have not changed the original html uncomment the code below to have an idea of the
-    // effect this function has on the table
-    //
     if (sortDirection === "asc") {
-        const firstItem = items.shift()
-        if (firstItem) {
-            items.push(firstItem)
+        if (numberFields.includes(sortField)) {
+            items.sort((a, b) => a[sortField] - b[sortField])
         }
-    } else {
-        const lastItem = items.pop()
-        if (lastItem) {
-            items.push(lastItem)
+        else {
+            items.sort((a, b) => a[sortField] > b[sortField])
         }
     }
-
+    else {
+        if (numberFields.includes(sortField)) {
+            items.sort((a, b) => b[sortField] - a[sortField])
+        }
+        else {
+            items.sort((a, b) => a[sortField] < b[sortField])
+        }
+    }
     return items
 }
 
