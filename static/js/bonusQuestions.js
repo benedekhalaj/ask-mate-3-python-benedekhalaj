@@ -25,18 +25,22 @@ function getSortedItems(items, sortField, sortDirection) {
 
 // you receive an array of objects which you must filter by all it's keys to have a value matching "filterValue"
 function getFilteredItems(items, filterValue) {
-    console.log(items)
-    console.log(filterValue)
-
-    // === SAMPLE CODE ===
-    // if you have not changed the original html uncomment the code below to have an idea of the
-    // effect this function has on the table
-    //
-    for (let i=0; i<filterValue.length; i++) {
-        items.pop()
+    let filteredItems = [];
+    console.clear();
+    for (let item of items) {
+        if (filterValue[0] === "!") {
+            if (Object.values(item).every(function (text) {return !text.includes(filterValue.slice(1, filterValue.length))})){
+                filteredItems.push(item)
+            }
+        } else { for (let data in item) {
+                if (item[data].includes(filterValue)) {
+                filteredItems.push(item)
+                break
+            }
+        }}
     }
 
-    return items
+    return filteredItems
 }
 
 function toggleTheme() {
