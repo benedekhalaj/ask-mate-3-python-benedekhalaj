@@ -26,21 +26,27 @@ function getSortedItems(items, sortField, sortDirection) {
 // you receive an array of objects which you must filter by all it's keys to have a value matching "filterValue"
 function getFilteredItems(items, filterValue) {
     let filteredItems = [];
-    console.clear();
     for (let item of items) {
-        if (filterValue[0] === "!") {
-            if (Object.values(item).every(function (text) {return !text.includes(filterValue.slice(1, filterValue.length))})){
+        if (filterValue[0] === '!') {
+            if (Object.values(item).every((string) => valueNotInAnyString(string, filterValue))) {
                 filteredItems.push(item)
             }
-        } else { for (let data in item) {
-                if (item[data].includes(filterValue)) {
+        }
+        else {
+            if (Object.values(item).some((string) => valueInAnyString(string, filterValue))) {
                 filteredItems.push(item)
-                break
             }
-        }}
+        }
     }
-
     return filteredItems
+}
+
+function valueInAnyString(string, value) {
+    return string.includes(value)
+}
+
+function valueNotInAnyString(string, value) {
+    return !string.includes(value.slice(1, value.length))
 }
 
 function toggleTheme() {
