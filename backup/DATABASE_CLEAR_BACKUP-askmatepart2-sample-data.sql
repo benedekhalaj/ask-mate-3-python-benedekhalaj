@@ -103,7 +103,9 @@ CREATE TABLE user_account(
     email TEXT,
     password TEXT,
     registration_date TIMESTAMP,
-    admin BOOLEAN
+    admin BOOLEAN,
+    UNIQUE (email),
+    UNIQUE (username)
 );
 ALTER TABLE ONLY user_account ADD CONSTRAINT pk_account_id PRIMARY KEY (id);
 

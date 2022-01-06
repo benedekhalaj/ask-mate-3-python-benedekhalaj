@@ -1,3 +1,4 @@
+import psycopg2
 from flask import Flask, render_template, request, redirect, url_for, session, escape
 import data_manager
 import helper
@@ -34,14 +35,22 @@ def login():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def register(message=None):
     if request.method == 'GET':
-        return render_template('registration.html')
+        return render_template('registration.html', message=message)
     else:
         user_account = dict(request.form)
         user_account['registration_date'] = helper.add_submission_time()
         user_account['password'] = helper.hash_password(user_account['password'])
-        data_manager.add_user_account(user_account)
+        try:
+            data_manager.add_user_account(user_account)
+        except psycopg2.Error as e:
+            print(e.pgerror)
+            if 'username' in e.pgerror:
+                message = 'username'
+            else:
+                message = 'email'
+            return render_template('registration.html', mesasage=message)
         session['username'] = user_account['username']
         return redirect(url_for('list_questions'))
 

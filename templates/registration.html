@@ -19,7 +19,10 @@
             <input type="text" name="username" id="username" placeholder="username" required><br><br>
 
             <label for="email">E-mail</label><br>
-            <input type="email" name="email" id="email" placeholder="e-mail" required><br><br>
+            <input type="email" name="email" id="email" placeholder="e-mail" required><br>
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}<br>
 
             <label for="password">Password</label><br>
             <input onkeyup='check();' type="password" name="password" id="password" placeholder="password" required><br><br>
@@ -28,7 +31,6 @@
             <input onkeyup='check();' type="password" name="password_confirmation" id="password_confirmation" placeholder="confirm password" required><br><br>
             <span id="message"></span>
             <br><br>
-
             <button id="submit" type="submit">Register</button>
         </fieldset>
     </form>
