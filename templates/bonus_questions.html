@@ -1,5 +1,6 @@
 <html>
     <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <script type="text/javascript" src="{{ url_for('static', filename='js/bonusQuestions.js') }}" defer></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/doNotModifyThisFile.js') }}" defer></script>
     </head>
@@ -14,7 +15,7 @@
                 style="width: 500px" id="doNotModifyThisId_QuestionsFilter"
                 type="text"
                 placeholder="filter questions by keywords">
-        <table>
+        <table id="bonus-questions" style="font-size:14px;">
             <thead id="doNotModifyThisId_QuestionsTableHeader">
                 <tr>
                     <td>Title</td>

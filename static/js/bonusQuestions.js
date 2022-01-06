@@ -67,9 +67,16 @@ function toggleTheme() {
 }
 
 function increaseFont() {
-    console.log("increaseFont")
+    let bonusQuestions = document.getElementById('bonus-questions');
+    if (+bonusQuestions.style.fontSize.slice(0, -2) < 15) {
+        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) + 1
+    }
+
 }
 
 function decreaseFont() {
-    console.log("decreaseFont")
+    let bonusQuestions = document.getElementById('bonus-questions');
+    if (+bonusQuestions.style.fontSize.slice(0, -2) > 3) {
+        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) - 1
+    }
 }
