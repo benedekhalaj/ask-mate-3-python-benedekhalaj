@@ -1,25 +1,23 @@
 // you receive an array of objects which you must sort in the by the key "sortField" in the "sortDirection"
 function getSortedItems(items, sortField, sortDirection) {
-    console.log(items)
-    console.log(sortField)
-    console.log(sortDirection)
+    let numberFields = ['VoteCount', 'ViewNumber']
 
-    // === SAMPLE CODE ===
-    // if you have not changed the original html uncomment the code below to have an idea of the
-    // effect this function has on the table
-    //
     if (sortDirection === "asc") {
-        const firstItem = items.shift()
-        if (firstItem) {
-            items.push(firstItem)
+        if (numberFields.includes(sortField)) {
+            items.sort((a, b) => a[sortField] - b[sortField])
         }
-    } else {
-        const lastItem = items.pop()
-        if (lastItem) {
-            items.push(lastItem)
+        else {
+            items.sort((a, b) => a[sortField] > b[sortField])
         }
     }
-
+    else {
+        if (numberFields.includes(sortField)) {
+            items.sort((a, b) => b[sortField] - a[sortField])
+        }
+        else {
+            items.sort((a, b) => a[sortField] < b[sortField])
+        }
+    }
     return items
 }
 
@@ -65,13 +63,34 @@ function valueNotInAnyString(string, value) {
 }
 
 function toggleTheme() {
-    console.log("toggle theme")
+    let themeButton = document.getElementById('theme-button');
+    let bonusQuestions = document.getElementById('bonus-questions');
+    if (bonusQuestions.style.color === 'black') {
+        bonusQuestions.style.transition = 'ease 0.5s';
+        bonusQuestions.style.backgroundColor = '#1c8fa6';
+        bonusQuestions.style.color = 'white';
+        themeButton.innerText = 'Change Theme to Light';
+    }
+    else {
+        bonusQuestions.style.transition = 'ease 0.5s';
+        bonusQuestions.style.backgroundColor = 'white';
+        bonusQuestions.style.color = 'black';
+        themeButton.innerText = 'Change Theme to Dark';
+    }
+
 }
 
 function increaseFont() {
-    console.log("increaseFont")
+    let bonusQuestions = document.getElementById('bonus-questions');
+    if (+bonusQuestions.style.fontSize.slice(0, -2) < 15) {
+        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) + 1;
+    }
+
 }
 
 function decreaseFont() {
-    console.log("decreaseFont")
+    let bonusQuestions = document.getElementById('bonus-questions');
+    if (+bonusQuestions.style.fontSize.slice(0, -2) > 3) {
+        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) - 1;
+    }
 }
