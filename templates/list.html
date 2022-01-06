@@ -12,14 +12,13 @@
 
     {% block back %}
     {% endblock %}
-    <h2>Questions</h2>
 
     {% if logged_in %}
         <p><a href="/add-question">Add new question</a></p>
     {% endif %}
     <!--Link for bonus questions-->
     <a href="{{ url_for('bonus_questions') }}">Bonus Questions</a>
-
+    <h2>Questions</h2>
         {% block highlight %}
 
         {% include 'question_layout.html' %}

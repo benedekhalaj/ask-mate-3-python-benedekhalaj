@@ -229,3 +229,10 @@ input, textarea {
     width: 20%;
     height: auto;
 }
+
+#welcome_message {
+    /*position:relative; left: 250px; top: -145px;*/
+    font-size: 25px;
+    color: whitesmoke;
+    text-shadow: 1px 1px 3px black, 0 0 25px blue, 0 0 5px darkblue;
+}
