@@ -12,6 +12,9 @@
 
 {% block content %}
     <h2>Register</h2>
+    {% if message %}
+        <p id="user-exist"><strong>{{ message.capitalize() }} already taken! Please try again!</strong></p>
+    {% endif %}<br>
     <form method="post">
         <fieldset>
             <legend>Create New Account</legend>
@@ -20,9 +23,6 @@
 
             <label for="email">E-mail</label><br>
             <input type="email" name="email" id="email" placeholder="e-mail" required><br>
-            {% if message %}
-                <p>{{ message }}</p>
-            {% endif %}<br>
 
             <label for="password">Password</label><br>
             <input onkeyup='check();' type="password" name="password" id="password" placeholder="password" required><br><br>

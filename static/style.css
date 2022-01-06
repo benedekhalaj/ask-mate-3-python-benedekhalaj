@@ -236,3 +236,7 @@ input, textarea {
     color: whitesmoke;
     text-shadow: 1px 1px 3px black, 0 0 25px blue, 0 0 5px darkblue;
 }
+
+#user-exist {
+    color: red;
+}
