@@ -75,7 +75,3 @@ function increaseFont() {
 function decreaseFont() {
     console.log("decreaseFont")
 }
-
-function onclick() {
-    
-}

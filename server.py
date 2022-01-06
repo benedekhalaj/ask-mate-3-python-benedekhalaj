@@ -35,7 +35,8 @@ def login():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def register(message=None):
+def register():
+    message = request.args.get('message')
     if request.method == 'GET':
         return render_template('registration.html', message=message)
     else:
@@ -50,7 +51,7 @@ def register(message=None):
                 message = 'username'
             else:
                 message = 'email'
-            return render_template('registration.html', mesasage=message)
+            return redirect(url_for('register', message=message))
         session['username'] = user_account['username']
         return redirect(url_for('list_questions'))
 
