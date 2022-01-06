@@ -26,10 +26,15 @@ function getSortedItems(items, sortField, sortDirection) {
 // you receive an array of objects which you must filter by all it's keys to have a value matching "filterValue"
 function getFilteredItems(items, filterValue) {
     let filteredItems = [];
-
     for (let item of items) {
         if (filterValue[0] === '!') {
-            if (Object.values(item).every((string) => valueNotInAnyString(string, filterValue))) {
+            if (filterValue.includes(':')) {
+                let [tag, value] = filterValue.split(':');
+                if (!item[tag.slice(1, tag.length)].includes(value)) {
+                    filteredItems.push(item)
+                }
+            }
+            else if (Object.values(item).every((string) => valueNotInAnyString(string, filterValue))) {
                 filteredItems.push(item);
             }
         }
