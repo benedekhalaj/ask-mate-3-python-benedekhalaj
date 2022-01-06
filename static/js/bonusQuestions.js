@@ -63,13 +63,27 @@ function valueNotInAnyString(string, value) {
 }
 
 function toggleTheme() {
-    console.log("toggle theme")
+    let themeButton = document.getElementById('theme-button');
+    let bonusQuestions = document.getElementById('bonus-questions');
+    if (bonusQuestions.style.color === 'black') {
+        bonusQuestions.style.transition = 'ease 0.5s';
+        bonusQuestions.style.backgroundColor = '#1c8fa6';
+        bonusQuestions.style.color = 'white';
+        themeButton.innerText = 'Change Theme to Light';
+    }
+    else {
+        bonusQuestions.style.transition = 'ease 0.5s';
+        bonusQuestions.style.backgroundColor = 'white';
+        bonusQuestions.style.color = 'black';
+        themeButton.innerText = 'Change Theme to Dark';
+    }
+
 }
 
 function increaseFont() {
     let bonusQuestions = document.getElementById('bonus-questions');
     if (+bonusQuestions.style.fontSize.slice(0, -2) < 15) {
-        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) + 1
+        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) + 1;
     }
 
 }
@@ -77,6 +91,6 @@ function increaseFont() {
 function decreaseFont() {
     let bonusQuestions = document.getElementById('bonus-questions');
     if (+bonusQuestions.style.fontSize.slice(0, -2) > 3) {
-        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) - 1
+        bonusQuestions.style.fontSize = +bonusQuestions.style.fontSize.slice(0, -2) - 1;
     }
 }
