@@ -4,7 +4,10 @@
                     {% if title == 'title' %}
                         {% include 'highlight_layout.html' %}
 
-                    {% elif title in ['vote_number', 'submission_time'] %}
+                    {% elif title == 'submission_time' %}
+                        <div class="{{ title }}"><p>{{ value.strftime("%Y-%m-%d %H:%M") }}</p></div>
+
+                    {% elif title == 'vote_number' %}
                         <div class="{{ title }}"><p>{{ value }}</p></div>
 
                     {% elif title == 'message' %}

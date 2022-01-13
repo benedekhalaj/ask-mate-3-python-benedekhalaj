@@ -65,7 +65,11 @@
                     {% if key in comment_header %}
                         {% if value != 'None' %}
                             {% if value %}
-                                <td>{{ value }}</td>
+                                {% if key == 'submission_time' %}
+                                    <td>{{ value.strftime("%Y-%m-%d %H:%M") }}</td>
+                                {% else %}
+                                    <td>{{ value }}</td>
+                                {% endif %}
                             {% else %}
                                 <td>-</td>
                             {% endif %}
@@ -132,7 +136,9 @@
 
                 {% for key, value in answer.items() %}
                     {% if key in answer_header %}
-                        {% if key == 'image' %}
+                        {% if key == 'submission_time' %}
+                            <td>{{ value.strftime("%Y-%m-%d %H:%M") }}</td>
+                        {% elif key == 'image' %}
                            {% if value %}
                                 <td>
                                     <a href="{{ url_for('static', filename = value) }}" target="_blank">
@@ -166,9 +172,11 @@
                 <td>
                     <a href="/answer/{{ answer['id'] }}/vote_down">Vote down</a>
                 </td>
-                <td>
-                    <a href="{{ url_for('add_new_comment', answer_id=answer['id']) }}">Add new comment to this answer</a>
-                </td>
+                <tr >
+                    <td colspan="7">
+                        <a href="{{ url_for('add_new_comment', answer_id=answer['id']) }}">Add new comment to this answer</a>
+                    </td>
+                </tr>
             {% endif %}
             </table>
             <h3>Comments for this Answer</h3>
@@ -191,7 +199,11 @@
                         {% for key, value in comment.items() %}
                             {% if key in comment_header %}
                                 {% if value %}
-                                    <td>{{ value }}</td>
+                                    {% if key == 'submission_time' %}
+                                        <td>{{ value.strftime("%Y-%m-%d %H:%M") }}</td>
+                                    {% else %}
+                                        <td>{{ value }}</td>
+                                    {% endif %}
                                 {% else %}
                                     <td>-</td>
                                 {% endif %}

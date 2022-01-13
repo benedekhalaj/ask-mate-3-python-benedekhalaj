@@ -49,6 +49,12 @@ table {
     width: 75%;
 }
 
+#add_comment_button {
+    text-align: center;
+    align-self: center;
+
+}
+
 #back{
     margin: 0;
     float: left;
