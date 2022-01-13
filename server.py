@@ -46,7 +46,6 @@ def register():
         try:
             data_manager.add_user_account(user_account)
         except psycopg2.Error as e:
-            print(e.pgerror)
             if 'username' in e.pgerror:
                 message = 'username'
             else:
